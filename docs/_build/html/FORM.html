@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>First Order Reliability Method (FORM) &mdash; parAnsys 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="Examples.html" />
+    <link rel="prev" title="Monte Carlo Simulation" href="MonteCarlo.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> parAnsys
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ANSYS.html">ANSYS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MonteCarlo.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">First Order Reliability Method (FORM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">parAnsys</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>First Order Reliability Method (FORM)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/FORM.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="first-order-reliability-method-form">
+<span id="form"></span><h1>First Order Reliability Method (FORM)<a class="headerlink" href="#first-order-reliability-method-form" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="paransys.FORM">
+<em class="property">class </em><code class="descclassname">paransys.</code><code class="descname">FORM</code><a class="headerlink" href="#paransys.FORM" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class applies the First Order Reliability Method (FORM) inside Python
+using ParAnsys as a connection with ANSYS for evaluate FEM models.</p>
+<p>It is possible to run simulations without using ANSYS, just
+defining the limit state equation and all variables.</p>
+<p>This code was made following the ideia of ANSYS being a tool for getting the
+ultimate load of the structure. This works applying a displacement in the
+loaded node, and then getting the biggest reaction force on that node,
+following this way the limit state defined here is ‘R-S’, where R are the
+values get from ANSYS and S the values generated in Python. It’s also
+possible to work applying the true load on ANSYS, it’s just necessary to
+formulate a valid limit state equation.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<dl class="method">
+<dt id="paransys.FORM.ANSYS">
+<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
+<dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
+paransys.ANSYS class.</p>
+<dl class="docutils">
+<dt>exec_loc <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Location of ANSYS executable file.</dd>
+<dt>run_location <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>ANSYS working directory. Recomended to be a separated directory.
+Defaults to ansys_anl on current directory.</dd>
+<dt>jobname <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>ANSYS jobname. Defaults to ‘file’.</dd>
+<dt>nproc <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>Number of processors. Defaults to 2.</dd>
+<dt>override <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd>Attempts to delete the .lock file at working directory.
+It’s useful when ANSYS was interrupted.
+Defaults to False</dd>
+<dt>cleardir <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd>Delete all the files from ANSYS working directory when call the Run command.
+Defaults to False</dd>
+<dt>add_flags <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>Additional flags to be called with ANSYS.
+If it’s an academic version use add_flags=’-aa_r’
+Do not use ‘-b -i -o’
+Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.CreateRandomVar">
+<code class="descname">CreateRandomVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.CreateRandomVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Random Variable</p>
+<p>If it’s used on ANSYS it need to be told, so after this use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSRandomVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name of variable.</dd>
+<dt>distrib <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd><p class="first">Probabilistic variable distribution type.</p>
+<p>For all distributions Mean and Std are related to Normal distribution
+(the code determines the parameters for the desired distribution).</p>
+<p class="last">Available types are:
+* gaussian (or gauss, normal);
+* lognormal (or log, logn, ln, lognorm);
+* gumbel (or gumb, type1);
+* constant (or const) - Constant value (doesn’t need std).</p>
+</dd>
+<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
+<dd>Standard mean of variable values.</dd>
+<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
+<dd>Standard deviation of variable.</dd>
+<dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Parameters for future implementations.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.ExportDataCSV">
+<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>separator='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports process data to a CSV file.</p>
+<dl class="docutils">
+<dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name of file that will receive the values, doesn’t need the
+extension “.csv”, it will be placed automatically.</dd>
+<dt>separator <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>Separator of data.
+Defaults to ‘,’.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.Info">
+<code class="descname">Info</code><span class="sig-paren">(</span><em>act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn on/off the return of the commands to Python.</p>
+<dl class="docutils">
+<dt>act <span class="classifier-delimiter">:</span> <span class="classifier">bool, obligatory</span></dt>
+<dd>True turn On and False turn Off the return of the commands to Python.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.Run">
+<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter</em>, <em>tol=0.001</em>, <em>dh=0.001</em>, <em>meth='HLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the FORM process.</p>
+<dl class="docutils">
+<dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
+<dd>Maximum of iterations that can be performed. After this the process
+will stop with error.</dd>
+<dt>tol <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Maximum relative error tolerance, same values is used for
+<a href="#id1"><span class="problematic" id="id2">|</span></a>G(X)|~=tol and <a href="#id3"><span class="problematic" id="id4">|</span></a>X_k - X_(k-1)|&lt;=tol. Defaults to 10**-3.</dd>
+<dt>dh <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>delta_h step when applying derivatives, value applied in reduced
+space. Defaults to 10**-3.</dd>
+<dt>meth <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd><p class="first">FORM method used. Available methods are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>HLRF: Hasofer Lind Rackwitz and Fiessler method.</li>
+<li>iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.</li>
+</ul>
+</div></blockquote>
+<p class="last">Defaults to HLRF.</p>
+</dd>
+</dl>
+<p><strong>Returns a dictionary with:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>status : integer
+Status of solution, values can be found after this list.</li>
+<li>Pf : float
+Probability of failure.</li>
+<li>Beta : float
+Reliability index.</li>
+<li>{DesignPoint} : dictionary of values
+Dictionary with the design points for each variable.</li>
+<li>cycles : int
+Number of iterations performed to obtain the solution.</li>
+</ul>
+</div></blockquote>
+<p><strong>Status values:</strong></p>
+<ul class="simple">
+<li>0: no problem;</li>
+<li>1: warning, maximum of cycles reached with no convergence of CVPf;</li>
+<li>99: undefined error!</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetANSYSModel">
+<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the input script file to be used on ANSYS and extra files that should
+be copied together.
+All this files must be in the same directory set in parameter directory.</p>
+<dl class="docutils">
+<dt>inputname <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.</dd>
+<dt>extrafiles <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
+<dd>A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</dd>
+<dt>directory <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetANSYSOutVar">
+<code class="descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a parameter/variable from ANSYS APDL script as an variable to
+return values for Python.</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Variable/Parameter name, as defined in APDL script.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetANSYSRandomVar">
+<code class="descname">SetANSYSRandomVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSRandomVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark a Random variable as ANSYS variable.</p>
+<p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
+are determined using the weights of all ANSYS input variables.</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name of variable.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetCorrel">
+<code class="descname">SetCorrel</code><span class="sig-paren">(</span><em>var1</em>, <em>var2</em>, <em>correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the correlation betwen two variables. The values will be transformed
+by the Nataf process before running.</p>
+<dl class="docutils">
+<dt>var1 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>First variable name.</dd>
+<dt>var2 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Second variable name.</dd>
+<dt>correl <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
+<dd>Correlation betwen var1 and var2.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetLimState">
+<code class="descname">SetLimState</code><span class="sig-paren">(</span><em>equat</em>, <em>userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetLimState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the limit state equation.</p>
+<dl class="docutils">
+<dt>equat <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>String with the equation of the limit state. It must be write as a
+function of defined variables (In and Out).</dd>
+<dt>userf <span class="classifier-delimiter">:</span> <span class="classifier">function, optional</span></dt>
+<dd>An user defined function that could be used inside the limit state
+equation, called inside equat as <code class="docutils literal notranslate"><span class="pre">userf()</span></code>.
+For example, you can create a complex Python function with loops, ifs
+and whatever for evaluate the R part of your limit state function
+for a concrete beam. An example is showed after.</dd>
+</dl>
+<p>First example: if ANSYS returns the maximum load on a truss as variable
+FxMAX, and applied loads to be tested are <code class="docutils literal notranslate"><span class="pre">(g+q)*sin(theta)</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, theta are defined random variables created with <code class="docutils literal notranslate"><span class="pre">CreateRandomVar()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;FxMAX-(g+q)*sin(theta)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that you can use math expressions as <code class="docutils literal notranslate"><span class="pre">sin()</span></code>, <code class="docutils literal notranslate"><span class="pre">cos()</span></code>, <code class="docutils literal notranslate"><span class="pre">tan()</span></code>, <code class="docutils literal notranslate"><span class="pre">sqrt()</span></code>
+from Python math module inside the equation.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Second example: you have a steel bar in tension that hasn’t hardening.
+It’s stress is a function of <code class="docutils literal notranslate"><span class="pre">(def,</span> <span class="pre">fy,</span> <span class="pre">E)</span></code>, where <code class="docutils literal notranslate"><span class="pre">def</span></code> is current
+deformation, <code class="docutils literal notranslate"><span class="pre">fy</span></code> is yield stress and <code class="docutils literal notranslate"><span class="pre">E</span></code> the elastic moduli,
+you can create inside your code an function like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stress</span><span class="p">(</span><span class="n">def</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+        <span class="k">if</span> <span class="k">def</span> <span class="o">&gt;</span> <span class="n">fy</span><span class="o">/</span><span class="n">E</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">fy</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">def</span><span class="o">*</span><span class="n">E</span>
+</pre></div>
+</div>
+<p>And now defining <code class="docutils literal notranslate"><span class="pre">userf=stress</span></code> we can:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(def,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">def</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
+Note that the function inside the limit state equation should be
+called as <code class="docutils literal notranslate"><span class="pre">userf()</span></code> with the parameters from <code class="docutils literal notranslate"><span class="pre">stress</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.FORM.SetStartPoint">
+<code class="descname">SetStartPoint</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetStartPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the point, for each variable, that process will start.
+If it’s not declared it will start with the mean value.</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Variable name.</dd>
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
+<dd>Starting point for this variable.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="MonteCarlo.html" class="btn btn-neutral float-left" title="Monte Carlo Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Pagnussat Titello
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

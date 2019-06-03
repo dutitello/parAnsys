@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Code page &mdash; parAnsys 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Project page" href="project.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> parAnsys
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project page</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code page</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">parAnsys</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Code page</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/code.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-paransys.ansys">
+<span id="code-page"></span><h1>Code page<a class="headerlink" href="#module-paransys.ansys" title="Permalink to this headline">¶</a></h1>
+<p>Module to use ANSYS by Probabilistic Design System (PDS) as an FEM tool for
+running a couple of analysis and get some variables back to Python.</p>
+<p>Built using ANSYS documentation from <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/">https://www.sharcnet.ca/Software/Ansys/</a></p>
+<p>This module makes no claim to own any rights to ANSYS, it’s just an interface
+to call the program owned by ANSYS.</p>
+<dl class="class">
+<dt id="paransys.ansys.ANSYS">
+<em class="property">class </em><code class="descclassname">paransys.ansys.</code><code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\ANSYS\Python\parAnsys\paransys\docs\ansys_anl\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class creates a couple of script files with some parameters defined here
+by the user, copy an APDL script file created by the user with the model to be
+analysed, run everything on ANSYS and get the results from some defined
+parameters back to Python.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>exec_loc <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Location of ANSYS executable file.</dd>
+<dt>run_location <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd><p class="first">ANSYS working directory. Recomended to be a separated directory.</p>
+<p class="last">Defaults to ansys_anl on current directory.</p>
+</dd>
+<dt>jobname <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>ANSYS jobname. Defaults to ‘file’.</dd>
+<dt>nproc <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>Number of processors. Defaults to 2.</dd>
+<dt>override <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first">Attempts to delete the .lock file at working directory.</p>
+<p>It’s useful when ANSYS was interrupted.</p>
+<p class="last">Defaults to False</p>
+</dd>
+<dt>cleardir <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first">Delete all the files from ANSYS working directory when call the Run command.</p>
+<p class="last">Defaults to False</p>
+</dd>
+<dt>add_flags <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd><p class="first">Additional flags to be called with ANSYS.</p>
+<p>If it’s an academic version use add_flags=’-aa_r’</p>
+<p>Do not use ‘-b -i -o’</p>
+<p class="last">Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.ht">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.ht</a></p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.ClearAll">
+<code class="descname">ClearAll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.ClearAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear all the properties (not from ANSYS object)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.ClearValues">
+<code class="descname">ClearValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.ClearValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the values of all variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.CreateVarIn">
+<code class="descname">CreateVarIn</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.CreateVarIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an INPUT variable.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd><p class="first">Variable name.</p>
+<p>Do not use spaces in the name!</p>
+<p>The same name cannot be used with INPUT and OUTPUT variables.</p>
+<p class="last">It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.CreateVarOut">
+<code class="descname">CreateVarOut</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.CreateVarOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an OUTPUT variable.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd><p class="first">Variable name.</p>
+<p>Do not use spaces in the name!</p>
+<p>The same name cannot be used with INPUT and OUTPUT variables.</p>
+<p class="last">It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.GetVarOutValues">
+<code class="descname">GetVarOutValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.GetVarOutValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the values of the Results file from ANSYS for all the OUTPUT variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.Info">
+<code class="descname">Info</code><span class="sig-paren">(</span><em>act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.Info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn on/off the return of the commands to Python.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>act <span class="classifier-delimiter">:</span> <span class="classifier">bool, obligatory</span></dt>
+<dd>True turn On and False turn Off the return of the commands to Python.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="paransys.ansys.ANSYS.Length">
+<code class="descname">Length</code><a class="headerlink" href="#paransys.ansys.ANSYS.Length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of analysis to be executed and the length of INPUT arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.Run">
+<code class="descname">Run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the analysis on ANSYS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.SetLength">
+<code class="descname">SetLength</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.SetLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the number of analysis to be executed and the length of INPUT arrays.</p>
+<p>Must be set before the variables.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>length: int, obligatory</dt>
+<dd>Number of analysis.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.SetModel">
+<code class="descname">SetModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.SetModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the input script file to be used and extra files that should be copied together.</p>
+<p>All this files must be in the same directory set in parameter directory.</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>inputname <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.</dd>
+<dt>extrafiles <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
+<dd>A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</dd>
+<dt>directory <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ansys.ANSYS.SetVarInValues">
+<code class="descname">SetVarInValues</code><span class="sig-paren">(</span><em>name</em>, <em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ansys.ANSYS.SetVarInValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the values of an INPUT variable</p>
+<p>Parameters:</p>
+<p>—</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Input variable name that will receive the values.</dd>
+<dt>values <span class="classifier-delimiter">:</span> <span class="classifier">1D np.array of floats, obligatory</span></dt>
+<dd>A 1D numpy.array() with the length of this class and the values to be analysed.
+If the array is not 1D just the first column (0) will be used.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="project.html" class="btn btn-neutral float-left" title="Project page" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eduardo Pagnussat Titello
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
