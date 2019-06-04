@@ -1028,12 +1028,12 @@ class FORM(object):
 				if minGrad > 0:
 					break
 				else:
-					self._PrintR(' One or more values from gradG were equal to zero, dh of this cycle was increased from %2.4E to %2.4E.' % (dh, dh*1.5))
-					dh = dh*1.5
+					self._PrintR(' One or more values from gradG were equal to zero, dh of this cycle was increased from %2.4E to %2.4E.' % (dh, dh*2.0))
+					dh = dh*2.0
 					gradrepeat += 1
-					if gradrepeat is 7:
-						# 7 increses?? dh is like 17 times greater! STOP IT!
-						exception = Exception('After 7 increases gradG still has a value lower than zero! Please increase dh on Run command.')
+					if gradrepeat is 8:
+						# 8 increses?? dh is like 20 times greater! STOP IT!
+						exception = Exception('After 8 increases gradG still has a value lower than zero! Please increase dh on Run command.')
 						raise exception
 
 			#-------------------------------------------------------------------
@@ -1125,7 +1125,9 @@ class FORM(object):
 						curlen = min(stepnk, maxnk-(step)*stepnk)
 
 						# points
-						matEvalPts = np.zeros([curlen, (NInRandVars+NOutVars)])
+						#matEvalPts = np.zeros([(1+2*NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
+						matEvalPts = np.zeros([curlen, (NInRandVars+NInConstVars+NOutVars)])
+						matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
 						lambdks = np.zeros(curlen)
 
 						for eachnk in range(curlen):
