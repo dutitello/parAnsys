@@ -181,13 +181,13 @@ class FORM(object):
 
 
 	# Setting distribution of variables
-	def CreateRandomVar(self, name, distrib, mean, std=0, cv=None, par1=None, par2=None):
+	def CreateVar(self, name, distrib, mean, std=0, cv=None, par1=None, par2=None):
 		"""
-		Create a Random Variable
+		Create a Variable, random or not.
 
 		If it's used on ANSYS it need to be told, so after this use:
 
-		>>> mc.SetANSYSRandomVar(name)
+		>>> form.SetANSYSVar(name)
 
 		Parameters
 		----------
@@ -350,7 +350,7 @@ class FORM(object):
 
 		First example: if ANSYS returns the maximum load on a truss as variable
 		FxMAX, and applied loads to be tested are ``(g+q)*sin(theta)``, where
-		``g``, ``q``, theta are defined random variables created with ``CreateRandomVar()``.
+		``g``, ``q``, theta are defined random variables created with ``CreateVar()``.
 
 		.. code-block:: python
 
@@ -397,12 +397,9 @@ class FORM(object):
 
 
 
-	def SetANSYSRandomVar(self, name):
+	def SetANSYSVar(self, name):
 		"""
-		Mark a Random variable as ANSYS variable.
-
-		ATTENTION: When using ANSYS the weight of results from ANSYS variables
-		are determined using the weights of all ANSYS input variables.
+		Set a variable as ANSYS variable.
 
 		Parameters
 		----------
@@ -427,7 +424,7 @@ class FORM(object):
 			if name not in self.variableDistrib and name not in self.variableConst:
 				exception = Exception('This variable name is not declared yet. '+
 						'Only Random variables can be set as ANSYS variables.\n'+
-						'Please use CreateRandomVar() to declare it.')
+						'Please use CreateVar() to declare it.')
 				raise exception
 
 		# Declare it on ansys object
@@ -454,7 +451,7 @@ class FORM(object):
 		if name not in self.variableDistrib:
 			exception = Exception('This variable name is not declared yet. '+
 					'Before set the start value you must create the random '+
-					'variable with CreateRandomVar().')
+					'variable with CreateVar().')
 			raise exception
 
 		# If no error: store the value
@@ -491,13 +488,13 @@ class FORM(object):
 		if var1 not in self.variableDistrib:
 			exception = Exception('Variable "%s" is not declared yet. ' % var1 +
 					'Before set the correlation you must create the random '+
-					'variable with CreateRandomVar().')
+					'variable with CreateVar().')
 			raise exception
 
 		if var2 not in self.variableDistrib:
 			exception = Exception('Variable "%s" is not declared yet. ' % var2 +
 					'Before set the correlation you must create the random '+
-					'variable with CreateRandomVar().')
+					'variable with CreateVar().')
 			raise exception
 
 		if var1 == var2:
@@ -512,7 +509,7 @@ class FORM(object):
 		self.corlist[var1, var2] = correl
 		self.corlist[var2, var1] = correl
 
-		self._PrintR('Correlation betwen "%s" and "%s" set as %f.' %(var1, var2, correl))
+		self._PrintR('Correlation betwen %s and %s set as %f.' %(var1, var2, correl))
 
 
 	def _EquivNormal(self, name, pt):
@@ -1185,8 +1182,8 @@ class FORM(object):
 							break
 
 					if done is False:
-						lambdk = 0.01
-						self._PrintR('iHLRF step not found, forcing to %2.3f.' % lambdk)
+						lambdk = 0.0020
+						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
 						jump = True
 
 					# Save new reduced point
@@ -1277,7 +1274,7 @@ class FORM(object):
 			absgrad = sqrt(gradG.dot(gradG))
 
 			for eachVar in self.variableDesPt:
-				self._PrintR(' %15s | %-8.5E | %-12.5E | %-9.5E' % (eachVar, \
+				self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
 				self.variableDesPt[eachVar], gradG[idx], gradG[idx]/absgrad))
 				idx += 1
 
@@ -1324,7 +1321,7 @@ class FORM(object):
 		self._PrintR(' Final values:')
 		self._PrintR('         VarName | D. Point    | grad(g(X_i)) | alfa(i) ')
 		for eachVar in self.variableDesPt:
-			self._PrintR(' %15s | %-8.5E | %-12.5E | %-9.5E' % (eachVar, \
+			self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
 				self.variableDesPt[eachVar], self.results['grad'][eachVar], self.results['alfa'][eachVar]))
 			#self._PrintR(' %s = %3.5E' % (eachVar, self.variableDesPt[eachVar]))
 		self._PrintR('\n=======================================================================\n\n')
@@ -1411,7 +1408,15 @@ class FORM(object):
 				values = self.variableDistrib[eachVar]
 				cmd = ',%s,%s' % (eachVar, values[0])
 				for eachVal in values[1:]:
-					cmd = '%s,%f' % (cmd, eachVal)
+					cmd = '%s,%8.5E' % (cmd, eachVal)
+				f.write('%s\n' % cmd)
+			f.write('\n')
+
+			# Constant variables
+			f.write('Constant variables:\n')
+			f.write(',Name,Value\n')
+			for eachVar in self.variableConst:
+				cmd = ',%s,%8.5E' % (eachVar, self.variableConst[eachVar])
 				f.write('%s\n' % cmd)
 			f.write('\n')
 
@@ -1447,7 +1452,7 @@ class FORM(object):
 			# Initial point
 			f.write('Initial design point:\n')
 			for eachVar in self.variableStartPt:
-				f.write(',%s,%f\n' % (eachVar, self.variableStartPt[eachVar]))
+				f.write(',%s,%8.5E\n' % (eachVar, self.variableStartPt[eachVar]))
 			f.write('\n')
 
 
