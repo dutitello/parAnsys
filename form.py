@@ -1346,7 +1346,7 @@ class FORM(object):
 		#-----------------------------------------------------------------------
 
 
-	def ExportDataCSV(self, filename, separator=','):
+	def ExportDataCSV(self, filename, description=None, separator=','):
 		"""
 		Exports process data to a CSV file.
 
@@ -1355,6 +1355,9 @@ class FORM(object):
 		filename : str, obligatory
 			Name of file that will receive the values, doesn't need the
 			extension ".csv", it will be placed automatically.
+
+		description : str, optional
+			A string that will be write in the beggining of the file.
 
 		separator : str, optional
 			Separator of data.
@@ -1372,6 +1375,10 @@ class FORM(object):
 			# Starts with sep=separator, for Microsoft Excel
 			f.write('sep=%s\n' % separator)
 
+			# Description
+			if description is not None:
+				f.write('%s\n\n' % description)
+				
 			f.write('Input data:\n')
 
 			# Simulation Controllers:
