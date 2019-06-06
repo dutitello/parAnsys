@@ -312,7 +312,7 @@ class FORM(object):
 
 		"""
 
-		if diff not in ['center', 'forward']:
+		if diff not in ['center', 'forward', 'backward']:
 			exception = Exception('Invalid derivative method.')
 			raise exception
 
@@ -614,6 +614,10 @@ class FORM(object):
 				``f'(x) = (f(x+h)-f(x)) / h``, it needs ``1 + Nvars``
 				evaluations of the limit state function.
 
+				* backward: for finite difference method with backward difference,
+				``f'(x) = (f(x)-f(x-h)) / h``, it needs ``1 + Nvars``
+				evaluations of the limit state function.
+
 				Defaults to center.
 
 		meth : str, optional
@@ -627,6 +631,8 @@ class FORM(object):
 
 		avoidExcess : bool, optional
 			An improvement of rate convergence that avoid exessive iterations.
+
+			Sometimes it's worst than original solution!
 
 			Defaults to False.
 
@@ -652,6 +658,12 @@ class FORM(object):
 			* {DesignPoint} : dictionary of values
 			  Dictionary with the design points for each variable.
 
+			* {gradG} : dictionary of values
+			  Dictionary with the final gradient for each variable.
+
+			* {alfa} : dictionary of values
+			  Dictionary with the final director cossines for each variable.
+
 			* cycles : int
 			  Number of iterations performed to obtain the solution.
 
@@ -667,11 +679,7 @@ class FORM(object):
 		#-----------------------------------------------------------------------
 		# Set controls
 		self._SetControls(maxIter=maxIter, tol=tol, dh=dh, diff=diff, meth=meth, avoidExcess=avoidExcess)
-		# Verify the controls
-		#if self.controls == {}:
-		#	exception = Exception('Before Run you must define the controls of '+
-		#						  'the process with SetControls().')
-		#	raise exception
+		#-----------------------------------------------------------------------
 
 
 		#-----------------------------------------------------------------------
@@ -704,12 +712,12 @@ class FORM(object):
 		#-----------------------------------------------------------------------
 		# Create the correlation Matrix and VarId list
 		#
-
-		# correlMat start as an eye matrix, just for RandomVars
 		NInRandVars = len(self.variableDistrib)
 		NInConstVars = len(self.variableConst)
-		# NOutVars are ANSYS out vars
+		# NOutVars is ANSYS out vars
 		NOutVars = 0
+
+		# correlMat start as an eye matrix, just with RandomVars!
 		self.correlMat = np.eye(NInRandVars)
 
 		# Create var id list
@@ -917,6 +925,19 @@ class FORM(object):
 						matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
 						curId += 1
 
+				elif diff is 'backward':
+					# size is 1+NInRandVars
+					matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
+					# All lines starts with design point/constant values, after random variables replace it
+					matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
+					curId = 0
+					for eachLine in range(1, 1+NInRandVars):
+						# vecdh is not zero on current var item
+						vecdh = np.zeros(NInRandVars)
+						vecdh[curId] = dh
+						matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
+						curId += 1
+
 
 				#-------------------------------------------------------------------
 				# If using ANSYS send it's variables dependents to simulation.
@@ -934,7 +955,7 @@ class FORM(object):
 								ansysSendingList.append(2*varId[eachVar]+1)
 								ansysSendingList.append(2*varId[eachVar]+2)
 
-					elif diff is 'forward':
+					elif diff is 'forward' or diff is 'backward':
 						for eachVar in self.ansys.varInNames:
 							# Current variable is random or constant?
 							if eachVar.lower() in self.variableDistrib:
@@ -1013,9 +1034,19 @@ class FORM(object):
 							varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
 						val1 = eval(self.limstate, globals(), varVal)
 
-						# G(X) = val2
 						gradG[curId] = (val1-valG)/dh
 						curId += 1
+
+				elif diff is 'backward':
+					for eachLine in range(1, (1+NInRandVars)):
+						# G(X-dh) = val1
+						for eachVar in varId:
+							varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
+						val1 = eval(self.limstate, globals(), varVal)
+
+						gradG[curId] = (valG-val1)/dh
+						curId += 1
+
 				#---------------------------------------------------------------
 
 
@@ -1339,6 +1370,8 @@ class FORM(object):
 		finret['Pf'] = self.results['Pf']
 		finret['Beta'] = self.results['Beta'][-1]
 		finret['DesignPoint'] = self.variableDesPt
+		finret['gradG'] = self.results['grad']
+		finret['alfa'] = self.results['alfa']
 		finret['cycles'] = self._cycles
 
 		return finret
@@ -1378,7 +1411,7 @@ class FORM(object):
 			# Description
 			if description is not None:
 				f.write('%s\n\n' % description)
-				
+
 			f.write('Input data:\n')
 
 			# Simulation Controllers:
