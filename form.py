@@ -1136,8 +1136,8 @@ class FORM(object):
 					maxdk = max(abs(dk))
 						# If b**n*max(dk) is less than tol, y ~= y+b**n*dk
 					maxnk = ceil(log(self.controls['tol']/maxdk)/log(par_b))
-						# But i'm a good guy and so we can do 8 more tests ;D
-					maxnk += 8
+						# But i'm a good guy and so we can do 2 more tests ;D
+					maxnk += 2
 					stepnk = 4
 
 					#print('maxnk=%d, maxdk=%f' % (maxnk, maxdk))
