@@ -318,7 +318,9 @@ class FORM(object):
 			exception = Exception('Invalid derivative method.')
 			raise exception
 
-		if maxIter >= 0 and tol >= 0:
+		if min(maxIter, tolRel, tolLS, dh) >= 0 and meth in ['HLRF', 'iHLRF'] and \
+			diff in ['center', 'forward', 'backward']:
+
 			# Save controls variable
 			self.controls['maxIter'] = maxIter
 			self.controls['tolRel'] = tolRel
@@ -595,7 +597,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1 dh=0.01, diff='center', meth='HLRF', avoidExcess=False):
+	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1, dh=0.01, diff='center', meth='HLRF', avoidExcess=False):
 		"""
 		Run the FORM process.
 
@@ -818,7 +820,7 @@ class FORM(object):
 			# Forbiden zone
 			else:
 				exception = Exception('When applying NATAF on variables %s and %s the variables '+
-						'conditions was not possible.')
+						'conditions wasn\'t possible.')
 				raise exception
 
 			# Save it!
@@ -831,7 +833,7 @@ class FORM(object):
 		#-----------------------------------------------------------------------
 		#  CYCLEs
 		#
-		self._PrintR('Starting FORM process.')
+		self._PrintR('\nStarting FORM process.')
 		timei = time.time()
 
 		# Start values
@@ -1164,7 +1166,7 @@ class FORM(object):
 					#	so we can use stepnk to avoid evaluate like 100 ANSYS
 					#	simulations and use the first/second....
 					nk = 0
-					valG_nk_old = 0.0
+					valG_nk = 99999999.0
 					done = False
 					forcenk = False
 
