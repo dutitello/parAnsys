@@ -198,13 +198,13 @@ class MonteCarlo(object):
 	# Internal for variable distrib definition
 	def _VarDistrib(self, type, name, distrib, mean, std, par1, par2, limst=0):
 		"""
-		Internal function that verify the values for CreateRandomVar
+		Internal function that verify the values for CreateVar
 		and SetRandomVarSampl.
 
 		Parameters
 		----------
 		type : int, obligatory
-			type = 0: for CreateRandomVar   -> variabledistrib
+			type = 0: for CreateVar   -> variabledistrib
 			type = 1: for SetRandomVarSampl -> samplingdistrib
 
 		limst : integer, obligatory for type=1 with more than 1 limit state
@@ -221,7 +221,7 @@ class MonteCarlo(object):
 			if type is 1 and name not in self.variabledistrib:
 				exception = Exception('Variable %s is not declared yet. '+
 						'Before set sampling distribution you must create it '+
-						'with CreateRandomVar().')
+						'with CreateVar().')
 				raise exception
 
 		# Set distribution name as lower case
@@ -329,13 +329,13 @@ class MonteCarlo(object):
 
 
 	# Setting distribution of variables
-	def CreateRandomVar(self, name, distrib, mean, std=0, par1=None, par2=None):
+	def CreateVar(self, name, distrib, mean, std=0, cv=None, par1=None, par2=None):
 		"""
 		Create a Random Variable
 
 		If it's used on ANSYS it need to be told, so after this use:
 
-		>>> mc.SetANSYSRandomVar(name)
+		>>> mc.SetANSYSVar(name)
 
 		Parameters
 		----------
@@ -357,13 +357,22 @@ class MonteCarlo(object):
 		mean : float, obligatory
 			Standard mean of variable values.
 
-		std : float, obligatory
-			Standard deviation of variable.
+		std : float, optional
+			Standard deviation of variable. You must define it or cv for variables
+			that aren't constant, if both (cv and std) declared std will be used.
+
+		cv : float, optional
+			Coeficient of Variation of variable. You must define it or std for variables
+			that aren't constant, if both (cv and std) declared std will be used.
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
 
 		"""
+
+		# CV or STD?
+		if std is 0 and cv is not None:
+			std = cv*mean
 
 		self._VarDistrib(type=0, name=name, limst=None, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
 
@@ -416,7 +425,7 @@ class MonteCarlo(object):
 		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
 
 
-	def SetControls(self, Ns, Nmaxcycles, cvpf=0.00, tolAdPt=False):
+	def _SetControls(self, Ns, Nmaxcycles, CVPf=0.00, tolAdPt=False):
 		"""
 		Set the controls of simulation process.
 
@@ -429,10 +438,10 @@ class MonteCarlo(object):
 			cycle the new sampling point will be determined.
 
 		Nmaxcycles : integer, obligatory
-			Maximum number of cycles to be performed, if cvpf is not reached on
+			Maximum number of cycles to be performed, if CVPf is not reached on
 			Nmaxcycles the simulation will be interrupted.
 
-		cvpf : float, optional
+		CVPf : float, optional
 			Target value of Probability Failure Coefficient of Variation, when
 			reached the simulation stops.
 
@@ -442,15 +451,15 @@ class MonteCarlo(object):
 			will use always the user set point.
 
 		"""
-		if Ns >= 0 and Nmaxcycles >= 0 and cvpf >= 0 and (tolAdPt is False or tolAdPt >= 0):
+		if Ns >= 0 and Nmaxcycles >= 0 and CVPf >= 0 and (tolAdPt is False or tolAdPt >= 0):
 			# Save controls variable
 			self.controls['Ns'] = Ns
 			self.controls['Nmaxcycles'] = Nmaxcycles
-			self.controls['cvpf'] = cvpf
+			self.controls['CVPf'] = CVPf
 			self.controls['tolAdPt'] = tolAdPt
 
 			return self._PrintR('Simulation control set. Ns=%d, NMaxCycles=%d, NMax=%d, CVPf_targ=%f, tolAdPt=%f'
-							% (Ns, Nmaxcycles, Ns*Nmaxcycles, cvpf, tolAdPt))
+							% (Ns, Nmaxcycles, Ns*Nmaxcycles, CVPf, tolAdPt))
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
 			raise exception
@@ -490,7 +499,7 @@ class MonteCarlo(object):
 
 		First example: if ANSYS returns the maximum load on a truss as variable
 		FxMAX, and applied loads to be tested are ``(g+q)*sin(theta)``, where
-		``g``, ``q``, theta are defined random variables created with ``CreateRandomVar()``.
+		``g``, ``q``, theta are defined random variables created with ``CreateVar()``.
 
 		.. code-block:: python
 
@@ -588,7 +597,7 @@ class MonteCarlo(object):
 
 
 
-	def SetANSYSRandomVar(self, name):
+	def SetANSYSVar(self, name):
 		"""
 		Mark a Random variable as ANSYS variable.
 
@@ -618,7 +627,7 @@ class MonteCarlo(object):
 			if name not in self.variabledistrib:
 				exception = Exception('This variable name is not declared. '+
 						'Only Random variables can be set as ANSYS variables.\n'+
-						'Please use CreateRandomVar() to declare it.')
+						'Please use CreateVar() to declare it.')
 				raise exception
 
 		# Declare it on ansys object
@@ -779,9 +788,31 @@ class MonteCarlo(object):
 		return [randval, weights]
 
 
-	def Run(self):
+	def Run(self, Ns, Nmaxcycles, CVPf=0.00, tolAdPt=False):
 		"""
 		Run the Monte Carlo simulation.
+
+		Parameters
+		----------
+		Ns : integer, obligatory
+			Number of simulations performed on each cycle.
+			After each cycle the convergence of simualtion is verified.
+			When using Importance Sampling with Adaptive Sampling, after each
+			cycle the new sampling point will be determined.
+
+		Nmaxcycles : integer, obligatory
+			Maximum number of cycles to be performed, if CVPf is not reached on
+			Nmaxcycles the simulation will be interrupted.
+
+		CVPf : float, optional
+			Target value of Probability Failure Coefficient of Variation, when
+			reached the simulation stops.
+
+		tolAdPt : float or False, optional
+			Maximum relative tolerance for adaptive sampling point search.
+			If the value is "False" it disable adaptive sampling, simulations
+			will use always the user set point.
+
 
 		**Returns a dictionary with:**
 
@@ -834,12 +865,15 @@ class MonteCarlo(object):
 
 
 		#-----------------------------------------------------------------------
-		# Verify the controls
-		if self.controls == {}:
-			exception = Exception('Before Run the Monte Carlo simulation you '+
-								  'must define the controls of simulation '+
-								  'process with SetControls().')
-			raise exception
+		# Set the controls
+
+		self._SetControls(Ns=Ns, Nmaxcycles=Nmaxcycles, CVPf=CVPf, tolAdPt=tolAdPt):
+
+		#if self.controls == {}:
+		#	exception = Exception('Before Run the Monte Carlo simulation you '+
+		#						  'must define the controls of simulation '+
+		#						  'process with SetControls().')
+		#	raise exception
 
 		Ns = self.controls['Ns']
 
@@ -1237,7 +1271,7 @@ class MonteCarlo(object):
 
 			# Verify the convergence criteria for CVPf after 3rd cycle
 			# Avoid CVPf < 1E-5!
-			if cCVPf <= self.controls['cvpf'] and cycle > 3 and cCVPf > 1E-5:
+			if cCVPf <= self.controls['CVPf'] and cycle > 3 and cCVPf > 1E-5:
 				self._PrintR('CVPf convergence criteria reached on cycle %d with %3.3E simulations.' % (cycle, cycle*Ns))
 				self._PrintR('Finalizing process.')
 				# Set status as 0 (no problem)
@@ -1454,7 +1488,7 @@ class MonteCarlo(object):
 			f.write('Simulation Controllers:\n')
 			f.write(',Ns/Cycle:,%d\n' % self.controls['Ns'])
 			f.write(',MaxCycles:,%d\n' % self.controls['Nmaxcycles'])
-			f.write(',CVPf target:,%2.4f\n' % self.controls['cvpf'])
+			f.write(',CVPf target:,%2.4f\n' % self.controls['CVPf'])
 			f.write(',tol. Adapt.:,%s\n' % str(self.controls['tolAdPt']))
 			f.write('\n')
 
