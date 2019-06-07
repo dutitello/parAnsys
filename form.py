@@ -278,7 +278,7 @@ class FORM(object):
 			raise exception
 
 
-	def _SetControls(self, maxIter, tol, dh, diff, meth, avoidExcess):
+	def _SetControls(self, maxIter, tolRel, tolLS, dh, diff, meth, avoidExcess):
 		"""
 		Internal from Run()
 		Set the controls of process.
@@ -289,9 +289,11 @@ class FORM(object):
 			Maximum of iterations that can be performed. After this the process
 			will stop with error.
 
-		tol : float
-			Maximum relative error tolerance, same values is used for
-			``|G(X)|~=tol`` and ``|X_k - X_(k-1)|<=tol``.
+		tolRel : float
+
+
+		tolLS : float
+
 
 		dh : float
 			delta_h step when applying derivatives, value applied in reduced
@@ -319,13 +321,22 @@ class FORM(object):
 		if maxIter >= 0 and tol >= 0:
 			# Save controls variable
 			self.controls['maxIter'] = maxIter
-			self.controls['tol'] = tol
+			self.controls['tolRel'] = tolRel
+			self.controls['tolLS'] = tolLS
 			self.controls['dh'] = dh
 			self.controls['diff'] = diff
 			self.controls['meth'] = meth
 			self.controls['avoidExcess'] = avoidExcess
 
-			return self._PrintR('Process controls set as maxIter=%d, tol=%2.4E, dh=%2.4E, method=%s, diff=%s' % (maxIter, tol, dh, meth, diff))
+			self._PrintR('Process controls set as:')
+			self._PrintR('   Limit of iterations: %d' % maxIter)
+			self._PrintR('   Relative error tolerance: %2.3E' % tolRel)
+			self._PrintR('   Absolute LS error tolerance: %2.3E' % tolLS)
+			self._PrintR('   deltah (for derivatives): %2.3E' % dh)
+			self._PrintR('   Finite difference method: %s' % diff)
+			self._PrintR('   FORM Method: %s' % meth)
+			self._PrintR('   Avoid FORM excessive iterations: %s' % avoidExcess)
+
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
 			raise exception
@@ -584,7 +595,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter, tol=10**-3, dh=0.05, diff='center', meth='HLRF', avoidExcess=False):
+	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1 dh=0.01, diff='center', meth='HLRF', avoidExcess=False):
 		"""
 		Run the FORM process.
 
@@ -594,14 +605,19 @@ class FORM(object):
 			Maximum of iterations that can be performed. After this the process
 			will stop with error.
 
-		tol : float, optional
-			Maximum relative error tolerance, same values is used for
-			``|G(X)|~=tol`` and ``|X_k - X_(k-1)|<=tol``. Defaults to# 10**-3.
+		tolRel : float, optional
+			Maximum **relative** error tolerance, for example on search for X point
+			``|X_k - X_(k-1)|/|X_(k-1)|<=tolRel``. Defaults to 10**-3.
+
+		tolLS : float, optional
+			Maximum **absolute** error tolerance for limit state function,
+			``|G(X)|~=tolLS``. It should be calibrated based on the magnitude of
+			limit state function. Defaults to 0.10.
 
 		dh : float, optional
 			delta_h step when applying derivatives, value applied over X', in
 			reduced space, so in real space it's applied over stadard
-			deviation (``g(X + dh*std)...``). Defaults to 0.05.
+			deviation (``g(X' + dh*std)...``). Defaults to 0.01.
 
 		diff : str, optional
 			Numeric derivative calcultation method. The possible mehtods are:
@@ -632,7 +648,7 @@ class FORM(object):
 		avoidExcess : bool, optional
 			An improvement of rate convergence that avoid exessive iterations.
 
-			Sometimes it's worst than original solution!
+			**Sometimes it's worst than original solution!**
 
 			Defaults to False.
 
@@ -678,7 +694,7 @@ class FORM(object):
 
 		#-----------------------------------------------------------------------
 		# Set controls
-		self._SetControls(maxIter=maxIter, tol=tol, dh=dh, diff=diff, meth=meth, avoidExcess=avoidExcess)
+		self._SetControls(maxIter=maxIter, tolRel=tolRel, tolLS=tolLS, dh=dh, diff=diff, meth=meth, avoidExcess=avoidExcess)
 		#-----------------------------------------------------------------------
 
 
@@ -1095,7 +1111,7 @@ class FORM(object):
 
 					self._PrintR('Schwarz inequality for (y*,gradG): %f' % val1)
 
-					if max([abs(valG), 1-val1]) < self.controls['tol']:
+					if abs(valG) < self.controls['tolLS'] and (1-val1) < self.controls['tolRel']:
 						self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 						self._PrintR('Performing a last cycle with final values.')
 						lastcycle = True
@@ -1105,7 +1121,7 @@ class FORM(object):
 					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
 					val2 = 0.00
 
-					if abs(valG) >= self.controls['tol']:
+					if abs(valG) >= self.controls['tolLS']:
 						# yk+dk = newVecRedPts
 						val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
 
@@ -1134,10 +1150,11 @@ class FORM(object):
 
 					# Find maxnk
 					maxdk = max(abs(dk))
-						# If b**n*max(dk) is less than tol, y ~= y+b**n*dk
-					maxnk = ceil(log(self.controls['tol']/maxdk)/log(par_b))
-						# But i'm a good guy and so we can do 2 more tests ;D
-					maxnk += 2
+						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
+					maxnk = ceil(log(self.controls['tolRel']/maxdk)/log(par_b))
+						# I'm a good guy and so we can do 5 more tests ;D
+					maxnk += 5
+						# But if limit state value doesn't change anymore it will stop!
 					stepnk = 4
 
 					#print('maxnk=%d, maxdk=%f' % (maxnk, maxdk))
@@ -1147,7 +1164,10 @@ class FORM(object):
 					#	so we can use stepnk to avoid evaluate like 100 ANSYS
 					#	simulations and use the first/second....
 					nk = 0
+					valG_nk_old = 0.0
 					done = False
+					forcenk = False
+
 					for step in range(ceil(maxnk/stepnk)):
 						# current lenght
 						curlen = min(stepnk, maxnk-(step)*stepnk)
@@ -1193,6 +1213,9 @@ class FORM(object):
 							varVal = {}
 							varVal['userf'] = self._userf
 
+							# Save last valG_nk to compare it
+							valG_nk_old = valG_nk
+
 							# Eval Limit State
 							for eachVar in varId:
 								varVal[eachVar] = matEvalPts[eachnk, varId[eachVar]]
@@ -1209,11 +1232,15 @@ class FORM(object):
 								done = True
 								break
 
-						if done is True:
+							if valG_nk_old/valG_nk == 1:
+								forcenk = True
+								break
+
+						if done is True or forcenk is True:
 							break
 
-					if done is False:
-						lambdk = 0.0020
+					if forcenk is True:
+						lambdk = 0.010
 						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
 						jump = True
 
@@ -1285,7 +1312,7 @@ class FORM(object):
 				break
 
 			# Convergence
-			if max([abs(valG), max(abs(newVecRedPts-curVecRedPts))]) < self.controls['tol']:
+			if abs(valG) < self.controls['tolLS'] and max(abs(newVecRedPts-curVecRedPts)) < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 				self._PrintR('Performing a last cycle with final values.')
 				lastcycle = True
@@ -1417,8 +1444,10 @@ class FORM(object):
 			# Simulation Controllers:
 			f.write('Process Controllers:\n')
 			f.write(',Limit of iterations:,%d\n' % self.controls['maxIter'])
-			f.write(',Error tolerance:,%2.3E\n' % self.controls['tol'])
+			f.write(',Relative error tolerance:,%2.3E\n' % self.controls['tolRel'])
+			f.write(',Absolute LS error tolerance:,%2.3E\n' % self.controls['tolLS'])
 			f.write(',deltah (for derivatives):,%2.3E\n' % self.controls['dh'])
+			f.write(',Finite difference method:,%s\n' % self.controls['diff'])
 			f.write(',FORM Method:,%s\n' % self.controls['meth'])
 			f.write(',Avoid FORM excessive iterations:,%s\n' % self.controls['avoidExcess'])
 
