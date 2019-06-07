@@ -193,8 +193,8 @@ class ANSYS(object):
 			# will be $jobname%_current.pdrs
 			f.write('PDEXE,current\n')
 
-			# Create a delay of 3s on ANSYS just to make sure that all were done
-			f.write('/WAIT,3\n')
+			# Create a delay of 2s on ANSYS just to make sure that all were done
+			f.write('/WAIT,2\n')
 
 			# Close the file
 			self._PrintR('Saving the pdsrun.inp file.')
