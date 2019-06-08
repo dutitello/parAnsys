@@ -458,8 +458,13 @@ class MonteCarlo(object):
 			self.controls['CVPf'] = CVPf
 			self.controls['tolAdPt'] = tolAdPt
 
-			return self._PrintR('Simulation control set. Ns=%d, NMaxCycles=%d, NMax=%d, CVPf_targ=%f, tolAdPt=%f'
-							% (Ns, Nmaxcycles, Ns*Nmaxcycles, CVPf, tolAdPt))
+			self._PrintR('Process controls set as:')
+			self._PrintR('   Simulations per cycle: %d' % Ns)
+			self._PrintR('   Maximum number of cycles: %d' % Nmaxcycles)
+			self._PrintR('   Total maximum number of simulations: %2.3E' % Ns*Nmaxcycles)
+			self._PrintR('   Target CVPf: %2.3E' % CVPf)
+			if tolAdPt is not False:
+				self._PrintR('   Maximum relative tolerance for adaptive sampling point search: %2.3E' % tolAdPt)
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
 			raise exception
@@ -867,7 +872,7 @@ class MonteCarlo(object):
 		#-----------------------------------------------------------------------
 		# Set the controls
 
-		self._SetControls(Ns=Ns, Nmaxcycles=Nmaxcycles, CVPf=CVPf, tolAdPt=tolAdPt):
+		self._SetControls(Ns=Ns, Nmaxcycles=Nmaxcycles, CVPf=CVPf, tolAdPt=tolAdPt)
 
 		#if self.controls == {}:
 		#	exception = Exception('Before Run the Monte Carlo simulation you '+
@@ -875,10 +880,8 @@ class MonteCarlo(object):
 		#						  'process with SetControls().')
 		#	raise exception
 
-		Ns = self.controls['Ns']
-
 		# Adaptive condition
-		if self.controls['tolAdPt'] is not False:
+		if tolAdPt is not False:
 			adapt = True
 		else:
 			adapt = False
@@ -1154,6 +1157,8 @@ class MonteCarlo(object):
 			#	Igw: = 0,	   if not failed
 			#		 = weight, if failed
 			Igw = np.zeros(Ns)
+
+
 			for eachLS in self.limstates:
 				# Get range of LS
 				Nsi = self.limstates[eachLS][3]
@@ -1194,7 +1199,6 @@ class MonteCarlo(object):
 							varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
 							# DO NOT REMOVE NEXT COMMENT!
 							##simWei = simWei * varsValues[eachVar]['weights'][eachSim]
-
 
 					# Evaluate each simulation with its LS equation
 						#Igw[eachSim] = eval(self.limstates[eachLS][0], globals(), varVal)
