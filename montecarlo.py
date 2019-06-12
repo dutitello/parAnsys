@@ -461,7 +461,7 @@ class MonteCarlo(object):
 			self._PrintR('Process controls set as:')
 			self._PrintR('   Simulations per cycle: %d' % Ns)
 			self._PrintR('   Maximum number of cycles: %d' % Nmaxcycles)
-			self._PrintR('   Total maximum number of simulations: %2.3E' % Ns*Nmaxcycles)
+			self._PrintR('   Total maximum number of simulations: %2.3E' % (Ns*Nmaxcycles))
 			self._PrintR('   Target CVPf: %2.3E' % CVPf)
 			if tolAdPt is not False:
 				self._PrintR('   Maximum relative tolerance for adaptive sampling point search: %2.3E' % tolAdPt)
