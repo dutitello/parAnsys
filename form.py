@@ -1241,7 +1241,7 @@ class FORM(object):
 						if done is True or forcenk is True:
 							break
 
-					if forcenk is True:
+					if done is False or forcenk is True:
 						lambdk = 0.010
 						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
 						jump = True
