@@ -54,6 +54,15 @@ class FORM(object):
 		self.controls = {}
 		self.corlist = {}
 
+		# Options
+		self._options = {}
+		self._options['iHLRF_forced_lambdk'] = 0.01
+		self._options['iHLRF_prod_ck'] = 3.00
+		self._options['iHLRF_add_ck'] = 0.00
+		self._options['iHLRF_par_a'] = 0.10
+		self._options['iHLRF_par_b'] = 0.50
+		self._options['iHLRF_step_lambdk_test'] = 4
+
 		# After
 		self.variableDesPt = {}
 		self.results = {}
@@ -123,7 +132,7 @@ class FORM(object):
 		Internal function to print or not the return of commands based on command Info()
 		"""
 		if self.PrintR:
-			return print(value)
+			return print(value, flush=True)
 		else:
 			pass
 
@@ -474,6 +483,56 @@ class FORM(object):
 		self._PrintR('Variable %s will start the process at point %f.' % (name, value))
 
 
+	def Options(self, option, value=None):
+		"""
+		Set extra options values.
+
+
+		Parameters
+		----------
+		option : str, obligatory
+			Name of option, listed next.
+
+		value : obligatory
+			Value to be set, type varies with option.
+
+
+		** Valid options:**
+		For iHLRF method:
+			* iHLRF_forced_lambdk : float
+			  Forced value when line search doesnt found a valid ``lambdak``.
+			  Being ``lambdak`` the step size.
+
+			* iHLRF_prod_ck : float
+			  Scalar value that will be multiplied by calculated ``ck`` value. For a
+			  fix ``ck`` value turn it to 0 and then use 'iHLRF_add_ck'.
+
+			* iHLRF_add_ck : float
+			  Scalar value that will be added to ``ck`` value.
+
+			* iHLRF_par_a : float
+			  Value presented as ``a`` in line search equation for iHLRF.
+
+			* iHLRF_par_b : float
+			  Value presented as ``b`` in line search equation for iHLRF,
+			  ``lambdak`` value is ``b**nk``.
+
+			* iHLRF_step_lambdk_test : float
+			  Size of ``lambdak`` test block, after each block convergence is checked.
+
+		** If an invalid option or value is set the process could stop (or not).**
+
+		"""
+
+		if value is None:
+			# Return current value
+			return self._options[option]
+
+		else:
+			self._options[option] = value
+
+
+
 	def SetCorrel(self, var1, var2, correl):
 		"""
 		Set the correlation betwen two variables. The values will be transformed
@@ -688,9 +747,9 @@ class FORM(object):
 
 		**Status values:**
 
-		* 0: no problem;
-		* 1: warning, maximum of cycles reached with no convergence of CVPf;
-		* 99: undefined error!
+			* 0: no problem;
+			* 1: warning, maximum of cycles reached with no convergence of CVPf;
+			* 99: undefined error!
 
 		"""
 
@@ -1077,9 +1136,9 @@ class FORM(object):
 					self._PrintR(' One or more values from gradG were equal to zero, dh of this cycle was increased from %2.4E to %2.4E.' % (dh, dh*2.0))
 					dh = dh*2.0
 					gradrepeat += 1
-					if gradrepeat is 8:
-						# 8 increses?? dh is like 20 times greater! STOP IT!
-						exception = Exception('After 8 increases gradG still has a value lower than zero! Please increase dh on Run command.')
+					if gradrepeat is 10:
+						# 10 increses?? dh is like 1024 times greater! STOP IT!
+						exception = Exception('After 10 increases gradG is 1024 times greater and still has a value fixed.')
 						raise exception
 
 			#-------------------------------------------------------------------
@@ -1101,9 +1160,8 @@ class FORM(object):
 					# iHLRF - improved Rackwitz and Fiessler recursive method
 					#
 					# parameters
-					par_a = 0.10
-					par_b = 0.50
-					par_gama = 2.00
+					par_a = self._options['iHLRF_par_a']
+					par_b = self._options['iHLRF_par_b']
 
 					# direction
 					dk = newVecRedPts - curVecRedPts
@@ -1111,7 +1169,7 @@ class FORM(object):
 					# Verify the convergence
 					val1 = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
 
-					self._PrintR('Schwarz inequality for (y*,gradG): %f' % val1)
+					self._PrintR('Schwarz inequality relation for (y*, gradG): %f' % val1)
 
 					if abs(valG) < self.controls['tolLS'] and (1-val1) < self.controls['tolRel']:
 						self._PrintR('\nFinal design point found on cycle %d.' % cycle)
@@ -1119,7 +1177,11 @@ class FORM(object):
 						lastcycle = True
 					#-------------------------------------------------------------------
 
+					self._PrintR('Starting line search for iHLRF step.')
+
+
 					# find ck
+					#	ck by Beck 2019
 					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
 					val2 = 0.00
 
@@ -1127,7 +1189,13 @@ class FORM(object):
 						# yk+dk = newVecRedPts
 						val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
 
-					ck = par_gama*max(val1, val2)
+					ck = max(val1, val2)*self._options['iHLRF_prod_ck'] + self._options['iHLRF_add_ck']
+
+					# As ck must be greater than ||y*||/||gradG(y*)||
+					while ck < val1:
+						ck = 2*ck
+
+					self._PrintR('ck value: %f' % ck)
 
 					#-----------------------------------------------------------
 					# Find lambdk:
@@ -1154,21 +1222,21 @@ class FORM(object):
 					maxdk = max(abs(dk))
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = ceil(log(self.controls['tolRel']/maxdk)/log(par_b))
-						# I'm a good guy and so we can do 5 more tests ;D
-					maxnk += 5
+						# I'm a good guy and so we can do more tests ;D
+					maxnk += 3
 						# But if limit state value doesn't change anymore it will stop!
-					stepnk = 4
-
-					#print('maxnk=%d, maxdk=%f' % (maxnk, maxdk))
+					stepnk = self._options['iHLRF_step_lambdk_test']
 
 					# We need max(b**n), since 0<b<1 and n start as 0, where
 					#	the first value that the condition is true is the value,
 					#	so we can use stepnk to avoid evaluate like 100 ANSYS
-					#	simulations and use the first/second....
+					#	simulations and use the first...
 					nk = 0
 					valG_nk = 99999999.0
 					done = False
 					forcenk = False
+
+					self._PrintR('iHLRF step range from %f to %f, being test step size %d.' % (par_b**nk, par_b**maxnk, stepnk))
 
 					for step in range(ceil(maxnk/stepnk)):
 						# current lenght
@@ -1242,7 +1310,7 @@ class FORM(object):
 							break
 
 					if done is False or forcenk is True:
-						lambdk = 0.010
+						lambdk = self._options['iHLRF_forced_lambdk']
 						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
 						jump = True
 
@@ -1314,7 +1382,7 @@ class FORM(object):
 				break
 
 			# Convergence
-			if abs(valG) < self.controls['tolLS'] and max(abs(newVecRedPts-curVecRedPts)) < self.controls['tolRel']:
+			if abs(valG) < self.controls['tolLS'] and max(abs((newVecRedPts-curVecRedPts)/newVecRedPts)) < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 				self._PrintR('Performing a last cycle with final values.')
 				lastcycle = True
