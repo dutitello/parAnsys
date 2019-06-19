@@ -138,7 +138,7 @@ class MonteCarlo(object):
 		Internal function to print or not the return of commands based on command Info()
 		"""
 		if self.PrintR:
-			return print(value)
+			return print(value, flush=True)
 		else:
 			pass
 
