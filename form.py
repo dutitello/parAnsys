@@ -62,7 +62,6 @@ class FORM(object):
 		self._options['iHLRF_par_a'] = 0.10
 		self._options['iHLRF_par_b'] = 0.50
 		self._options['iHLRF_step_lambdk_test'] = 4
-		self._options['rHLRF_relax'] = 0.50
 
 		# After
 		self.variableDesPt = {}
@@ -328,7 +327,7 @@ class FORM(object):
 			exception = Exception('Invalid derivative method.')
 			raise exception
 
-		if min(maxIter, tolRel, tolLS, dh) >= 0 and meth in ['HLRF', 'iHLRF', 'rHLRF'] and \
+		if min(maxIter, tolRel, tolLS, dh) >= 0 and meth in ['HLRF', 'iHLRF'] and \
 			diff in ['center', 'forward', 'backward']:
 
 			# Save controls variable
@@ -1148,17 +1147,13 @@ class FORM(object):
 			# FORM Method
 			#
 			jump = False
-			if meth in ['HLRF', 'iHLRF', 'rHLRF']:
+			if meth is 'HLRF' or meth is 'iHLRF':
 				#-------------------------------------------------------------------
 				# HLRF - Rackwitz and Fiessler recursive method - Not Improved
 				#
 				# New reduced design point:
 				newVecRedPts = gradG*(gradG.dot(curVecRedPts)-valG)*1/gradG.dot(gradG)
 				#-------------------------------------------------------------------
-
-				if meth is 'rHLRF':
-					dk = newVecRedPts - curVecRedPts
-					newVecRedPts = curVecRedPts + self._options['rHLRF_relax']*dk
 
 				if meth is 'iHLRF':
 					#-------------------------------------------------------------------
@@ -1190,9 +1185,9 @@ class FORM(object):
 					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
 					val2 = 0.00
 
-					#if abs(valG) >= self.controls['tolLS']:
-					#	# yk+dk = newVecRedPts
-					#	val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
+					if abs(valG) >= self.controls['tolLS']:
+						# yk+dk = newVecRedPts
+						val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
 
 					ck = max(val1, val2)*self._options['iHLRF_prod_ck'] + self._options['iHLRF_add_ck']
 
@@ -1228,7 +1223,7 @@ class FORM(object):
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = ceil(log(self.controls['tolRel']/maxdk)/log(par_b))
 						# I'm a good guy and so we can do more tests ;D
-					maxnk += 1
+					maxnk += 3
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
