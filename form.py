@@ -46,18 +46,19 @@ class FORM(object):
 
 		# Before
 		self._ANSYS = False
-		self.PrintR = False
+		self.PrintR = True
 		self.limstate = None
 		self.variableDistrib = {}
 		self.variableConst = {}
 		self.variableStartPt = {}
 		self.controls = {}
 		self.corlist = {}
+		self._last_ck = 0
 
 		# Options
 		self._options = {}
-		self._options['iHLRF_forced_lambdk'] = 0.01
-		self._options['iHLRF_prod_ck'] = 3.00
+		self._options['iHLRF_forced_lambdk'] = 'auto'
+		self._options['iHLRF_prod_ck'] = 2.00
 		self._options['iHLRF_add_ck'] = 0.00
 		self._options['iHLRF_par_a'] = 0.10
 		self._options['iHLRF_par_b'] = 0.50
@@ -253,7 +254,7 @@ class FORM(object):
 			self.variableDistrib[name] = ['gauss', mean, std]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable %s defined as Gaussian with mean=%f and std. dev.=%f.'
+			return self._PrintR('Variable \"%s\" defined as Gaussian with mean=%f and std. dev.=%f.'
 									% (name, mean, std))
 
 		# Lognormal distribution
@@ -262,7 +263,7 @@ class FORM(object):
 			self.variableDistrib[name] = ['logn', mean, std]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable %s defined as LogNormal with mean=%f and std. dev.=%f.'
+			return self._PrintR('Variable \"%s\" defined as LogNormal with mean=%f and std. dev.=%f.'
 									% (name, mean, std))
 
 		# Gumbel distribution
@@ -271,24 +272,24 @@ class FORM(object):
 			self.variableDistrib[name] = ['gumbel', mean, std]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable %s defined as Gumbel with mean=%f and std. dev.=%f.'
+			return self._PrintR('Variable \"%s\" defined as Gumbel with mean=%f and std. dev.=%f.'
 									% (name, mean, std))
 
 		# Constant value
 		elif distrib in ['constant', 'const', 'cons', 'c']:
 			# Store value
 			self.variableConst[name] = mean
-			return self._PrintR('Variable %s defined as Constant with value=%f'
+			return self._PrintR('Variable \"%s\" defined as Constant with value=%f'
 									% (name, mean))
 
 		# or what?
 		else:
-			exception = Exception('Distribution %s set on variable %s is not recognized.'
+			exception = Exception('Distribution \"%s\" set on variable \"%s\" is not recognized.'
 									% (distrib.upper(), name))
 			raise exception
 
 
-	def _SetControls(self, maxIter, tolRel, tolLS, dh, diff, meth, avoidExcess):
+	def _SetControls(self, maxIter, tolRel, tolLS, dh, diff, meth):
 		"""
 		Internal from Run()
 		Set the controls of process.
@@ -318,10 +319,6 @@ class FORM(object):
 				* HLRF: Hasofer Lind Rackwitz and Fiessler method.
 
 				* iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.
-
-		avoidExcess :
-
-
 		"""
 
 		if diff not in ['center', 'forward', 'backward']:
@@ -338,7 +335,7 @@ class FORM(object):
 			self.controls['dh'] = dh
 			self.controls['diff'] = diff
 			self.controls['meth'] = meth
-			self.controls['avoidExcess'] = avoidExcess
+
 
 			self._PrintR('Process controls set as:')
 			self._PrintR('   Limit of iterations: %d' % maxIter)
@@ -347,7 +344,6 @@ class FORM(object):
 			self._PrintR('   deltah (for derivatives): %2.3E' % dh)
 			self._PrintR('   Finite difference method: %s' % diff)
 			self._PrintR('   FORM Method: %s' % meth)
-			self._PrintR('   Avoid FORM excessive iterations: %s' % avoidExcess)
 
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
@@ -481,7 +477,7 @@ class FORM(object):
 		self.variableStartPt[name] = value
 
 		#
-		self._PrintR('Variable %s will start the process at point %f.' % (name, value))
+		self._PrintR('Variable \"%s\" will start the process at point %f.' % (name, value))
 
 
 	def Options(self, option, value=None):
@@ -494,8 +490,9 @@ class FORM(object):
 		option : str, obligatory
 			Name of option, listed next.
 
-		value : obligatory
+		value : optional
 			Value to be set, type varies with option.
+			If not defined it will return current value.
 
 
 		** Valid options:**
@@ -503,6 +500,10 @@ class FORM(object):
 			* iHLRF_forced_lambdk : float
 			  Forced value when line search doesnt found a valid ``lambdak``.
 			  Being ``lambdak`` the step size.
+
+			  It could be set as ``'auto'``, when it
+			  is the complement of ``cos(y*, gradG)``.
+			  Defaults to 'auto'.
 
 			* iHLRF_prod_ck : float
 			  Scalar value that will be multiplied by calculated ``ck`` value. For a
@@ -531,6 +532,7 @@ class FORM(object):
 
 		else:
 			self._options[option] = value
+			self._PrintR('Option \"%s\" set as \"%s\".' % (option, str(value)))
 
 
 
@@ -582,7 +584,7 @@ class FORM(object):
 		self.corlist[var1, var2] = correl
 		self.corlist[var2, var1] = correl
 
-		self._PrintR('Correlation betwen %s and %s set as %f.' %(var1, var2, correl))
+		self._PrintR('Correlation betwen \"%s\" and \"%s\" set as %f.' %(var1, var2, correl))
 
 
 	def _EquivNormal(self, name, pt):
@@ -657,7 +659,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1, dh=0.01, diff='center', meth='HLRF', avoidExcess=False):
+	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1, dh=0.01, diff='center', meth='HLRF'):
 		"""
 		Run the FORM process.
 
@@ -707,21 +709,6 @@ class FORM(object):
 
 			Defaults to HLRF.
 
-		avoidExcess : bool, optional
-			An improvement of rate convergence that avoid exessive iterations.
-
-			**Sometimes it's worst than original solution!**
-
-			Defaults to False.
-
-			Presented by Yang and Lee (1999) in Importance sampling combined with
-			variance reduction techniques and its application to response surface
-			method, Internal working report - lecture notes, INSDEL, NAOE, Seoul
-			National University, Korea; apud Gomes and Awruch (2002), Reliability
-			of reinforced concrete structures using stochastic finite
-			elements. Engineering Computations, Vol 19, Iss 9, pp 764-786
-
-
 		**Returns a dictionary with:**
 
 			* status : integer
@@ -756,7 +743,7 @@ class FORM(object):
 
 		#-----------------------------------------------------------------------
 		# Set controls
-		self._SetControls(maxIter=maxIter, tolRel=tolRel, tolLS=tolLS, dh=dh, diff=diff, meth=meth, avoidExcess=avoidExcess)
+		self._SetControls(maxIter=maxIter, tolRel=tolRel, tolLS=tolLS, dh=dh, diff=diff, meth=meth)
 		#-----------------------------------------------------------------------
 
 
@@ -879,7 +866,7 @@ class FORM(object):
 
 			# Forbiden zone
 			else:
-				exception = Exception('When applying NATAF on variables %s and %s the variables '+
+				exception = Exception('When applying NATAF on variables \"%s\" and \"%s\" the variables '+
 						'conditions wasn\'t possible.')
 				raise exception
 
@@ -1172,11 +1159,11 @@ class FORM(object):
 					dk = newVecRedPts - curVecRedPts
 
 					# Verify the convergence
-					val1 = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
+					cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
 
-					self._PrintR('Schwarz inequality relation for (y*, gradG): %f' % val1)
+					self._PrintR('|cos(y*, gradG)| = %f. It must be near 1.' % cosYgradY)
 
-					if abs(valG) < self.controls['tolLS'] and (1-val1) < self.controls['tolRel']:
+					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
 						self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 						self._PrintR('Performing a last cycle with final values.')
 						lastcycle = True
@@ -1190,15 +1177,19 @@ class FORM(object):
 					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
 					val2 = 0.00
 
-					#if abs(valG) >= self.controls['tolLS']:
-					#	# yk+dk = newVecRedPts
-					#	val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
+					if abs(valG) >= self.controls['tolLS']:
+						# yk+dk = newVecRedPts
+						val2 = 1/2*newVecRedPts.dot(newVecRedPts)/abs(valG)
 
 					ck = max(val1, val2)*self._options['iHLRF_prod_ck'] + self._options['iHLRF_add_ck']
 
 					# As ck must be greater than ||y*||/||gradG(y*)||
 					while ck < val1:
 						ck = 2*ck
+
+					# Ck must always grow
+					ck = max(ck, self._last_ck)
+					self._last_ck = ck
 
 					self._PrintR('ck value: %f' % ck)
 
@@ -1228,7 +1219,7 @@ class FORM(object):
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = ceil(log(self.controls['tolRel']/maxdk)/log(par_b))
 						# I'm a good guy and so we can do more tests ;D
-					maxnk += 1
+					maxnk += 5
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
@@ -1302,6 +1293,7 @@ class FORM(object):
 							mynk = 1/2*curYk.dot(curYk)+ck*abs(valG_nk)
 							target = -par_a*lambdk*gradMy.dot(dk)
 
+
 							if (mynk - myk) <= target:
 								self._PrintR('iHLRF step size is %f.' % lambdk)
 								done = True
@@ -1315,52 +1307,20 @@ class FORM(object):
 							break
 
 					if done is False or forcenk is True:
-						lambdk = self._options['iHLRF_forced_lambdk']
+
+						if self._options['iHLRF_forced_lambdk'] is 'auto':
+							lambdk = 1 - cosYgradY
+						else:
+							lambdk = self._options['iHLRF_forced_lambdk']
+
 						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
 						jump = True
 
 					# Save new reduced point
 					newVecRedPts = curVecRedPts + lambdk*dk
 			else:
-				exception = Exception('FORM method %s is not implemented.' % meth)
+				exception = Exception('FORM method \"%s\" is not implemented.' % meth)
 				raise exception
-
-
-			#-------------------------------------------------------------------
-			# Rate convergence improvement
-			#	as Yang and Lee (1999)
-			#
-			#	Point:
-			#	 oldVecRedPts -> i-1
-			#	 curVecRedPts -> i
-			#	 newVecRedPts -> i+1
-			#
-			# 	Beta:
-			#	 oldBeta -> i-1
-			#	 curBeta -> i
-			#
-			#---
-
-			# It's active? cycle is >= 3?
-			#	First cycle has current (who is zero) and next, so just next = 1 value
-			#	Second cycle has first (zero), current and next = 2 values
-			#	Third cycle finally has three true values !
-			if jump is not True and self.controls['avoidExcess'] is True and cycle >= 3:
-				# If pval1 > pval2 it need to be improved
-				pval1 = oldVecRedPts.dot(newVecRedPts)/(sqrt(oldVecRedPts.dot(oldVecRedPts))*sqrt(newVecRedPts.dot(newVecRedPts)))
-				pval2 = curVecRedPts.dot(newVecRedPts)/(sqrt(curVecRedPts.dot(curVecRedPts))*sqrt(newVecRedPts.dot(newVecRedPts)))
-				if pval1 > pval2:
-					#---REMOVE THIS?
-					self._PrintR('Excessive iterations were detected and corrected.')
-					#---
-
-					# To compute last part
-					oldPlusCurRedPts = oldVecRedPts+curVecRedPts
-
-					# New reduced point
-					newVecRedPts = ((curBeta*oldValG-oldBeta*valG)/(oldValG-valG))*(oldPlusCurRedPts/sqrt(oldPlusCurRedPts.dot(oldPlusCurRedPts)))
-
-			#-------------------------------------------------------------------
 
 
 			#-------------------------------------------------------------------
@@ -1504,7 +1464,7 @@ class FORM(object):
 		try:
 			f = open(filename, 'wt')
 		except:
-			exception = Exception('Unable to open the %s file for write data.' % filename)
+			exception = Exception('Unable to open the \"%s\" file for write data.' % filename)
 			raise exception
 		else:
 			# Starts with sep=separator, for Microsoft Excel
@@ -1524,7 +1484,6 @@ class FORM(object):
 			f.write(',deltah (for derivatives):,%2.3E\n' % self.controls['dh'])
 			f.write(',Finite difference method:,%s\n' % self.controls['diff'])
 			f.write(',FORM Method:,%s\n' % self.controls['meth'])
-			f.write(',Avoid FORM excessive iterations:,%s\n' % self.controls['avoidExcess'])
 
 			# ANSYS Properties
 			if self._ANSYS:
