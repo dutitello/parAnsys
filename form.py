@@ -1381,6 +1381,8 @@ class FORM(object):
 		# After CYCLEs
 		#
 		timef = time.time()
+		self.results['ElapsedTime'] = ((timef-timei)/60)
+
 		# Save last cycles
 		self._cycles = cycle
 
@@ -1409,7 +1411,7 @@ class FORM(object):
 		self._PrintR(' Total of iterations: %3.3E' % (self._cycles))
 		self._PrintR(' Probability of failure (Pf): %2.4E' % (self.results['Pf']))
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.results['Beta'][-1]))
-		self._PrintR(' Elapsed time: %f minutes.' % ((timef-timei)/60))
+		self._PrintR(' Elapsed time: %f minutes.' % (self.results['ElapsedTime']))
 
 		self._PrintR(' Final values:')
 		self._PrintR('         VarName | D. Point    | grad(g(X_i)) | alfa(i) ')
@@ -1569,6 +1571,7 @@ class FORM(object):
 			f.write(',Total of iterations:,%d\n' % (self._cycles))
 			f.write(',Probability of failure (Pf):,%2.4E\n' % self.results['Pf'])
 			f.write(',Reliability Index (Beta):,%2.3f\n' % self.results['Beta'][-1])
+			f.write(',Elapsed time (minutes):,%4.3f\n' % self.results['ElapsedTime'])
 			f.write('\n')
 
 			# Final Sampling Point
