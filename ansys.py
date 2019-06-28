@@ -70,7 +70,7 @@ class ANSYS(object):
 		else:
 			# Verify if the file exists
 			if not os.path.isfile(exec_loc):
-				exception = Exception('Invalid ANSYS executable file as %s' % exec_loc)
+				exception = Exception('Invalid ANSYS executable file as \"%s\"' % exec_loc)
 				raise exception
 
 		# Save the options to the main object
@@ -99,11 +99,18 @@ class ANSYS(object):
 		# Model properties
 		self.Model = {}
 
-		# In the begging doesn't return anything
-		self.PrintR = False
+		# Defalts to print always
+		self.PrintR = True
 
 
-		return print('ANSYS properties defined.')
+		self._PrintR('ANSYS properties defined as:')
+		self._PrintR('   Executable file: \"%s\".' % self.ANSYSprops['exec_loc'])
+		self._PrintR('   Working directory: \"%s\".' % self.ANSYSprops['run_location'])
+		self._PrintR('   Jobname: \"%s\".' % self.ANSYSprops['jobname'])
+		self._PrintR('   Number of processors used: \"%s\".' % self.ANSYSprops['nproc'])
+		self._PrintR('   Override lock file: \"%s\".' % self.ANSYSprops['override'])
+		self._PrintR('   Clear working directory: \"%s\".' % self.ANSYSprops['cleardir'])
+		self._PrintR('   Additional flags: \"%s\".' % self.ANSYSprops['add_flags'])
 
 
 	def Info(self, act=False):
@@ -117,14 +124,14 @@ class ANSYS(object):
 		"""
 
 		self.PrintR = act
-		return self._PrintR('Now the commands will send a return to Python (like this).')
+		self._PrintR('Now the commands will send a return to Python (like this).')
 
 	def _PrintR(self, value):
 		"""
 		Internal function to print or not the return of commands based on command Info()
 		"""
 		if self.PrintR:
-			return print(value, flush=True)
+			print(value, flush=True)
 		else:
 			pass
 
@@ -142,7 +149,7 @@ class ANSYS(object):
 		# Run all the varInValues[var] looking for an empty
 		for each in self.varInNames:
 			if self.varInValues[each] is None:
-				exception = Exception('Input variable %s has no defined values.' % each)
+				exception = Exception('Input variable \"%s\" has no defined values.' % each)
 				raise exception
 
 		# Try to open the file for writing
@@ -249,7 +256,7 @@ class ANSYS(object):
 			try:
 				samparray[:, i] = self.varInValues[each]
 			except:
-				exception = Exception('Error while passing the values of %s to the current.samp file.' % each)
+				exception = Exception('Error while passing the values of \"%s\" to the current.samp file.' % each)
 				raise exception
 
 		# Save the file
@@ -257,7 +264,7 @@ class ANSYS(object):
 			sampfile = '%s\\current.samp' % self.ANSYSprops['run_location']
 			np.savetxt(sampfile, samparray, delimiter=' ', newline='\n', header=header, comments='', fmt=format)
 		except:
-			exception = Exception('Error while passing the values of %s to the current.samp file.' % each)
+			exception = Exception('Error while passing the values of \"%s\" to the current.samp file.' % each)
 			raise exception
 		pass
 
@@ -291,20 +298,20 @@ class ANSYS(object):
 
 		# Verify if the input script file exists
 		if not os.path.isfile(str(directory+'\\'+inputname)):
-			exception = Exception('Current input script file (%s) does not exists in (%s) to be copied.' % (inputname, directory))
+			exception = Exception('Current input script file (\"%s\") does not exists in (\"%s\") to be copied.' % (inputname, directory))
 			raise exception
 
 		# Copy the script file to workdirectory with the name 'current.inp'
 		errcopy = os.system('copy /Y %s %s' % (str(directory+'\\'+inputname), str(self.ANSYSprops['run_location']+'\\current.inp')))
 		if errcopy is not 0:
-			exception = Exception('It was not possible to copy the input script file. (%s)' % str(directory+'\\'+inputname))
+			exception = Exception('It was not possible to copy the input script file. (\"%s\")' % str(directory+'\\'+inputname))
 			raise exception
 
 		# Copy the extra files
 		for each in extrafiles:
 			errcopy = os.system('copy /Y %s %s' % (str(directory+'\\'+each), str(self.ANSYSprops['run_location']+'\\'+each)))
 			if errcopy is not 0:
-				exception = Exception('It was not possible to copy an extra file (%s).' % each)
+				exception = Exception('It was not possible to copy an extra file (\"%s\").' % each)
 				raise exception
 
 		# Clear last Model properties and set new
@@ -313,7 +320,10 @@ class ANSYS(object):
 		self.Model['extrafiles'] = extrafiles
 		self.Model['directory'] = directory
 
-		return self._PrintR('Input script file and extra files copied.')
+		self._PrintR('Input script file and extra files copied to working directory.')
+		self._PrintR('   Main APDL script: \"%s\"' % self.Model['inputname'])
+		self._PrintR('   Extra model files: \"%s\"' % self.Model['extrafiles'])
+		self._PrintR('   Input directory: \"%s\"' % self.Model['directory'])
 
 
 	def _ClearForRun(self):
@@ -323,7 +333,7 @@ class ANSYS(object):
 		# Verify the clear condition
 		if self.ANSYSprops['cleardir']:
 			# Try to clear the working directory
-			self._PrintR('Cleaning the files from ANSYS working directory (%s)' % self.ANSYSprops['run_location'])
+			self._PrintR('Cleaning the files from ANSYS working directory (\"%s\")' % self.ANSYSprops['run_location'])
 			delhand = os.system('del /q %s\\*' % self.ANSYSprops['run_location'])
 			if delhand is not 0:
 				exception = Exception('Unable to clear the ANSYS working directory.')
@@ -339,7 +349,7 @@ class ANSYS(object):
 				self._PrintR('Deleting lock file.')
 				delhand = os.system('del /q %s' % lockfile)
 				if delhand is not 0:
-					exception = Exception('Unable to delete lock file (%s).' % lockfile)
+					exception = Exception('Unable to delete lock file (\"%s\").' % lockfile)
 					raise exception
 
 			# Before execution ALWAYS erase the $jobname$.err file
@@ -358,14 +368,14 @@ class ANSYS(object):
 		cmd = 'start "ANSYS" /d "%s" /min /wait /b "%s" "   -np %d -j %s -b -i pdsrun.inp -o pdsout.out %s" ' % (self.ANSYSprops['run_location'],
 				self.ANSYSprops['exec_loc'], self.ANSYSprops['nproc'], self.ANSYSprops['jobname'], self.ANSYSprops['add_flags'])
 
-		self._PrintR('\nRunning ANSYS.\n')
+		self._PrintR('Running ANSYS.')
 
 		# Get time before run ANSYS
 		timei = time.time()
 
 		ansyshand = os.system(cmd)
 		if ansyshand is not 0:
-			exception = Exception('ANSYS exited with error id=%d. Please verify the output file (%s).\n\n' %(ansyshand, self.ANSYSprops['run_location']+'\\pdsout.out'))
+			exception = Exception('ANSYS exited with error id=%d. Please verify the output file (\"%s\").\n\n' %(ansyshand, self.ANSYSprops['run_location']+'\\pdsout.out'))
 			raise exception
 
 		# verify if it has an error on $jobname$.err
@@ -378,7 +388,7 @@ class ANSYS(object):
 		# Time after ANSYS
 		timef = time.time()
 
-		return self._PrintR('Solution is done. It took %f minutes.' % ((timef-timei)/60))
+		self._PrintR('Solution is done. It took %f minutes.' % ((timef-timei)/60))
 
 
 	def Run(self):
@@ -449,7 +459,7 @@ class ANSYS(object):
 				raise exception
 			else:
 				self.length = length
-				return self._PrintR('The number of analysis to be executed is now %d.' % self.length)
+				self._PrintR('Analysis lenght set to %d.' % self.length)
 
 
 	def CreateVarIn(self, name):
@@ -480,7 +490,7 @@ class ANSYS(object):
 			else:
 				self.varInNames.append(name)
 				self.varInValues[name] = None
-				return self._PrintR('ANSYS input variable %s created.' % name)
+				self._PrintR('ANSYS input variable \"%s\" created.' % name)
 
 
 	def CreateVarOut(self, name):
@@ -510,7 +520,7 @@ class ANSYS(object):
 			else:
 				self.varOutNames.append(name)
 				self.varOutValues[name] = None
-				return self._PrintR('Variable %s declared as ANSYS output variable.' % name)
+				self._PrintR('Variable \"%s\" declared as ANSYS output variable.' % name)
 
 
 	def SetVarInValues(self, name, values):
@@ -553,15 +563,15 @@ class ANSYS(object):
 		except:
 			pass
 		else:
-			self._PrintR('The values that are trying to be set to %s has more than one column, just the first (0) will be used.' % (name))
+			self._PrintR('The values that are trying to be set to \"%s\" has more than one column, just the first (0) will be used.' % (name))
 			values = np.copy(values[:,0])
 
 		# Verify if length is GT or LT the expected value
 		if values.shape[0] < self.length:
-			exception = Exception('The length of values that are trying to be set to %s is less than the defined length (%d).' % (name, self.length))
+			exception = Exception('The length of values that are trying to be set to \"%s\" is less than the defined length (%d).' % (name, self.length))
 			raise exception
 		elif values.shape[0] > self.length:
-			self._PrintR('The length of values that are trying to be set to %s is greater than the defined length (%d).\
+			self._PrintR('The length of values that are trying to be set to \"%s\" is greater than the defined length (%d).\
 				  \nJust the first %dth values will be used.' % (name, self.length, self.length))
 
 			values = values[:self.length]
@@ -570,10 +580,10 @@ class ANSYS(object):
 		try:
 			self.varInValues[name] = values
 		except:
-			exception = Exception('Error setting the values of %s' % name)
+			exception = Exception('Error setting the values of \"%s\"' % name)
 			raise exception
 		else:
-			return self._PrintR('Values of %s were set.' % name)
+			self._PrintR('Values of \"%s\" were set.' % name)
 
 
 	def GetVarOutValues(self):
@@ -587,7 +597,7 @@ class ANSYS(object):
 		if os.path.isfile(resultsfile):
 
 			# Import the results file
-			self._PrintR('Importing results from PDS results file (%s).' % resultsfile)
+			self._PrintR('Importing results from PDS results file (\"%s\").' % resultsfile)
 			resultsALL = np.genfromtxt(resultsfile, names=True, skip_header=1)
 
 			# Verify the existence of ERRORS
@@ -633,7 +643,7 @@ class ANSYS(object):
 		self.length = 0
 		#self.PrintR = False
 
-		return self._PrintR('All the properties were cleared (not from ANSYS object).')
+		self._PrintR('All the properties were cleared (not from ANSYS object).')
 
 	def ClearValues(self):
 		"""
@@ -647,5 +657,4 @@ class ANSYS(object):
 		for each in self.varOutNames:
 			self.varOutValues[each] = None
 
-		return self._PrintR('The values of all variables were cleared. \n'+
-					 'Now you can change the parameter length.')
+		self._PrintR('The values of all variables were cleared. Now you can change the length parameter.')
