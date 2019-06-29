@@ -1161,17 +1161,20 @@ class FORM(object):
 					# Verify the convergence
 					cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
 
-					self._PrintR('|cos(y*, gradG)| = %f. It must be near 1.' % cosYgradY)
+					self._PrintR('|cos(y*, gradG)| = %f. (It must be near 1)' % cosYgradY)
 
-					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
-						self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-						self._PrintR('Performing a last cycle with final values.')
-						lastcycle = True
+					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
+						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
+						#self._PrintR('Performing a last cycle with final values.')
+						#lastcycle = True
+						self._PrintR('Convergence criterias checked.')
+						self._PrintR('That\'s all folks.')
+						self._stnumb = 0
+						break
 					#-------------------------------------------------------------------
 
+
 					self._PrintR('Starting line search for iHLRF step.')
-
-
 					# find ck
 					#	ck by Beck 2019
 					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
@@ -1190,8 +1193,8 @@ class FORM(object):
 					# Ck must always grow
 					ck = max(ck, self._last_ck)
 					self._last_ck = ck
-
 					self._PrintR('ck value: %f' % ck)
+
 
 					#-----------------------------------------------------------
 					# Find lambdk:
@@ -1293,13 +1296,13 @@ class FORM(object):
 							mynk = 1/2*curYk.dot(curYk)+ck*abs(valG_nk)
 							target = -par_a*lambdk*gradMy.dot(dk)
 
-
 							if (mynk - myk) <= target:
 								self._PrintR('iHLRF step size is %f.' % lambdk)
 								done = True
 								break
 
 							if valG_nk_old/valG_nk == 1:
+							#if valG_nk_old/valG_nk >= (1-self.controls['tolRel']):
 								forcenk = True
 								break
 
@@ -1341,16 +1344,14 @@ class FORM(object):
 			#-------------------------------------------------------------------
 			# Verify the convergence
 			#
-			# Last cycle!
-			if lastcycle is True:
-				self._stnumb = 0
-				break
-
-			# Convergence
-			if abs(valG) < self.controls['tolLS'] and max(abs((newVecRedPts-curVecRedPts)/newVecRedPts)) < self.controls['tolRel']:
+			relErrorPoint = max(abs((newVecRedPts-curVecRedPts)/newVecRedPts))
+			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
+			if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-				self._PrintR('Performing a last cycle with final values.')
+				self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
 				lastcycle = True
+			else:
+				lastcycle = False
 			#-------------------------------------------------------------------
 
 
@@ -1372,6 +1373,13 @@ class FORM(object):
 				idx += 1
 
 			self._PrintR('\n')
+
+
+			# END LOOP
+			#if lastcycle is True:
+			#	self._stnumb = 0
+			#	break
+
 			#-------------------------------------------------------------------
 
 
