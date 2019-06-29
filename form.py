@@ -1141,8 +1141,26 @@ class FORM(object):
 				#
 				# New reduced design point:
 				newVecRedPts = gradG*(gradG.dot(curVecRedPts)-valG)*1/gradG.dot(gradG)
-				#-------------------------------------------------------------------
 
+
+				#-------------------------------------------------------------------
+				# Verify the convergence
+				#
+				cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
+				self._PrintR('|cos(y*, gradG)| = %f. (It must be near 1)' % cosYgradY)
+				if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
+					#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
+					#self._PrintR('Performing a last cycle with final values.')
+					#lastcycle = True
+					self._PrintR('Convergence criterias checked.')
+					self._PrintR('That\'s all folks.')
+					self._stnumb = 0
+					break
+
+
+				#-------------------------------------------------------------------
+				# If not converged yet and meth is rHLRF or iHLRF
+				#
 				if meth is 'rHLRF':
 					dk = newVecRedPts - curVecRedPts
 					newVecRedPts = curVecRedPts + self._options['rHLRF_relax']*dk
@@ -1151,6 +1169,7 @@ class FORM(object):
 					#-------------------------------------------------------------------
 					# iHLRF - improved Rackwitz and Fiessler recursive method
 					#
+
 					# parameters
 					par_a = self._options['iHLRF_par_a']
 					par_b = self._options['iHLRF_par_b']
@@ -1158,22 +1177,7 @@ class FORM(object):
 					# direction
 					dk = newVecRedPts - curVecRedPts
 
-					# Verify the convergence
-					cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
-
-					self._PrintR('|cos(y*, gradG)| = %f. (It must be near 1)' % cosYgradY)
-
-					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
-						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-						#self._PrintR('Performing a last cycle with final values.')
-						#lastcycle = True
-						self._PrintR('Convergence criterias checked.')
-						self._PrintR('That\'s all folks.')
-						self._stnumb = 0
-						break
-					#-------------------------------------------------------------------
-
-
+					# Line search
 					self._PrintR('Starting line search for iHLRF step.')
 					# find ck
 					#	ck by Beck 2019
