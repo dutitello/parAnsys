@@ -70,7 +70,7 @@ class ANSYS(object):
 		else:
 			# Verify if the file exists
 			if not os.path.isfile(exec_loc):
-				exception = Exception('Invalid ANSYS executable file as \"%s\"' % exec_loc)
+				exception = Exception('Invalid ANSYS executable file as \"%s\".' % exec_loc)
 				raise exception
 
 		# Save the options to the main object
@@ -304,7 +304,7 @@ class ANSYS(object):
 		# Copy the script file to workdirectory with the name 'current.inp'
 		errcopy = os.system('copy /Y %s %s' % (str(directory+'\\'+inputname), str(self.ANSYSprops['run_location']+'\\current.inp')))
 		if errcopy is not 0:
-			exception = Exception('It was not possible to copy the input script file. (\"%s\")' % str(directory+'\\'+inputname))
+			exception = Exception('It was not possible to copy the input script file. (\"%s\").' % str(directory+'\\'+inputname))
 			raise exception
 
 		# Copy the extra files
@@ -321,9 +321,9 @@ class ANSYS(object):
 		self.Model['directory'] = directory
 
 		self._PrintR('Input script file and extra files copied to working directory.')
-		self._PrintR('   Main APDL script: \"%s\"' % self.Model['inputname'])
-		self._PrintR('   Extra model files: \"%s\"' % self.Model['extrafiles'])
-		self._PrintR('   Input directory: \"%s\"' % self.Model['directory'])
+		self._PrintR('   Main APDL script: \"%s\".' % self.Model['inputname'])
+		self._PrintR('   Extra model files: \"%s\".' % self.Model['extrafiles'])
+		self._PrintR('   Input directory: \"%s\".' % self.Model['directory'])
 
 
 	def _ClearForRun(self):
@@ -333,7 +333,7 @@ class ANSYS(object):
 		# Verify the clear condition
 		if self.ANSYSprops['cleardir']:
 			# Try to clear the working directory
-			self._PrintR('Cleaning the files from ANSYS working directory (\"%s\")' % self.ANSYSprops['run_location'])
+			self._PrintR('Cleaning the files from ANSYS working directory (\"%s\").' % self.ANSYSprops['run_location'])
 			delhand = os.system('del /q %s\\*' % self.ANSYSprops['run_location'])
 			if delhand is not 0:
 				exception = Exception('Unable to clear the ANSYS working directory.')
@@ -580,7 +580,7 @@ class ANSYS(object):
 		try:
 			self.varInValues[name] = values
 		except:
-			exception = Exception('Error setting the values of \"%s\"' % name)
+			exception = Exception('Error setting the values of \"%s\".' % name)
 			raise exception
 		else:
 			self._PrintR('Values of \"%s\" were set.' % name)

@@ -1066,7 +1066,7 @@ class FORM(object):
 					varVal[eachVar] = matEvalPts[0, varId[eachVar]]
 
 				valG = eval(self.limstate, globals(), varVal)
-				self._PrintR('Limit state value = %f' % valG)
+				self._PrintR('Limit state value = %f.' % valG)
 
 				# Eval Gradient
 				self._PrintR('Evaluating gradient.')
@@ -1147,7 +1147,7 @@ class FORM(object):
 				# Verify the convergence
 				#
 				cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
-				self._PrintR('|cos(y*, gradG)| = %f. (It must be near 1)' % cosYgradY)
+				self._PrintR('|cos(y*, gradG)| = %f (it must be near 1).' % cosYgradY)
 				if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
 					#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 					#self._PrintR('Performing a last cycle with final values.')
@@ -1197,7 +1197,7 @@ class FORM(object):
 					# Ck must always grow
 					ck = max(ck, self._last_ck)
 					self._last_ck = ck
-					self._PrintR('ck value: %f' % ck)
+					self._PrintR('ck value: %f.' % ck)
 
 
 					#-----------------------------------------------------------
