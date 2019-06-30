@@ -1298,7 +1298,10 @@ class FORM(object):
 							lambdk = lambdks[eachnk]
 							curYk = curVecRedPts + lambdk*dk
 							mynk = 1/2*curYk.dot(curYk)+ck*abs(valG_nk)
+							# Correct way - REAL ARMIJO RULE
 							target = -par_a*lambdk*gradMy.dot(dk)
+							# Some people talk about this: gradMy.dot(gradMy), but ??
+							#target = -par_a*lambdk*gradMy.dot(gradMy)
 
 							if (mynk - myk) <= target:
 								self._PrintR('iHLRF step size is %f.' % lambdk)
