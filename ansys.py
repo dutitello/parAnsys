@@ -379,8 +379,8 @@ class ANSYS(object):
 			raise exception
 
 		# verify if it has an error on $jobname$.err
-		errfile = '%s\\%s.err' % (self.ANSYSprops['run_location'], self.ANSYSprops['jobname'])
-		f = open(errfile).read()
+		#errfile = '%s\\%s.err' % (self.ANSYSprops['run_location'], self.ANSYSprops['jobname'])
+		#f = open(errfile).read()
 		#if '*** ERROR ***' in f:
 		#	exception = Exception('ANSYS exited with an error. Please verify the output file (%s).\n\n' % (self.ANSYSprops['run_location']+'\\pdsout.out'))
 		#	raise exception
@@ -450,7 +450,6 @@ class ANSYS(object):
 				exception = Exception('At least one value were already set to INPUT variables. \n'+
 							'To change the length you have to clear the variables values with ClearValues().')
 				raise exception
-				break
 
 		# if there is no value setted and length > 0 can change
 		if valuesset is False:

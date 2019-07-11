@@ -12,8 +12,8 @@ import time
 from paransys.ansys import ANSYS
 import numpy as np
 import scipy.stats
-from math import *
-
+#from math import *
+import math
 
 class FORM(object):
 	"""
@@ -622,17 +622,17 @@ class FORM(object):
 		# Lognormal
 		elif var[0] is 'logn':
 			# LogNormal parameters
-			qsi = sqrt(log(1 + (var[2]/var[1])**2))
-			lmbd = log(var[1]) - 0.5*qsi**2
+			qsi = math.sqrt(math.log(1 + (var[2]/var[1])**2))
+			lmbd = math.log(var[1]) - 0.5*qsi**2
 
 			# Equiv parametes: analitycal since lognormal is derivated from normal
 			std = pt*qsi
-			mean = pt*(1-log(pt)+lmbd)
+			mean = pt*(1-math.log(pt)+lmbd)
 
 		# Gumbel
 		elif var[0] is 'gumbel':
 			# Gumbel parameters
-			scl = sqrt(6)*var[2]/pi
+			scl = math.sqrt(6)*var[2]/math.pi
 			loc = var[1] - 0.57721*scl
 
 			# Equiv with PDF/CDF functions
@@ -828,7 +828,7 @@ class FORM(object):
 			elif var1props[0] is 'logn' and var2props[0] is 'logn':
 				cv1 = var1props[2]/var1props[1]
 				cv2 = var2props[2]/var2props[1]
-				cor = cor*(log(1+cor*cv1*cv2)/(cor*sqrt(log(1+cv1**2)*log(1+cv2**2))))
+				cor = cor*(math.log(1+cor*cv1*cv2)/(cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
 
 			# Both are Gumbel
 			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
@@ -845,7 +845,7 @@ class FORM(object):
 					cv = var2props[2]/var2props[1]
 
 				# cor is
-				cor = cv/sqrt(log(1+cv**2))
+				cor = cv/math.sqrt(math.log(1+cv**2))
 
 			# One is gauss and other is gumbel
 			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
@@ -932,17 +932,12 @@ class FORM(object):
 			matL = np.linalg.cholesky(matCov)
 			matLinv = np.linalg.inv(matL)
 
-			# copy/save old reduced points and beta index
-			oldBeta = self.results['Beta'][cycle-1]
-			oldValG = valG
-			oldVecRedPts = curVecRedPts.copy()
-
 			# reduced uncorrelated points
 			curVecRedPts = matLinv.dot(vecPts[:NInRandVars]-vecMean)
 
 			# Current beta
 			if cycle is 1:
-				self.results['Beta'].append(sqrt(curVecRedPts.dot(curVecRedPts)))
+				self.results['Beta'].append(math.sqrt(curVecRedPts.dot(curVecRedPts)))
 
 			curBeta = self.results['Beta'][cycle]
 			#-------------------------------------------------------------------
@@ -1134,7 +1129,6 @@ class FORM(object):
 			#-------------------------------------------------------------------
 			# FORM Method
 			#
-			jump = False
 			if meth in ['HLRF', 'iHLRF', 'rHLRF']:
 				#-------------------------------------------------------------------
 				# HLRF - Rackwitz and Fiessler recursive method - Not Improved
@@ -1146,7 +1140,7 @@ class FORM(object):
 				#-------------------------------------------------------------------
 				# Verify the convergence
 				#
-				cosYgradY = abs(gradG.dot(curVecRedPts))/sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
+				cosYgradY = abs(gradG.dot(curVecRedPts))/math.sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
 				self._PrintR('|cos(y*, gradG)| = %f (it must be near 1).' % cosYgradY)
 				if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
 					#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
@@ -1181,7 +1175,7 @@ class FORM(object):
 					self._PrintR('Starting line search for iHLRF step.')
 					# find ck
 					#	ck by Beck 2019
-					val1 = sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
+					val1 = math.sqrt(curVecRedPts.dot(curVecRedPts)/gradG.dot(gradG))
 					val2 = 0.00
 
 					if abs(valG) >= self.controls['tolLS']:
@@ -1206,10 +1200,6 @@ class FORM(object):
 
 					# Initial calcs
 					#	m(y) = 1/2*y.y^T + c*|g(y)|
-					# 	grad(m(y)) = 1/2*grad(y.y^T) + c *|grad(g(y))|
-
-					#	gradYy = grad(y.y^T)
-					gradYy = np.zeros(NInRandVars)
 
 					# 	gradMy = grad(m(y))
 					gradMy = np.zeros(NInRandVars)
@@ -1224,7 +1214,7 @@ class FORM(object):
 					# Find maxnk
 					maxdk = max(abs(dk))
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
-					maxnk = ceil(log(self.controls['tolRel']/maxdk)/log(par_b))
+					maxnk = math.ceil(math.log(self.controls['tolRel']/maxdk)/math.log(par_b))
 						# I'm a good guy and so we can do more tests ;D
 					maxnk += 5
 						# But if limit state value doesn't change anymore it will stop!
@@ -1241,7 +1231,7 @@ class FORM(object):
 
 					self._PrintR('iHLRF step range from %f to %f, being test step size %d.' % (par_b**nk, par_b**maxnk, stepnk))
 
-					for step in range(ceil(maxnk/stepnk)):
+					for step in range(math.ceil(maxnk/stepnk)):
 						# current lenght
 						curlen = min(stepnk, maxnk-(step)*stepnk)
 
@@ -1324,7 +1314,6 @@ class FORM(object):
 							lambdk = self._options['iHLRF_forced_lambdk']
 
 						self._PrintR('iHLRF step not found, forcing to %f.' % lambdk)
-						jump = True
 
 					# Save new reduced point
 					newVecRedPts = curVecRedPts + lambdk*dk
@@ -1336,7 +1325,7 @@ class FORM(object):
 			#-------------------------------------------------------------------
 			# Transform reduced points back to real space
 			#
-			newBeta = sqrt(newVecRedPts.dot(newVecRedPts))
+			newBeta = math.sqrt(newVecRedPts.dot(newVecRedPts))
 			self.results['Beta'].append(newBeta)
 
 			NewVecPts = vecMean + matL.dot(newVecRedPts)
@@ -1372,7 +1361,7 @@ class FORM(object):
 			self._PrintR('                 | Point       | grad(g(X_i)) | alfa(i) ')
 
 			idx = 0
-			absgrad = sqrt(gradG.dot(gradG))
+			absgrad = math.sqrt(gradG.dot(gradG))
 
 			for eachVar in self.variableDesPt:
 				self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
@@ -1402,13 +1391,13 @@ class FORM(object):
 		self._cycles = cycle
 
 		# Get results
-		#self.results['Beta'] = sqrt(newVecRedPts.dot(newVecRedPts))
+		#self.results['Beta'] = math.sqrt(newVecRedPts.dot(newVecRedPts))
 		self.results['Pf'] = scipy.stats.norm.cdf(-self.results['Beta'][-1])
 
 		# Put grad and alfa in self.results
 		self.results['grad'] = {}
 		self.results['alfa'] = {}
-		absgrad = sqrt(gradG.dot(gradG))
+		absgrad = math.sqrt(gradG.dot(gradG))
 		idx = 0
 		for eachVar in self.variableDistrib:
 			self.results['grad'][eachVar] = gradG[idx]

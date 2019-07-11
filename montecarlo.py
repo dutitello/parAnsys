@@ -12,7 +12,7 @@ import time
 from paransys.ansys import ANSYS
 import numpy as np
 import scipy.stats
-from math import *
+import math
 
 
 class MonteCarlo(object):
@@ -256,8 +256,8 @@ class MonteCarlo(object):
 		elif distrib in ['lognormal', 'logn', 'ln', 'log', 'lognorm']:
 			# Distribution parameters are qsi, related do std dev, and
 			#	lmbd, related to mean.
-			#qsi = sqrt(log(1 + (cv)**2))
-			#lmbd = log(mean) - 0.5*qsix**2
+			#qsi = math.sqrt(math.log(1 + (cv)**2))
+			#lmbd = math.log(mean) - 0.5*qsix**2
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
@@ -706,8 +706,8 @@ class MonteCarlo(object):
 			# Real distrib is logn:
 			#elif varDistrib[0] is 'logn':
 				# eq for varDistrib
-			#	qsiv = sqrt(log(1 + (varDistrib[2]/varDistrib[1])**2))
-			#	lambdav = log(varDistrib[1]) - 0.5*qsiv**2
+			#	qsiv = math.sqrt(math.log(1 + (varDistrib[2]/varDistrib[1])**2))
+			#	lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
 			#	weights = (1/(qsiv*randval)*scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)) \
 			#			 / scipy.stats.norm.pdf(randval, curDist[1], curDist[2])
@@ -719,9 +719,9 @@ class MonteCarlo(object):
 		# Lognormal distribution
 		elif curDist[0] is 'logn':
 			# equiv std dev
-			qsic = sqrt(log(1 + (curDist[2]/curDist[1])**2))
+			qsic = math.sqrt(math.log(1 + (curDist[2]/curDist[1])**2))
 			# equiv mean
-			lambdac = log(curDist[1]) - 0.5*qsic**2
+			lambdac = math.log(curDist[1]) - 0.5*qsic**2
 			# Random values
 			randval = np.random.lognormal(lambdac, qsic, Nsi)
 
@@ -733,8 +733,8 @@ class MonteCarlo(object):
 			# Real distrib is logn:
 			elif varDistrib[0] is 'logn':
 				# eq for varDistrib
-				qsiv = sqrt(log(1 + (varDistrib[2]/varDistrib[1])**2))
-				lambdav = log(varDistrib[1]) - 0.5*qsiv**2
+				qsiv = math.sqrt(math.log(1 + (varDistrib[2]/varDistrib[1])**2))
+				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
 				weights = (scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)/qsiv) \
 						/ (scipy.stats.norm.pdf(np.log(randval), lambdac, qsic)/qsic)
@@ -757,7 +757,7 @@ class MonteCarlo(object):
 		# Gumbel distribution
 		elif curDist[0] is 'gumbel':
 			# scale parm - eqv to std
-			sclc = sqrt(6)*curDist[2]/pi
+			sclc = math.sqrt(6)*curDist[2]/math.pi
 
 			# loc parm - equiv to mean
 			locc = curDist[1] - 0.57721*sclc
@@ -773,7 +773,7 @@ class MonteCarlo(object):
 			# Real distrib is gumbel
 			elif varDistrib[0] is 'gumbel':
 				# eq for varDistrib
-				sclv = sqrt(6)*varDistrib[2]/pi
+				sclv = math.sqrt(6)*varDistrib[2]/math.pi
 				locv = varDistrib[1] - 0.57721*sclv
 
 				weights = scipy.stats.gumbel_r.pdf(randval, locv, sclv) \
@@ -1222,7 +1222,7 @@ class MonteCarlo(object):
 				# Current CVPf of Limit state
 				sumNfi  = sum(self.MCControl_LS['Nfi'][eachLS])
 				sumNfi2 = sum(self.MCControl_LS['Nfi2'][eachLS])
-				cCVPf = 1/cPfi * 1/sqrt((cycle*Nsi)*(cycle*Nsi-1)) \
+				cCVPf = 1/cPfi * 1/math.sqrt((cycle*Nsi)*(cycle*Nsi-1)) \
 							 *(sumNfi2 - 1/(cycle*Nsi)*(sumNfi)**2)**0.50
 				self.MCControl_LS['CVPf'][eachLS].append(cCVPf)
 
@@ -1249,7 +1249,7 @@ class MonteCarlo(object):
 			# Current CVPf of Limit state
 			sumNfi  = sum(self.MCControl['Nfi'])
 			sumNfi2 = sum(self.MCControl['Nfi2'])
-			cCVPf = 1/cPfi * 1/sqrt((cycle*Ns)*(cycle*Ns-1)) \
+			cCVPf = 1/cPfi * 1/math.sqrt((cycle*Ns)*(cycle*Ns-1)) \
 							 *(sumNfi2 - 1/(cycle*Ns)*(sumNfi)**2)**0.50
 			self.MCControl['CVPf'].append(cCVPf)
 
