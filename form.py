@@ -31,8 +31,13 @@ class FORM(object):
 	possible to work applying the true load on ANSYS, it's just necessary to
 	formulate a valid limit state equation.
 
+		
+	|
 	|
 
+	**Class methods:**
+
+	
 	"""
 
 	#---------------------------------------------------------------------------
@@ -303,7 +308,7 @@ class FORM(object):
 		tolRel : float
 
 
-		tolLS : float
+		tolLS : float or string
 
 
 		dh : float
@@ -325,7 +330,7 @@ class FORM(object):
 			exception = Exception('Invalid derivative method.')
 			raise exception
 
-		if min(maxIter, tolRel, tolLS, dh) >= 0 and meth in ['HLRF', 'iHLRF', 'rHLRF'] and \
+		if min(maxIter, tolRel, dh) >= 0 and meth in ['HLRF', 'iHLRF', 'rHLRF'] and \
 			diff in ['center', 'forward', 'backward']:
 
 			# Save controls variable
@@ -338,12 +343,15 @@ class FORM(object):
 
 
 			self._PrintR('Process controls set as:')
-			self._PrintR('   Limit of iterations: %d' % maxIter)
-			self._PrintR('   Relative error tolerance: %2.3E' % tolRel)
-			self._PrintR('   Absolute LS error tolerance: %2.3E' % tolLS)
-			self._PrintR('   deltah (for derivatives): %2.3E' % dh)
-			self._PrintR('   Finite difference method: %s' % diff)
-			self._PrintR('   FORM Method: %s' % meth)
+			self._PrintR('   Limit of iterations: %d.' % maxIter)
+			self._PrintR('   Relative error tolerance: %2.3E.' % tolRel)
+			if isinstance(tolLS, str):
+				self._PrintR('   Absolute LS error tolerance: auto.')
+			else:
+				self._PrintR('   Absolute LS error tolerance: %2.3E.' % tolLS)
+			self._PrintR('   deltah (for derivatives): %2.3E.' % dh)
+			self._PrintR('   Finite difference method: %s.' % diff)
+			self._PrintR('   FORM Method: %s.' % meth)
 
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
@@ -659,29 +667,35 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter, tolRel=10**-3, tolLS=0.1, dh=0.01, diff='center', meth='HLRF'):
+	def Run(self, maxIter=50, tolRel=0.01, tolLS='auto', dh=0.10, diff='forward', meth='iHLRF'):
 		"""
 		Run the FORM process.
 
 		Parameters
 		----------
-		maxIter : integer, obligatory
+		maxIter : integer, optional
 			Maximum of iterations that can be performed. After this the process
 			will stop with error.
+			Defaults to 50.
 
 		tolRel : float, optional
 			Maximum **relative** error tolerance, for example on search for X point
-			``|X_k - X_(k-1)|/|X_(k-1)|<=tolRel``. Defaults to 10**-3.
+			``|X_k - X_(k-1)|/|X_(k-1)|<=tolRel``. Defaults to 0.01.
 
 		tolLS : float, optional
 			Maximum **absolute** error tolerance for limit state function,
 			``|G(X)|~=tolLS``. It should be calibrated based on the magnitude of
-			limit state function. Defaults to 0.10.
+			limit state function. 
+			
+			It's possible to automatically determine it using tolLS='auto', it will be set
+			as 1% of first cycle limit state value.
+
+			Defaults to 'auto'.
 
 		dh : float, optional
 			delta_h step when applying derivatives, value applied over X', in
 			reduced space, so in real space it's applied over stadard
-			deviation (``g(X' + dh*std)...``). Defaults to 0.01.
+			deviation (``g(X' + dh*std)...``). Defaults to 0.10.
 
 		diff : str, optional
 			Numeric derivative calcultation method. The possible mehtods are:
@@ -698,7 +712,7 @@ class FORM(object):
 				``f'(x) = (f(x)-f(x-h)) / h``, it needs ``1 + Nvars``
 				evaluations of the limit state function.
 
-				Defaults to center.
+				Defaults to forward.
 
 		meth : str, optional
 			FORM method used. Available methods are:
@@ -707,7 +721,7 @@ class FORM(object):
 
 				* iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.
 
-			Defaults to HLRF.
+			Defaults to iHLRF.
 
 		**Returns a dictionary with:**
 
@@ -1062,6 +1076,13 @@ class FORM(object):
 
 				valG = eval(self.limstate, globals(), varVal)
 				self._PrintR('Limit state value = %f.' % valG)
+
+				# tolLS 'auto' is 1% of initial valG
+				if cycle == 1 and tolLS == 'auto':
+					tolLS = 0.01 * valG
+					self.controls['tolLS'] = tolLS
+					self._PrintR('Limit state tolerance set to %f.' % tolLS)
+
 
 				# Eval Gradient
 				self._PrintR('Evaluating gradient.')
