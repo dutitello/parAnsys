@@ -35,7 +35,7 @@ class MonteCarlo(object):
 
 	ATTENTION: When using ANSYS the weight of results from ANSYS variables
 	are determined using the weights of all ANSYS input variables.
-
+	
 	|
 
 	**To do**
@@ -48,9 +48,13 @@ class MonteCarlo(object):
 
 	2) When sampling distribution is different of real distribution Pf is going
 	   wrong, so it's not able to be used, for now.
-
+		
+	|
 	|
 
+	**Class methods:**
+
+	
 	"""
 
 	#---------------------------------------------------------------------------

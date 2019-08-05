@@ -3,9 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to parAnsys's documentation!
+Welcome to PARANSYS's documentation!
 ====================================
 
+This is part of my master degree thesis, which is currently under development.
+------------------------------------------------------------------------------
 
 This module calls ANSYS by Probabilistic Design System (PDS) as an FEM tool for
 running a couple of parametric analysis and get some variables back to Python.

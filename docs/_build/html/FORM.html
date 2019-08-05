@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>First Order Reliability Method (FORM) &mdash; parAnsys 0.0.1 documentation</title>
+  <title>First Order Reliability Method (FORM) &mdash; PARANSYS 0.0.1 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> parAnsys
+            <a href="index.html" class="icon icon-home"> PARANSYS
           
 
           
@@ -101,7 +101,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">parAnsys</a>
+          <a href="index.html">PARANSYS</a>
         
       </nav>
 
@@ -138,8 +138,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/FORM.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -169,7 +167,9 @@ possible to work applying the true load on ANSYS, it’s just necessary to
 formulate a valid limit state equation.</p>
 <div class="line-block">
 <div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
+<p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.FORM.ANSYS">
 <code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
@@ -201,11 +201,11 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 </dd></dl>
 
 <dl class="method">
-<dt id="paransys.FORM.CreateRandomVar">
-<code class="descname">CreateRandomVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.CreateRandomVar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Random Variable</p>
+<dt id="paransys.FORM.CreateVar">
+<code class="descname">CreateVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.CreateVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Variable, random or not.</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSRandomVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">form</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -223,8 +223,12 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 </dd>
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard deviation of variable.</dd>
+<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>
@@ -232,12 +236,14 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 
 <dl class="method">
 <dt id="paransys.FORM.ExportDataCSV">
-<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>separator='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em>, <em>separator='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports process data to a CSV file.</p>
 <dl class="docutils">
 <dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
 <dd>Name of file that will receive the values, doesn’t need the
 extension “.csv”, it will be placed automatically.</dd>
+<dt>description <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>A string that will be write in the beggining of the file.</dd>
 <dt>separator <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd>Separator of data.
 Defaults to ‘,’.</dd>
@@ -255,19 +261,89 @@ Defaults to ‘,’.</dd>
 </dd></dl>
 
 <dl class="method">
+<dt id="paransys.FORM.Options">
+<code class="descname">Options</code><span class="sig-paren">(</span><em>option</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set extra options values.</p>
+<dl class="docutils">
+<dt>option <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Name of option, listed next.</dd>
+<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">optional</span></dt>
+<dd>Value to be set, type varies with option.
+If not defined it will return current value.</dd>
+</dl>
+<p>** Valid options:**
+For iHLRF method:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">iHLRF_forced_lambdk : float
+Forced value when line search doesnt found a valid <code class="docutils literal notranslate"><span class="pre">lambdak</span></code>.
+Being <code class="docutils literal notranslate"><span class="pre">lambdak</span></code> the step size.</p>
+<p>It could be set as <code class="docutils literal notranslate"><span class="pre">'auto'</span></code>, when it
+is the complement of <code class="docutils literal notranslate"><span class="pre">cos(y*,</span> <span class="pre">gradG)</span></code>.
+Defaults to ‘auto’.</p>
+</li>
+<li><p class="first">iHLRF_prod_ck : float
+Scalar value that will be multiplied by calculated <code class="docutils literal notranslate"><span class="pre">ck</span></code> value. For a
+fix <code class="docutils literal notranslate"><span class="pre">ck</span></code> value turn it to 0 and then use ‘iHLRF_add_ck’.</p>
+</li>
+<li><p class="first">iHLRF_add_ck : float
+Scalar value that will be added to <code class="docutils literal notranslate"><span class="pre">ck</span></code> value.</p>
+</li>
+<li><p class="first">iHLRF_par_a : float
+Value presented as <code class="docutils literal notranslate"><span class="pre">a</span></code> in line search equation for iHLRF.</p>
+</li>
+<li><p class="first">iHLRF_par_b : float
+Value presented as <code class="docutils literal notranslate"><span class="pre">b</span></code> in line search equation for iHLRF,
+<code class="docutils literal notranslate"><span class="pre">lambdak</span></code> value is <code class="docutils literal notranslate"><span class="pre">b**nk</span></code>.</p>
+</li>
+<li><p class="first">iHLRF_step_lambdk_test : float
+Size of <code class="docutils literal notranslate"><span class="pre">lambdak</span></code> test block, after each block convergence is checked.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>** If an invalid option or value is set the process could stop (or not).**</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="paransys.FORM.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter</em>, <em>tol=0.001</em>, <em>dh=0.001</em>, <em>meth='HLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter</em>, <em>tolRel=0.001</em>, <em>tolLS=0.1</em>, <em>dh=0.01</em>, <em>diff='center'</em>, <em>meth='HLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the FORM process.</p>
 <dl class="docutils">
 <dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
 <dd>Maximum of iterations that can be performed. After this the process
 will stop with error.</dd>
-<dt>tol <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Maximum relative error tolerance, same values is used for
-<a href="#id1"><span class="problematic" id="id2">|</span></a>G(X)|~=tol and <a href="#id3"><span class="problematic" id="id4">|</span></a>X_k - X_(k-1)|&lt;=tol. Defaults to 10**-3.</dd>
+<dt>tolRel <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Maximum <strong>relative</strong> error tolerance, for example on search for X point
+<code class="docutils literal notranslate"><span class="pre">|X_k</span> <span class="pre">-</span> <span class="pre">X_(k-1)|/|X_(k-1)|&lt;=tolRel</span></code>. Defaults to 10**-3.</dd>
+<dt>tolLS <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Maximum <strong>absolute</strong> error tolerance for limit state function,
+<code class="docutils literal notranslate"><span class="pre">|G(X)|~=tolLS</span></code>. It should be calibrated based on the magnitude of
+limit state function. Defaults to 0.10.</dd>
 <dt>dh <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>delta_h step when applying derivatives, value applied in reduced
-space. Defaults to 10**-3.</dd>
+<dd>delta_h step when applying derivatives, value applied over X’, in
+reduced space, so in real space it’s applied over stadard
+deviation (<code class="docutils literal notranslate"><span class="pre">g(X'</span> <span class="pre">+</span> <span class="pre">dh*std)...</span></code>). Defaults to 0.01.</dd>
+<dt>diff <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd><p class="first">Numeric derivative calcultation method. The possible mehtods are:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>center: for finite difference method with central difference,</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x+h)-f(x-h))</span> <span class="pre">/</span> <span class="pre">(2h)</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">2*Nvars</span></code>
+evaluations of the limit state function.</p>
+<ul class="simple">
+<li>forward: for finite difference method with forward difference,</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x+h)-f(x))</span> <span class="pre">/</span> <span class="pre">h</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">Nvars</span></code>
+evaluations of the limit state function.</p>
+<ul class="simple">
+<li>backward: for finite difference method with backward difference,</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x)-f(x-h))</span> <span class="pre">/</span> <span class="pre">h</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">Nvars</span></code>
+evaluations of the limit state function.</p>
+<p>Defaults to center.</p>
+</div></blockquote>
+</dd>
 <dt>meth <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd><p class="first">FORM method used. Available methods are:</p>
 <blockquote>
@@ -290,16 +366,22 @@ Probability of failure.</li>
 Reliability index.</li>
 <li>{DesignPoint} : dictionary of values
 Dictionary with the design points for each variable.</li>
+<li>{gradG} : dictionary of values
+Dictionary with the final gradient for each variable.</li>
+<li>{alfa} : dictionary of values
+Dictionary with the final director cossines for each variable.</li>
 <li>cycles : int
 Number of iterations performed to obtain the solution.</li>
 </ul>
 </div></blockquote>
 <p><strong>Status values:</strong></p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>0: no problem;</li>
 <li>1: warning, maximum of cycles reached with no convergence of CVPf;</li>
 <li>99: undefined error!</li>
 </ul>
+</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -319,7 +401,7 @@ the results using the names defined here.</dd>
 run the script analys, could be an MODEL with the MESH already generated,
 for example.
 An example of extrafiles list is:
-extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</dd>
+<code class="docutils literal notranslate"><span class="pre">extrafiles</span> <span class="pre">=</span> <span class="pre">['temps.txt',</span> <span class="pre">'model1.ans',</span> <span class="pre">'file.db']</span></code></dd>
 <dt>directory <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd>If the script is not in the current running Python directory you should
 place the entire location, if it’s in a subdirectory of current directory
@@ -340,11 +422,9 @@ return values for Python.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="paransys.FORM.SetANSYSRandomVar">
-<code class="descname">SetANSYSRandomVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSRandomVar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mark a Random variable as ANSYS variable.</p>
-<p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
-are determined using the weights of all ANSYS input variables.</p>
+<dt id="paransys.FORM.SetANSYSVar">
+<code class="descname">SetANSYSVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a variable as ANSYS variable.</p>
 <dl class="docutils">
 <dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
 <dd>Name of variable.</dd>
@@ -383,8 +463,8 @@ for a concrete beam. An example is showed after.</dd>
 </dl>
 <p>First example: if ANSYS returns the maximum load on a truss as variable
 FxMAX, and applied loads to be tested are <code class="docutils literal notranslate"><span class="pre">(g+q)*sin(theta)</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, theta are defined random variables created with <code class="docutils literal notranslate"><span class="pre">CreateRandomVar()</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;FxMAX-(g+q)*sin(theta)&#39;</span><span class="p">)</span>
+<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, theta are defined random variables created with <code class="docutils literal notranslate"><span class="pre">CreateVar()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;FxMAX-(g+q)*sin(theta)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that you can use math expressions as <code class="docutils literal notranslate"><span class="pre">sin()</span></code>, <code class="docutils literal notranslate"><span class="pre">cos()</span></code>, <code class="docutils literal notranslate"><span class="pre">tan()</span></code>, <code class="docutils literal notranslate"><span class="pre">sqrt()</span></code>
@@ -404,7 +484,7 @@ you can create inside your code an function like:</p>
 </pre></div>
 </div>
 <p>And now defining <code class="docutils literal notranslate"><span class="pre">userf=stress</span></code> we can:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(def,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(def,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">def</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.

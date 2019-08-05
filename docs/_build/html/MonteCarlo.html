@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Monte Carlo Simulation &mdash; parAnsys 0.0.1 documentation</title>
+  <title>Monte Carlo Simulation &mdash; PARANSYS 0.0.1 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> parAnsys
+            <a href="index.html" class="icon icon-home"> PARANSYS
           
 
           
@@ -101,7 +101,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">parAnsys</a>
+          <a href="index.html">PARANSYS</a>
         
       </nav>
 
@@ -138,8 +138,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/MonteCarlo.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -187,7 +185,9 @@ wrong, so it’s not able to be used, for now.</li>
 </ol>
 <div class="line-block">
 <div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
+<p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.MonteCarlo.ANSYS">
 <code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
@@ -220,7 +220,7 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.CreateLimState">
-<code class="descname">CreateLimState</code><span class="sig-paren">(</span><em>equat</em>, <em>weight=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
+<code class="descname">CreateLimState</code><span class="sig-paren">(</span><em>equat</em>, <em>weight=1.0</em>, <em>userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and Set a new limit state.*</p>
 <p>The number ID of LimitStates are generated automatically starting at 0
 for the first.</p>
@@ -236,23 +236,51 @@ function of defined variables (In and Out).</dd>
 are distributed betwen all the limit states.
 The sum of all limit states must be 1.00, so, if there is just one
 limit state it’s weight should be 1.00</dd>
+<dt>userf <span class="classifier-delimiter">:</span> <span class="classifier">function, optional</span></dt>
+<dd>An user defined function that could be used inside the limit state
+equation, called inside equat as <code class="docutils literal notranslate"><span class="pre">userf()</span></code>. Each limit state has it’s
+own userf, but you can use the same Python function for all limit states.
+For example, you can create a complex Python function with loops, ifs
+and whatever for evaluate the R part of your limit state function
+for a concrete beam. An example is showed after.</dd>
 </dl>
-<p>For example, if ANSYS returns the maximum load on a truss as variable
-FxMAX, and applied loads to be tested are ‘(g+q)*sin(theta)’, where
-g, q, theta are defined random variables created with CreateRandomVar().</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">CreateLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;FxMAX-(g+q)*sin(theta)&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.00</span><span class="p">)</span>
+<p>First example: if ANSYS returns the maximum load on a truss as variable
+FxMAX, and applied loads to be tested are <code class="docutils literal notranslate"><span class="pre">(g+q)*sin(theta)</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, theta are defined random variables created with <code class="docutils literal notranslate"><span class="pre">CreateVar()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">CreateLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;FxMAX-(g+q)*sin(theta)&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.00</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Note that you can use math expressions as sin(), cos(), tan(), sqrt()
-from Python math module.</p>
+<p>Note that you can use math expressions as <code class="docutils literal notranslate"><span class="pre">sin()</span></code>, <code class="docutils literal notranslate"><span class="pre">cos()</span></code>, <code class="docutils literal notranslate"><span class="pre">tan()</span></code>, <code class="docutils literal notranslate"><span class="pre">sqrt()</span></code>
+from Python math module inside the equation.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Second example: you have a steel bar in tension that hasn’t hardening.
+It’s stress is a function of <code class="docutils literal notranslate"><span class="pre">(def,</span> <span class="pre">fy,</span> <span class="pre">E)</span></code>, where <code class="docutils literal notranslate"><span class="pre">def</span></code> is current
+deformation, <code class="docutils literal notranslate"><span class="pre">fy</span></code> is yield stress and <code class="docutils literal notranslate"><span class="pre">E</span></code> the elastic moduli,
+you can create inside your code an function like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stress</span><span class="p">(</span><span class="n">def</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+        <span class="k">if</span> <span class="k">def</span> <span class="o">&gt;</span> <span class="n">fy</span><span class="o">/</span><span class="n">E</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">fy</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">def</span><span class="o">*</span><span class="n">E</span>
+</pre></div>
+</div>
+<p>And now defining <code class="docutils literal notranslate"><span class="pre">userf=stress</span></code> we can:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">CreateLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(def,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">def</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
+Note that the function inside the limit state equation should be
+called as <code class="docutils literal notranslate"><span class="pre">userf()</span></code> with the parameters from <code class="docutils literal notranslate"><span class="pre">stress</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="paransys.MonteCarlo.CreateRandomVar">
-<code class="descname">CreateRandomVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateRandomVar" title="Permalink to this definition">¶</a></dt>
+<dt id="paransys.MonteCarlo.CreateVar">
+<code class="descname">CreateVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Random Variable</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSRandomVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -270,8 +298,12 @@ from Python math module.</p>
 </dd>
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard deviation of variable.</dd>
+<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>
@@ -356,8 +388,25 @@ Defaults to False.</dd>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">Run</code><span class="sig-paren">(</span><em>Ns</em>, <em>Nmaxcycles</em>, <em>CVPf=0.0</em>, <em>tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the Monte Carlo simulation.</p>
+<dl class="docutils">
+<dt>Ns <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
+<dd>Number of simulations performed on each cycle.
+After each cycle the convergence of simualtion is verified.
+When using Importance Sampling with Adaptive Sampling, after each
+cycle the new sampling point will be determined.</dd>
+<dt>Nmaxcycles <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
+<dd>Maximum number of cycles to be performed, if CVPf is not reached on
+Nmaxcycles the simulation will be interrupted.</dd>
+<dt>CVPf <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Target value of Probability Failure Coefficient of Variation, when
+reached the simulation stops.</dd>
+<dt>tolAdPt <span class="classifier-delimiter">:</span> <span class="classifier">float or False, optional</span></dt>
+<dd>Maximum relative tolerance for adaptive sampling point search.
+If the value is “False” it disable adaptive sampling, simulations
+will use always the user set point.</dd>
+</dl>
 <p><strong>Returns a dictionary with:</strong></p>
 <blockquote>
 <div><ul class="simple">
@@ -423,37 +472,14 @@ return values for Python.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="paransys.MonteCarlo.SetANSYSRandomVar">
-<code class="descname">SetANSYSRandomVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSRandomVar" title="Permalink to this definition">¶</a></dt>
+<dt id="paransys.MonteCarlo.SetANSYSVar">
+<code class="descname">SetANSYSVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a Random variable as ANSYS variable.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
 <dl class="docutils">
 <dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
 <dd>Name of variable.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="paransys.MonteCarlo.SetControls">
-<code class="descname">SetControls</code><span class="sig-paren">(</span><em>Ns</em>, <em>Nmaxcycles</em>, <em>cvpf=0.0</em>, <em>tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetControls" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the controls of simulation process.</p>
-<dl class="docutils">
-<dt>Ns <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
-<dd>Number of simulations performed on each cycle.
-After each cycle the convergence of simualtion is verified.
-When using Importance Sampling with Adaptive Sampling, after each
-cycle the new sampling point will be determined.</dd>
-<dt>Nmaxcycles <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
-<dd>Maximum number of cycles to be performed, if cvpf is not reached on
-Nmaxcycles the simulation will be interrupted.</dd>
-<dt>cvpf <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Target value of Probability Failure Coefficient of Variation, when
-reached the simulation stops.</dd>
-<dt>tolAdPt <span class="classifier-delimiter">:</span> <span class="classifier">float or False, optional</span></dt>
-<dd>Maximum relative tolerance for adaptive sampling point search.
-If the value is “False” it disable adaptive sampling, simulations
-will use always the user set point.</dd>
 </dl>
 </dd></dl>
 

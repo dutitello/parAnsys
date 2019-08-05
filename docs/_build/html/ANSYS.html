@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ANSYS &mdash; parAnsys 0.0.1 documentation</title>
+  <title>ANSYS &mdash; PARANSYS 0.0.1 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Monte Carlo Simulation" href="MonteCarlo.html" />
-    <link rel="prev" title="Welcome to parAnsys’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Welcome to PARANSYS’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> parAnsys
+            <a href="index.html" class="icon icon-home"> PARANSYS
           
 
           
@@ -101,7 +101,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">parAnsys</a>
+          <a href="index.html">PARANSYS</a>
         
       </nav>
 
@@ -138,8 +138,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/ANSYS.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -160,29 +158,40 @@
 by the user, copy an APDL script file created by the user with the model to be
 analysed, run everything on ANSYS and get the results from some defined
 parameters back to Python.</p>
-<dl class="docutils">
+<blockquote>
+<div><dl class="docutils">
 <dt>exec_loc <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
 <dd>Location of ANSYS executable file.</dd>
 <dt>run_location <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>ANSYS working directory. Recomended to be a separated directory.
-Defaults to ansys_anl on current directory.</dd>
+<dd><p class="first">ANSYS working directory. Must be a separated directory.</p>
+<p class="last">Defaults to ansys_anl inside current directory.</p>
+</dd>
 <dt>jobname <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd>ANSYS jobname. Defaults to ‘file’.</dd>
 <dt>nproc <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
 <dd>Number of processors. Defaults to 2.</dd>
 <dt>override <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Attempts to delete the .lock file at working directory.
-It’s useful when ANSYS was interrupted.
-Defaults to False</dd>
+<dd><p class="first">Attempts to delete the .lock file at working directory.</p>
+<p>It’s useful when ANSYS was interrupted.</p>
+<p class="last">Defaults to False</p>
+</dd>
 <dt>cleardir <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Delete all the files from ANSYS working directory when call the Run command.
-Defaults to False</dd>
+<dd><p class="first">Delete all the files from ANSYS working directory when call the Run command.</p>
+<p class="last">Defaults to False</p>
+</dd>
 <dt>add_flags <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>Additional flags to be called with ANSYS.
-If it’s an academic version use add_flags=’-aa_r’
-Do not use ‘-b -i -o’
-Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></dd>
+<dd><p class="first">Additional flags to be called with ANSYS.</p>
+<p>If it’s an academic version use add_flags=’-aa_r’</p>
+<p>Do not use ‘-b -i -o’.</p>
+<p class="last">Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></p>
+</dd>
 </dl>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.ANSYS.ClearAll">
 <code class="descname">ClearAll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.ClearAll" title="Permalink to this definition">¶</a></dt>
@@ -317,7 +326,7 @@ If the array is not 1D just the first column (0) will be used.</dd>
         <a href="MonteCarlo.html" class="btn btn-neutral float-right" title="Monte Carlo Simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to parAnsys’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PARANSYS’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

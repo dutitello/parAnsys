@@ -14,13 +14,13 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('C:\\ANSYS\\Python\\parAnsys\\'))
+sys.path.insert(0, os.path.abspath('C:\\ANSYS\\Python\\paransys\\'))
 import paransys
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'parAnsys'
+project = 'PARANSYS'
 copyright = '2019, Eduardo Pagnussat Titello'
 author = 'Eduardo Pagnussat Titello'
 
@@ -91,6 +91,7 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_show_sourcelink = False
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -106,7 +107,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'parAnsysdoc'
+htmlhelp_basename = 'PARANSYSdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -133,7 +134,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'parAnsys.tex', 'parAnsys Documentation',
+    (master_doc, 'PARANSYS.tex', 'PARANSYS Documentation',
      'Eduardo Pagnussat Titello', 'manual'),
 ]
 
@@ -143,7 +144,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'paransys', 'parAnsys Documentation',
+    (master_doc, 'PARANSYS', 'PARANSYS Documentation',
      [author], 1)
 ]
 
@@ -154,8 +155,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'parAnsys', 'parAnsys Documentation',
-     author, 'parAnsys', 'One line description of project.',
+    (master_doc, 'PARANSYS', 'PARANSYS Documentation',
+     author, 'PARANSYS', 'One line description of project.',
      'Miscellaneous'),
 ]
 

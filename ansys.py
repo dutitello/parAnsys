@@ -22,45 +22,55 @@ class ANSYS(object):
 	analysed, run everything on ANSYS and get the results from some defined
 	parameters back to Python.
 
-	Parameters
-	----------
-	exec_loc : str, obligatory
-		Location of ANSYS executable file.
 
-	run_location : str, optional
-		ANSYS working directory. Recomended to be a separated directory.
-		Defaults to ansys_anl on current directory.
+		exec_loc : str, obligatory
+			Location of ANSYS executable file.
 
-	jobname : str, optional
-		ANSYS jobname. Defaults to \'file\'.
+		run_location : str, optional
+			ANSYS working directory. Must be a separated directory.
+			
+			Defaults to ansys_anl inside current directory.
 
-	nproc : int, optional
-		Number of processors. Defaults to 2.
+		jobname : str, optional
+			ANSYS jobname. Defaults to \'file\'.
 
-	override : bool, optional
-		Attempts to delete the .lock file at working directory.
-		It's useful when ANSYS was interrupted.
-		Defaults to False
+		nproc : int, optional
+			Number of processors. Defaults to 2.
 
-	cleardir : bool, optional
-		Delete all the files from ANSYS working directory when call the Run command.
-		Defaults to False
+		override : bool, optional
+			Attempts to delete the .lock file at working directory.
+			
+			It's useful when ANSYS was interrupted.
+			
+			Defaults to False
 
-	add_flags : str, optional
-		Additional flags to be called with ANSYS.
-		If it's an academic version use add_flags='-aa_r'
-		Do not use '-b -i -o'
-		Flags can be found at https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html
+		cleardir : bool, optional
+			Delete all the files from ANSYS working directory when call the Run command.
+			
+			Defaults to False
 
+		add_flags : str, optional
+			Additional flags to be called with ANSYS.
+
+			If it's an academic version use add_flags='-aa_r'
+			
+			Do not use '-b -i -o'.
+
+			Flags can be found at https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html
+		
+	|
+	|
+
+	**Class methods:**
+
+	
 	"""
 
 
 	def __init__(self, exec_loc=None, run_location=os.getcwd()+'\\ansys_anl\\', jobname='file',
 			     nproc=2, override=False, cleardir=False, add_flags=''):
 		"""
-		Define the properties of ANSYS exection.
-
-		(As defined in the main class ANSYS)
+		
 		"""
 
 		# Verify if the exec_loc is defined and real
