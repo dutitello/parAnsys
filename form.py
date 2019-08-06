@@ -688,7 +688,7 @@ class FORM(object):
 			limit state function. 
 			
 			It's possible to automatically determine it using tolLS='auto', it will be set
-			as 0.5% of first cycle limit state value.
+			as (tolRel)*(first cycle limit state value).
 
 			Defaults to 'auto'.
 
@@ -1078,9 +1078,9 @@ class FORM(object):
 				self._PrintR('Limit state value = %f.' % valG)
 
 
-				# tolLS 'auto' is 0.5% of initial valG
+				# tolLS 'auto' is tolRel*(initial valG)
 				if cycle == 1 and tolLS == 'auto':
-					tolLS = 0.005 * valG
+					tolLS = self.controls['tolRel']*valG
 					self.controls['tolLS'] = tolLS
 					self._PrintR('Limit state tolerance set to %f.' % tolLS)
 
