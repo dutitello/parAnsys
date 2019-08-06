@@ -383,7 +383,7 @@ class MonteCarlo(object):
 
 
 	# Sampling definition
-	def SetRandomVarSampl(self, name, limst, distrib, mean, std=0, par1=None, par2=None):
+	def SetRandomVarSampl(self, name, limst, distrib, mean, std=0, cv=None, par1=None, par2=None):
 		"""
 		Sets the sampling distribution of a variable to performn Importance
 		Sampling the simulations.
@@ -414,8 +414,13 @@ class MonteCarlo(object):
 		mean : float, obligatory
 			Standard mean of variable values.
 
-		std : float, obligatory
-			Standard deviation of variable.
+		std : float, optional
+			Standard deviation of variable. You must define it or cv for variables
+			that aren't constant, if both (cv and std) declared std will be used.
+
+		cv : float, optional
+			Coeficient of Variation of variable. You must define it or std for variables
+			that aren't constant, if both (cv and std) declared std will be used.
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
@@ -425,6 +430,10 @@ class MonteCarlo(object):
 		if limst > (len(self.limstates)-1):
 			exception = Exception('Limit state %d is not created yet. Please create it before set sampling distribution.' % limst)
 			raise exception
+
+		# CV or STD?
+		if std is 0 and cv is not None:
+			std = cv*mean
 
 		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
 
