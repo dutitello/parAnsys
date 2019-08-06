@@ -389,25 +389,25 @@ class FORM(object):
 		|
 
 		Second example: you have a steel bar in tension that hasn't hardening.
-		It's stress is a function of ``(def, fy, E)``, where ``def`` is current
+		It's stress is a function of ``(eps, fy, E)``, where ``eps`` is current
 		deformation, ``fy`` is yield stress and ``E`` the elastic moduli,
 		you can create inside your code	an function like:
 
 		.. code-block:: python
 
-			def stress(def, fy, E):
-				if def > fy/E:
+			def stress(eps, fy, E):
+				if eps > fy/E:
 					return fy
 				else:
-					return def*E
+					return eps*E
 
 		And now defining ``userf=stress`` we can:
 
 		.. code-block:: python
 
-			form.SetLimState(equat='userf(def,fy,E)-q', userf=stress)
+			form.SetLimState(equat='userf(eps,fy,E)-q', userf=stress)
 
-		where ``def``, ``fy``, ``E`` and ``q`` are random variables.
+		where ``eps``, ``fy``, ``E`` and ``q`` are random variables.
 		Note that the function inside the limit state equation should be
 		called as ``userf()`` with the parameters from ``stress``.
 
@@ -1164,15 +1164,19 @@ class FORM(object):
 				#
 				cosYgradY = abs(gradG.dot(curVecRedPts))/math.sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
 				self._PrintR('|cos(y*, gradG)| = %f (it must be near 1).' % cosYgradY)
-				if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel'] and lastcycle is True:
-					#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-					#self._PrintR('Performing a last cycle with final values.')
-					#lastcycle = True
-					self._PrintR('Convergence criterias checked.')
-					self._PrintR('That\'s all folks.')
-					self._stnumb = 0
-					break
-
+				if lastcycle is True:
+					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
+						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
+						#self._PrintR('Performing a last cycle with final values.')
+						#lastcycle = True
+						self._PrintR('Convergence criterias checked.')
+						self._PrintR('That\'s all folks.')
+						self._stnumb = 0
+						break
+					else:
+						self._PrintR('Convergence criterias not checked.')
+						self._PrintR('Sorry, it wasn\'t the last cycle...')
+						lastcycle = False
 
 				#-------------------------------------------------------------------
 				# If not converged yet and meth is rHLRF or iHLRF
