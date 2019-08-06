@@ -667,7 +667,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter=50, tolRel=0.01, tolLS='auto', dh=0.10, diff='forward', meth='iHLRF'):
+	def Run(self, maxIter=50, tolRel=0.005, tolLS='auto', dh=0.15, diff='forward', meth='iHLRF'):
 		"""
 		Run the FORM process.
 
@@ -680,7 +680,7 @@ class FORM(object):
 
 		tolRel : float, optional
 			Maximum **relative** error tolerance, for example on search for X point
-			``|X_k - X_(k-1)|/|X_(k-1)|<=tolRel``. Defaults to 0.01.
+			``|X_k - X_(k-1)|/|X_(k-1)|<=tolRel``. Defaults to 0.005.
 
 		tolLS : float, optional
 			Maximum **absolute** error tolerance for limit state function,
@@ -688,14 +688,14 @@ class FORM(object):
 			limit state function. 
 			
 			It's possible to automatically determine it using tolLS='auto', it will be set
-			as 1% of first cycle limit state value.
+			as 0.5% of first cycle limit state value.
 
 			Defaults to 'auto'.
 
 		dh : float, optional
 			delta_h step when applying derivatives, value applied over X', in
 			reduced space, so in real space it's applied over stadard
-			deviation (``g(X' + dh*std)...``). Defaults to 0.10.
+			deviation (``g(X' + dh*std)...``). Defaults to 0.15.
 
 		diff : str, optional
 			Numeric derivative calcultation method. The possible mehtods are:
@@ -1077,9 +1077,10 @@ class FORM(object):
 				valG = eval(self.limstate, globals(), varVal)
 				self._PrintR('Limit state value = %f.' % valG)
 
-				# tolLS 'auto' is 1% of initial valG
+
+				# tolLS 'auto' is 0.5% of initial valG
 				if cycle == 1 and tolLS == 'auto':
-					tolLS = 0.01 * valG
+					tolLS = 0.005 * valG
 					self.controls['tolLS'] = tolLS
 					self._PrintR('Limit state tolerance set to %f.' % tolLS)
 
@@ -1363,7 +1364,9 @@ class FORM(object):
 			#
 			relErrorPoint = max(abs((newVecRedPts-curVecRedPts)/newVecRedPts))
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
-			if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
+			if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
+			# Sometimes it didn't converge because if this crap
+			#if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 				self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
 				lastcycle = True
