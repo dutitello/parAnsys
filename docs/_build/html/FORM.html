@@ -306,23 +306,28 @@ Size of <code class="docutils literal notranslate"><span class="pre">lambdak</sp
 
 <dl class="method">
 <dt id="paransys.FORM.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter</em>, <em>tolRel=0.001</em>, <em>tolLS=0.1</em>, <em>dh=0.01</em>, <em>diff='center'</em>, <em>meth='HLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter=50</em>, <em>tolRel=0.005</em>, <em>tolLS='auto'</em>, <em>dh=0.15</em>, <em>diff='forward'</em>, <em>meth='iHLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the FORM process.</p>
 <dl class="docutils">
-<dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
+<dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, optional</span></dt>
 <dd>Maximum of iterations that can be performed. After this the process
-will stop with error.</dd>
+will stop with error.
+Defaults to 50.</dd>
 <dt>tolRel <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Maximum <strong>relative</strong> error tolerance, for example on search for X point
-<code class="docutils literal notranslate"><span class="pre">|X_k</span> <span class="pre">-</span> <span class="pre">X_(k-1)|/|X_(k-1)|&lt;=tolRel</span></code>. Defaults to 10**-3.</dd>
+<code class="docutils literal notranslate"><span class="pre">|X_k</span> <span class="pre">-</span> <span class="pre">X_(k-1)|/|X_(k-1)|&lt;=tolRel</span></code>. Defaults to 0.005.</dd>
 <dt>tolLS <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Maximum <strong>absolute</strong> error tolerance for limit state function,
+<dd><p class="first">Maximum <strong>absolute</strong> error tolerance for limit state function,
 <code class="docutils literal notranslate"><span class="pre">|G(X)|~=tolLS</span></code>. It should be calibrated based on the magnitude of
-limit state function. Defaults to 0.10.</dd>
+limit state function.</p>
+<p>It’s possible to automatically determine it using tolLS=’auto’, it will be set
+as (tolRel)*(first cycle limit state value).</p>
+<p class="last">Defaults to ‘auto’.</p>
+</dd>
 <dt>dh <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>delta_h step when applying derivatives, value applied over X’, in
 reduced space, so in real space it’s applied over stadard
-deviation (<code class="docutils literal notranslate"><span class="pre">g(X'</span> <span class="pre">+</span> <span class="pre">dh*std)...</span></code>). Defaults to 0.01.</dd>
+deviation (<code class="docutils literal notranslate"><span class="pre">g(X'</span> <span class="pre">+</span> <span class="pre">dh*std)...</span></code>). Defaults to 0.15.</dd>
 <dt>diff <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd><p class="first">Numeric derivative calcultation method. The possible mehtods are:</p>
 <blockquote class="last">
@@ -341,7 +346,7 @@ evaluations of the limit state function.</p>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x)-f(x-h))</span> <span class="pre">/</span> <span class="pre">h</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">Nvars</span></code>
 evaluations of the limit state function.</p>
-<p>Defaults to center.</p>
+<p>Defaults to forward.</p>
 </div></blockquote>
 </dd>
 <dt>meth <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
@@ -352,7 +357,7 @@ evaluations of the limit state function.</p>
 <li>iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.</li>
 </ul>
 </div></blockquote>
-<p class="last">Defaults to HLRF.</p>
+<p class="last">Defaults to iHLRF.</p>
 </dd>
 </dl>
 <p><strong>Returns a dictionary with:</strong></p>
@@ -473,21 +478,21 @@ from Python math module inside the equation.</p>
 <div class="line"><br /></div>
 </div>
 <p>Second example: you have a steel bar in tension that hasn’t hardening.
-It’s stress is a function of <code class="docutils literal notranslate"><span class="pre">(def,</span> <span class="pre">fy,</span> <span class="pre">E)</span></code>, where <code class="docutils literal notranslate"><span class="pre">def</span></code> is current
+It’s stress is a function of <code class="docutils literal notranslate"><span class="pre">(eps,</span> <span class="pre">fy,</span> <span class="pre">E)</span></code>, where <code class="docutils literal notranslate"><span class="pre">eps</span></code> is current
 deformation, <code class="docutils literal notranslate"><span class="pre">fy</span></code> is yield stress and <code class="docutils literal notranslate"><span class="pre">E</span></code> the elastic moduli,
 you can create inside your code an function like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stress</span><span class="p">(</span><span class="n">def</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
-        <span class="k">if</span> <span class="k">def</span> <span class="o">&gt;</span> <span class="n">fy</span><span class="o">/</span><span class="n">E</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stress</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">eps</span> <span class="o">&gt;</span> <span class="n">fy</span><span class="o">/</span><span class="n">E</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">fy</span>
         <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">def</span><span class="o">*</span><span class="n">E</span>
+                <span class="k">return</span> <span class="n">eps</span><span class="o">*</span><span class="n">E</span>
 </pre></div>
 </div>
 <p>And now defining <code class="docutils literal notranslate"><span class="pre">userf=stress</span></code> we can:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(def,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="s1">&#39;userf(eps,fy,E)-q&#39;</span><span class="p">,</span> <span class="n">userf</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">def</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
+<p>where <code class="docutils literal notranslate"><span class="pre">eps</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
 Note that the function inside the limit state equation should be
 called as <code class="docutils literal notranslate"><span class="pre">userf()</span></code> with the parameters from <code class="docutils literal notranslate"><span class="pre">stress</span></code>.</p>
 </dd></dl>

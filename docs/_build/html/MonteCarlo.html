@@ -485,7 +485,7 @@ are determined using the weights of all ANSYS input variables.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetRandomVarSampl">
-<code class="descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em>name</em>, <em>limst</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em>name</em>, <em>limst</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the sampling distribution of a variable to performn Importance
 Sampling the simulations.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
@@ -507,8 +507,12 @@ are determined using the weights of all ANSYS input variables.</p>
 </dd>
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard deviation of variable.</dd>
+<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>
