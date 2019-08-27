@@ -204,7 +204,7 @@ class MonteCarlo(object):
 
 
 	# Internal for variable distrib definition
-	def _VarDistrib(self, type, name, distrib, mean, std, par1, par2, limst=0):
+	def _VarDistrib(self, type, name, distrib, mean, std, cv, par1, par2, limst=0):
 		"""
 		Internal function that verify the values for CreateVar
 		and SetRandomVarSampl.
@@ -238,6 +238,10 @@ class MonteCarlo(object):
 		# Verify the distribution and then determine the parameters
 		# Gaussian variable
 		if distrib in ['gauss', 'gaus', 'gaussian', 'normal', 'norm']:
+			# CV or STD?
+			if std is 0 and cv is not None:
+				std = cv*mean
+
 			# Type 0 = Random Variable distribution
 			if type is 0:
 				self.variableDistrib[name] = ['gauss', mean, std]
@@ -267,11 +271,15 @@ class MonteCarlo(object):
 			#qsi = math.sqrt(math.log(1 + (cv)**2))
 			#lmbd = math.log(mean) - 0.5*qsix**2
 
+			# CV or STD?
+			if std is not 0 and cv is None:
+				cv = std/mean
+
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variableDistrib[name] = ['logn', mean, std]
-				return self._PrintR('Variable %s defined as LogNormal with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['logn', mean, cv]
+				return self._PrintR('Variable %s defined as LogNormal with mean=%f and CV=%f.'
+									% (name, mean, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
@@ -281,17 +289,21 @@ class MonteCarlo(object):
 				except:
 					# Not created yet
 					self.samplingDistrib[limst] = {}
-					self.samplingDistrib[limst][name] = ['logn', mean, std]
+					self.samplingDistrib[limst][name] = ['logn', mean, cv]
 				else:
 					# Already created
-					self.samplingDistrib[limst][name] = ['logn', mean, std]
+					self.samplingDistrib[limst][name] = ['logn', mean, cv]
 
-				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f and std. dev.=%f. for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f and CV=%f. for limit state %d.'
+									% (name, mean, cv, limst))
 
 
 		# Gumbel distribution
 		elif distrib in ['gumbel', 'gumb', 'type1']:
+			# CV or STD?
+			if std is 0 and cv is not None:
+				std = cv*mean
+
 			# Type 0 = Random Variable distribution
 			if type is 0:
 				self.variableDistrib[name] = ['gumbel', mean, std]
@@ -369,20 +381,22 @@ class MonteCarlo(object):
 			Standard deviation of variable. You must define it or cv for variables
 			that aren't constant, if both (cv and std) declared std will be used.
 
+			For LogNormal variables it's recommend to use CV!
+
+
 		cv : float, optional
 			Coeficient of Variation of variable. You must define it or std for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+
+			For LogNormal variables it's recommend to use CV!
+
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
 
 		"""
 
-		# CV or STD?
-		if std is 0 and cv is not None:
-			std = cv*mean
-
-		self._VarDistrib(type=0, name=name, limst=None, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
+		self._VarDistrib(type=0, name=name, limst=None, distrib=distrib, mean=mean, std=std, cv=cv, par1=par1, par2=par2)
 
 
 
@@ -421,10 +435,14 @@ class MonteCarlo(object):
 		std : float, optional
 			Standard deviation of variable. You must define it or cv for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+			
+			For LogNormal variables it's recommend to use CV!
 
 		cv : float, optional
 			Coeficient of Variation of variable. You must define it or std for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+			
+			For LogNormal variables it's recommend to use CV!
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
@@ -435,11 +453,8 @@ class MonteCarlo(object):
 			exception = Exception('Limit state %d is not created yet. Please create it before set sampling distribution.' % limst)
 			raise exception
 
-		# CV or STD?
-		if std is 0 and cv is not None:
-			std = cv*mean
 
-		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
+		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, cv=cv, par1=par1, par2=par2)
 
 
 	
@@ -801,7 +816,7 @@ class MonteCarlo(object):
 		# Lognormal distribution
 		elif curDist[0] is 'logn':
 			# equiv std dev
-			qsic = math.sqrt(math.log(1 + (curDist[2]/curDist[1])**2))
+			qsic = math.sqrt(math.log(1 + (curDist[2])**2))
 			# equiv mean
 			lambdac = math.log(curDist[1]) - 0.5*qsic**2
 
@@ -818,7 +833,7 @@ class MonteCarlo(object):
 			# Real distrib is logn:
 			elif varDistrib[0] is 'logn':
 				# eq for varDistrib
-				qsiv = math.sqrt(math.log(1 + (varDistrib[2]/varDistrib[1])**2))
+				qsiv = math.sqrt(math.log(1 + (varDistrib[2])**2))
 				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
 				# Real normal reduced correlated values (Z_f)
