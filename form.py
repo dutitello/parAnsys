@@ -229,9 +229,15 @@ class FORM(object):
 			Standard deviation of variable. You must define it or cv for variables
 			that aren't constant, if both (cv and std) declared std will be used.
 
+			For LogNormal variables it's recommend to use CV!
+
+
 		cv : float, optional
 			Coeficient of Variation of variable. You must define it or std for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+
+			For LogNormal variables it's recommend to use CV!
+
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
@@ -248,37 +254,38 @@ class FORM(object):
 		distrib = distrib.lower()
 
 		# CV or STD?
-		if std is 0 and cv is not None:
+		if cv is None:
+			cv = std/mean
+		else:
 			std = cv*mean
-
 
 		# Verify the distribution and then store the parameters
 		# Gaussian variable
 		if distrib in ['gauss', 'gaus', 'gaussian', 'normal', 'norm']:
 			# Store values
-			self.variableDistrib[name] = ['gauss', mean, std]
+			self.variableDistrib[name] = ['gauss', mean, std, cv]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable \"%s\" defined as Gaussian with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+			return self._PrintR('Variable \"%s\" defined as Gaussian with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 		# Lognormal distribution
 		elif distrib in ['lognormal', 'logn', 'ln', 'log', 'lognorm']:
 			# Store values
-			self.variableDistrib[name] = ['logn', mean, std]
+			self.variableDistrib[name] = ['logn', mean, std, cv]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable \"%s\" defined as LogNormal with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+			return self._PrintR('Variable \"%s\" defined as LogNormal with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 		# Gumbel distribution
 		elif distrib in ['gumbel', 'gumb', 'type1']:
 			# Store values
-			self.variableDistrib[name] = ['gumbel', mean, std]
+			self.variableDistrib[name] = ['gumbel', mean, std, cv]
 			# Set the start point as the mean
 			self.variableStartPt[name] = mean
-			return self._PrintR('Variable \"%s\" defined as Gumbel with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+			return self._PrintR('Variable \"%s\" defined as Gumbel with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 		# Constant value
 		elif distrib in ['constant', 'const', 'cons', 'c']:
@@ -630,7 +637,7 @@ class FORM(object):
 		# Lognormal
 		elif var[0] is 'logn':
 			# LogNormal parameters
-			qsi = math.sqrt(math.log(1 + (var[2]/var[1])**2))
+			qsi = math.sqrt(math.log(1 + (var[3])**2))
 			lmbd = math.log(var[1]) - 0.5*qsi**2
 
 			# Equiv parametes: analitycal since lognormal is derivated from normal
@@ -840,13 +847,13 @@ class FORM(object):
 
 			# Both are LN
 			elif var1props[0] is 'logn' and var2props[0] is 'logn':
-				cv1 = var1props[2]/var1props[1]
-				cv2 = var2props[2]/var2props[1]
+				cv1 = var1props[3]
+				cv2 = var2props[3]
 				cor = cor*(math.log(1+cor*cv1*cv2)/(cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
 
 			# Both are Gumbel
 			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
-				cor = 1.064 - 0.069*cor + 0.005*cor**2
+				cor = cor*(1.064 - 0.069*cor + 0.005*cor**2)
 
 			# One is gauss and other is logn
 			elif (var1props[0] is 'gauss' and var2props[0] is 'logn') \
@@ -854,12 +861,12 @@ class FORM(object):
 
 				# who is logn?
 				if var1props[0] is 'logn':
-					cv = var1props[2]/var1props[1]
+					cv = var1props[3]
 				else:
-					cv = var2props[2]/var2props[1]
+					cv = var2props[3]
 
 				# cor is
-				cor = cv/math.sqrt(math.log(1+cv**2))
+				cor = cor*cv/math.sqrt(math.log(1+cv**2))
 
 			# One is gauss and other is gumbel
 			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
@@ -871,12 +878,12 @@ class FORM(object):
 				or (var2props[0] is 'logn' and var1props[0] is 'gumbel'):
 				# who is logn?
 				if var1props[0] is 'logn':
-					cv = var1props[2]/var1props[1]
+					cv = var1props[3]
 				else:
-					cv = var2props[2]/var2props[1]
+					cv = var2props[3]
 
 				# cor is
-				cor = 1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv
+				cor = cor*(1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv)
 
 			# Forbiden zone
 			else:
@@ -1475,7 +1482,7 @@ class FORM(object):
 		#-----------------------------------------------------------------------
 
 
-	def ExportDataCSV(self, filename, description=None, separator=','):
+	def ExportDataCSV(self, filename, description=None):
 		"""
 		Exports process data to a CSV file.
 
@@ -1487,10 +1494,6 @@ class FORM(object):
 
 		description : str, optional
 			A string that will be write in the beggining of the file.
-
-		separator : str, optional
-			Separator of data.
-			Defaults to ','.
 		"""
 
 		# Open file
@@ -1501,8 +1504,8 @@ class FORM(object):
 			exception = Exception('Unable to open the \"%s\" file for write data.' % filename)
 			raise exception
 		else:
-			# Starts with sep=separator, for Microsoft Excel
-			f.write('sep=%s\n' % separator)
+			# Starts with sep=, for Microsoft Excel
+			f.write('sep=,\n')
 
 			# Description
 			if description is not None:
@@ -1540,7 +1543,7 @@ class FORM(object):
 
 			# Random variables
 			f.write('Random variables:\n')
-			f.write(',Name,Distribution,Mean,Standard Deviation,Par1,Par2\n')
+			f.write(',Name,Distribution,Mean,Standard Deviation,CV,Par1,Par2\n')
 			for eachVar in self.variableDistrib:
 				values = self.variableDistrib[eachVar]
 				cmd = ',%s,%s' % (eachVar, values[0])
@@ -1574,6 +1577,7 @@ class FORM(object):
 			idx = 0
 			for eachLine in self.correlMat:
 				cmd = ',%s' % list(self.varId.keys())[idx] # WTF DID I DO? But it works very well... xD
+					# GO HORSE, GO GO GO GO GO!
 				for eachVal in eachLine:
 					cmd = '%s,%f' % (cmd, eachVal)
 				cmd = '%s\n' % cmd
