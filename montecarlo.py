@@ -1591,6 +1591,7 @@ class MonteCarlo(object):
 		timef = time.time()
 		# Save last cycles
 		self.cycles = cycle
+		self.MCControl['ElapsedTime'] = ((timef-timei)/60)
 
 		self._PrintR('\n\n=======================================================================\n')
 		# Verify if stopped with no convergence
@@ -1604,7 +1605,7 @@ class MonteCarlo(object):
 		self._PrintR(' Probability of failure (Pf): %2.4E' % (self.MCControl['Pf'][-1]))
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.MCControl['Beta'][-1]))
 		self._PrintR(' CV of Prob. of failure (CVPf): %2.3f' % (self.MCControl['CVPf'][-1]))
-		self._PrintR(' Elapsed time: %f minutes.' % ((timef-timei)/60))
+		self._PrintR(' Elapsed time: %f minutes.' % (self.MCControl['ElapsedTime']))
 		self._PrintR('\n=======================================================================\n\n')
 		#-------------------------------------------------------------------
 
@@ -1820,6 +1821,7 @@ class MonteCarlo(object):
 			f.write(',Probability of failure (Pf):,%2.4E\n' % self.MCControl['Pf'][-1])
 			f.write(',Reliability Index (Beta):,%2.3f\n' % self.MCControl['Beta'][-1])
 			f.write(',CV of Prob. of failure (CVPf):,%2.3f\n' % self.MCControl['CVPf'][-1])
+			f.write(',Elapsed time (minutes):,%4.3f\n' % self.MCControl['ElapsedTime'])
 			f.write('\n')
 
 			# Final Sampling Point
