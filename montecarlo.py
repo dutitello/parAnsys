@@ -773,6 +773,7 @@ class MonteCarlo(object):
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gaussian:
@@ -803,12 +804,15 @@ class MonteCarlo(object):
 			qsic = math.sqrt(math.log(1 + (curDist[2]/curDist[1])**2))
 			# equiv mean
 			lambdac = math.log(curDist[1]) - 0.5*qsic**2
+
 			# Random values
-			randval = np.random.lognormal(lambdac, qsic, Nsi)
+			randval = np.exp(lambdac + qsic*NCValues_h)
+			#np.random.lognormal(lambdac, qsic, Nsi)
 
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is logn:
@@ -817,8 +821,11 @@ class MonteCarlo(object):
 				qsiv = math.sqrt(math.log(1 + (varDistrib[2]/varDistrib[1])**2))
 				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
-				weights = (scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)/qsiv) \
-						/ (scipy.stats.norm.pdf(np.log(randval), lambdac, qsic)/qsic)
+				# Real normal reduced correlated values (Z_f)
+				NCValues_f = (lambdac-lambdav+qsic*NCValues_h)/qsiv
+
+				weights = (scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)/qsiv/scipy.stats.norm.pdf(NCValues_f)) \
+						/ (scipy.stats.norm.pdf(np.log(randval), lambdac, qsic)/qsic/scipy.stats.norm.pdf(NCValues_h))
 
 				# old and wrong! who is s???
 				# scipy.stats.lognorm.pdf(x, s, loc, scale)
@@ -844,11 +851,13 @@ class MonteCarlo(object):
 			locc = curDist[1] - 0.57721*sclc
 
 			# Random values
-			randval = np.random.gumbel(locc, sclc, Nsi)
+			randval = scipy.stats.gumbel_r.ppf(scipy.stats.norm.cdf(NCValues_h), loc=locc, scale=sclc)
+			#randval = np.random.gumbel(locc, sclc, Nsi)
 
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gumbel
@@ -857,18 +866,15 @@ class MonteCarlo(object):
 				sclv = math.sqrt(6)*varDistrib[2]/math.pi
 				locv = varDistrib[1] - 0.57721*sclv
 
-				weights = scipy.stats.gumbel_r.pdf(randval, locv, sclv) \
-						/ scipy.stats.gumbel_r.pdf(randval, locc, sclc)
+				# Real normal reduced correlated values (Z_f)
+				NCValues_f = scipy.stats.norm.ppf(scipy.stats.gumbel_r.cdf(randval, loc=locv, scale=sclv))
+
+				weights = (scipy.stats.gumbel_r.pdf(randval, loc=locv, scale=sclv)/scipy.stats.norm.pdf(NCValues_f)) \
+						/ (scipy.stats.gumbel_r.pdf(randval, loc=locc, scale=sclc)/scipy.stats.norm.pdf(NCValues_h))
 
 			else:
 				exception = Exception('For now it is not possible to use different distributions in the same var.')
 				raise exception
-
-		elif curDist[0] is 'const':
-			# Constant value is not random!
-			randval = curDist[1]
-			weights[:] = 1
-
 
 		# Return
 		return [randval, weights, NCValues_f]
@@ -1153,7 +1159,7 @@ class MonteCarlo(object):
 
 			# Both are Gumbel
 			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
-				cor = 1.064 - 0.069*cor + 0.005*cor**2
+				cor = cor*(1.064 - 0.069*cor + 0.005*cor**2)
 
 			# One is gauss and other is logn
 			elif (var1props[0] is 'gauss' and var2props[0] is 'logn') \
@@ -1166,7 +1172,7 @@ class MonteCarlo(object):
 					cv = var2props[2]/var2props[1]
 
 				# cor is
-				cor = cv/math.sqrt(math.log(1+cv**2))
+				cor = cor*cv/math.sqrt(math.log(1+cv**2))
 
 			# One is gauss and other is gumbel
 			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
@@ -1183,7 +1189,7 @@ class MonteCarlo(object):
 					cv = var2props[2]/var2props[1]
 
 				# cor is
-				cor = 1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv
+				cor = cor*(1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv)
 
 			# Forbiden zone
 			else:
@@ -1226,14 +1232,11 @@ class MonteCarlo(object):
 			#	(dictionary of dictionaries)
 			varsValues = {}
 
-			maxwei = 1
-			minwei = 1
-
 			# Generate random normal matrix with all values
 			normalValuesMatrix = np.random.normal(0.0, 1.0, (NInRandVars, Nsi))
 			# Apply correlation with x_c=L.x
 			normalCorrelatedMatrix_h = matL.dot(normalValuesMatrix)
-			normalCorrelatedMatrix_f = np.zeros((NInRandVars, Nsi))
+			normalCorrelatedMatrix_f = normalCorrelatedMatrix_h.copy()
 
 			# Run for each variable each limit state, of limit state get limit
 			# 	state size (Ns), if there is SamplDistrb generate Ns from
@@ -1269,35 +1272,22 @@ class MonteCarlo(object):
 						sampDist = False
 
 
-					#print('* LS %d from %d to %d' % (eachLS, posi, posf))
-					#vvvv = np.zeros(Ns)
-					#vvvv[posi:posf] = eachLS+1
-					#print(vvvv)
-
 					# Call _GenRandomVW to get values and weights
 					[varsValues[eachVar]['values'][posi:posf], varsValues[eachVar]['weights'][posi:posf], \
 						normalCorrelatedMatrix_f[varId[eachVar], posi:posf]] = \
 						self._GenRandomVW(varDistrib, sampDist, normalCorrelatedMatrix_h[varId[eachVar], posi:posf])
-
-					maxwei = max(maxwei, max(varsValues[eachVar]['weights'][posi:posf]))
-					minwei = min(minwei, min(varsValues[eachVar]['weights'][posi:posf]))
 
 					# Set posf as next posi
 					posi = posf
 
 			# Joint distributions weights
 			varsValues['__joint_all_w__'] = 1+np.zeros(Ns)
-			
-			# If there is one weight that isn't 1: using importance sampling
-			if maxwei > 1 or minwei < 1:
-				#print('\n\nUSING IMPORTANCE SAMPLING\n\n')
-				# Ratio of joint normal distributions (fX/hX) for Nataf process
-				for each in range(Ns):
-					# matCorInv
-					Z_f = normalCorrelatedMatrix_f[:, each]
-					Z_h = normalCorrelatedMatrix_h[:, each]
-					varsValues['__joint_all_w__'][each] = math.exp(-1/2*(Z_f.T).dot(matCorInv.dot(Z_f))+1/2*(Z_h.T).dot(matCorInv.dot(Z_h)))
-
+			# Ratio of joint normal distributions (fX/hX) for Nataf process - if not using importance sampling it will be 1 !
+			for each in range(Ns):
+				# matCorInv
+				Z_f = normalCorrelatedMatrix_f[:, each]
+				Z_h = normalCorrelatedMatrix_h[:, each]
+				varsValues['__joint_all_w__'][each] = math.exp(-1/2*(Z_f.T).dot(matCorInv.dot(Z_f))+1/2*(Z_h.T).dot(matCorInv.dot(Z_h)))
 
 			# Now for constats variables
 			for eachVar in self.variableConst:
