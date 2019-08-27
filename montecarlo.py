@@ -67,13 +67,17 @@ class MonteCarlo(object):
 		"""
 		# Definition of self varibles that just exists on MonteCarlo
 		# Dictionary with variables distrib and parameters
-		self.variabledistrib = {}
-		self.samplingdistrib = {}
+		self.variableDistrib = {}
+		self.samplingDistrib = {}
+		self.variableConst = {}
+		self.corlist = {}
 		self.controls = {}
 		self.ansysvars = []
 		self.limstates = {}
 
+		#
 		self.PrintR = False
+
 		# Control if ANSYS is being used
 		self._ANSYS = False
 		pass
@@ -200,7 +204,7 @@ class MonteCarlo(object):
 
 
 	# Internal for variable distrib definition
-	def _VarDistrib(self, type, name, distrib, mean, std, par1, par2, limst=0):
+	def _VarDistrib(self, type, name, distrib, mean, std, cv, par1, par2, limst=0):
 		"""
 		Internal function that verify the values for CreateVar
 		and SetRandomVarSampl.
@@ -208,8 +212,8 @@ class MonteCarlo(object):
 		Parameters
 		----------
 		type : int, obligatory
-			type = 0: for CreateVar   -> variabledistrib
-			type = 1: for SetRandomVarSampl -> samplingdistrib
+			type = 0: for CreateVar   -> variableDistrib
+			type = 1: for SetRandomVarSampl -> samplingDistrib
 
 		limst : integer, obligatory for type=1 with more than 1 limit state
 			Limit state ID that will use current sampling distribution.
@@ -222,7 +226,7 @@ class MonteCarlo(object):
 		else:
 			name = name.lower()
 			# Sampling distribution not created yet
-			if type is 1 and name not in self.variabledistrib:
+			if type is 1 and name not in self.variableDistrib:
 				exception = Exception('Variable %s is not declared yet. '+
 						'Before set sampling distribution you must create it '+
 						'with CreateVar().')
@@ -231,30 +235,36 @@ class MonteCarlo(object):
 		# Set distribution name as lower case
 		distrib = distrib.lower()
 
+		# CV or STD?
+		if cv is not None:
+			std = cv*mean
+		else:
+			cv = std/mean
+
 		# Verify the distribution and then determine the parameters
 		# Gaussian variable
 		if distrib in ['gauss', 'gaus', 'gaussian', 'normal', 'norm']:
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variabledistrib[name] = ['gauss', mean, std]
-				return self._PrintR('Variable %s defined as Gaussian with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['gauss', mean, std, cv]
+				return self._PrintR('Variable %s defined as Gaussian with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
-				# Vrify of samplingdistrib[limst] exists
+				# Vrify of samplingDistrib[limst] exists
 				try:
-					self.samplingdistrib[limst]
+					self.samplingDistrib[limst]
 				except:
 					# Not created yet
-					self.samplingdistrib[limst] = {}
-					self.samplingdistrib[limst][name] = ['gauss', mean, std]
+					self.samplingDistrib[limst] = {}
+					self.samplingDistrib[limst][name] = ['gauss', mean, std, cv]
 				else:
 					# Already created
-					self.samplingdistrib[limst][name] = ['gauss', mean, std]
+					self.samplingDistrib[limst][name] = ['gauss', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as Gaussian with mean=%f and std. dev.=%f for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as Gaussian with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 		# Lognormal distribution
 		elif distrib in ['lognormal', 'logn', 'ln', 'log', 'lognorm']:
@@ -265,56 +275,57 @@ class MonteCarlo(object):
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variabledistrib[name] = ['logn', mean, std]
-				return self._PrintR('Variable %s defined as LogNormal with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['logn', mean, std, cv]
+				return self._PrintR('Variable %s defined as LogNormal with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
-				# Vrify of samplingdistrib[limst] exists
+				# Vrify of samplingDistrib[limst] exists
 				try:
-					self.samplingdistrib[limst]
+					self.samplingDistrib[limst]
 				except:
 					# Not created yet
-					self.samplingdistrib[limst] = {}
-					self.samplingdistrib[limst][name] = ['logn', mean, std]
+					self.samplingDistrib[limst] = {}
+					self.samplingDistrib[limst][name] = ['logn', mean, std, cv]
 				else:
 					# Already created
-					self.samplingdistrib[limst][name] = ['logn', mean, std]
+					self.samplingDistrib[limst][name] = ['logn', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f and std. dev.=%f. for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 
 		# Gumbel distribution
 		elif distrib in ['gumbel', 'gumb', 'type1']:
+
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variabledistrib[name] = ['gumbel', mean, std]
-				return self._PrintR('Variable %s defined as Gumbel with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['gumbel', mean, std, cv]
+				return self._PrintR('Variable %s defined as Gumbel with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
-				# Vrify of samplingdistrib[limst] exists
+				# Vrify of samplingDistrib[limst] exists
 				try:
-					self.samplingdistrib[limst]
+					self.samplingDistrib[limst]
 				except:
 					# Not created yet
-					self.samplingdistrib[limst] = {}
-					self.samplingdistrib[limst][name] = ['gumbel', mean, std]
+					self.samplingDistrib[limst] = {}
+					self.samplingDistrib[limst][name] = ['gumbel', mean, std, cv]
 				else:
 					# Already created
-					self.samplingdistrib[limst][name] = ['gumbel', mean, std]
+					self.samplingDistrib[limst][name] = ['gumbel', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as Gumbel with mean=%f and std. dev.=%f for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as Gumbel with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 		# Constant value
 		elif distrib in ['constant', 'const', 'cons', 'c']:
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variabledistrib[name] = ['const', mean]
+				self.variableConst[name] = mean
 				return self._PrintR('Variable %s defined as Constant with value=%f'
 									% (name, mean))
 
@@ -365,20 +376,22 @@ class MonteCarlo(object):
 			Standard deviation of variable. You must define it or cv for variables
 			that aren't constant, if both (cv and std) declared std will be used.
 
+			For LogNormal variables it's recommend to use CV!
+
+
 		cv : float, optional
 			Coeficient of Variation of variable. You must define it or std for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+
+			For LogNormal variables it's recommend to use CV!
+
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
 
 		"""
 
-		# CV or STD?
-		if std is 0 and cv is not None:
-			std = cv*mean
-
-		self._VarDistrib(type=0, name=name, limst=None, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
+		self._VarDistrib(type=0, name=name, limst=None, distrib=distrib, mean=mean, std=std, cv=cv, par1=par1, par2=par2)
 
 
 
@@ -417,10 +430,14 @@ class MonteCarlo(object):
 		std : float, optional
 			Standard deviation of variable. You must define it or cv for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+			
+			For LogNormal variables it's recommend to use CV!
 
 		cv : float, optional
 			Coeficient of Variation of variable. You must define it or std for variables
 			that aren't constant, if both (cv and std) declared std will be used.
+			
+			For LogNormal variables it's recommend to use CV!
 
 		par1 and par2 : float, optional
 			Parameters for future implementations.
@@ -431,11 +448,64 @@ class MonteCarlo(object):
 			exception = Exception('Limit state %d is not created yet. Please create it before set sampling distribution.' % limst)
 			raise exception
 
-		# CV or STD?
-		if std is 0 and cv is not None:
-			std = cv*mean
 
-		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, par1=par1, par2=par2)
+		self._VarDistrib(type=1, name=name, limst=limst, distrib=distrib, mean=mean, std=std, cv=cv, par1=par1, par2=par2)
+
+
+	
+	
+	def SetCorrel(self, var1, var2, correl):
+		"""
+		Set the correlation betwen two variables. 
+		
+		The values will be transformed by the Nataf process before running.
+
+
+		Parameters
+		----------
+		var1 : str, obligatory
+			First variable name.
+
+		var2 : str, obligatory
+			Second variable name.
+
+		correl : float, obligatory
+			Correlation betwen var1 and var2.
+		"""
+
+		# Set lower
+		var1 = var1.lower()
+		var2 = var2.lower()
+
+		# Verify if it's already created
+		if var1 not in self.variableDistrib:
+			exception = Exception('Variable "%s" is not declared yet. ' % var1 +
+                         'Before set the correlation you must create the random ' +
+                         'variable with CreateVar().')
+			raise exception
+
+		if var2 not in self.variableDistrib:
+			exception = Exception('Variable "%s" is not declared yet. ' % var2 +
+                         'Before set the correlation you must create the random ' +
+                         'variable with CreateVar().')
+			raise exception
+
+		if var1 == var2:
+			exception = Exception(
+			    'You cannot change the correlation from a variable with itself.')
+			raise exception
+
+		if correl < -1 or correl > 1:
+			exception = Exception('Correlation must be a value betwen -1 and +1.')
+			raise exception
+
+		# Store correlations on correlation list self.corlist
+		self.corlist[var1, var2] = correl
+		self.corlist[var2, var1] = correl
+
+		self._PrintR('Correlation betwen \"%s\" and \"%s\" set as %f.' %
+		             (var1, var2, correl))
+
 
 
 	def _SetControls(self, Ns, Nmaxcycles, CVPf=0.00, tolAdPt=False):
@@ -597,9 +667,9 @@ class MonteCarlo(object):
 
 		#
 		try:
-			self.samplingdistrib[act]
+			self.samplingDistrib[act]
 		except:
-			self.samplingdistrib[act] = {}
+			self.samplingDistrib[act] = {}
 
 		# Verify the sum off all limit states until now
 		#	itsn't possible to verify the equantion since we dont have ANSYS out values
@@ -642,7 +712,7 @@ class MonteCarlo(object):
 			raise exception
 		else:
 			name = name.lower()
-			if name not in self.variabledistrib:
+			if name not in self.variableDistrib:
 				exception = Exception('This variable name is not declared. '+
 						'Only Random variables can be set as ANSYS variables.\n'+
 						'Please use CreateVar() to declare it.')
@@ -658,8 +728,7 @@ class MonteCarlo(object):
 		#else:
 		#	return self._PrintR('Variable %s is already set as an ANSYS variable.' % name)
 
-
-	def _GenRandomVW(self, varDistrib, sampDist, Nsi):
+	def _GenRandomVW(self, varDistrib, sampDist, NCValues_h):
 		"""
 		Internal function for Generate Random Values and it's Weights
 			(when sampDist not False)
@@ -675,23 +744,28 @@ class MonteCarlo(object):
 			A list with the sampling distribution parameters, like varDistrib.
 			It also could be "False", in this case there is no sampling distribution.
 
-		Nsi : integer, obligatory
-			Sample size.
+		NCValues_h : 1D np.array
+			INPUT Normalized correlated (or not) values from sampling distirbuition (h_X(x))
 
 
 		Returns
 		-------
-		[randval, weights] where:
+		[randval, weights, NCValues_f] where:
 			* randval : float
 			  Random values generated.
 
 			* weights : float
 			  Weight of each value, when sampDist being used.
+
+			* NCValues_f : 1D np.array
+			  OUTPUT Normalized correlated (or not) values for real distribution (f_X(x))
 		"""
 
 		# Initial values
+		Nsi = len(NCValues_h)
 		randval = np.zeros(Nsi)
 		weights = np.zeros(Nsi)
+		NCValues_f = np.zeros(Nsi)
 
 		# Verify the existence of sampling distrib
 		if sampDist is False:
@@ -703,18 +777,23 @@ class MonteCarlo(object):
 		# Generate it
 		# Gauss distribution
 		if curDist[0] is 'gauss':
-			# Random values
-			randval = np.random.normal(curDist[1], curDist[2], Nsi)
+			# Sampling distribution values (X_h)
+			randval = curDist[1] + curDist[2]*NCValues_h
 
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gaussian:
 			elif varDistrib[0] is 'gauss':
-				weights = scipy.stats.norm.pdf(randval, varDistrib[1], varDistrib[2]) \
-						/ scipy.stats.norm.pdf(randval, curDist[1], curDist[2])
+				# Real normal reduced correlated values (Z_f)
+				NCValues_f = (randval - varDistrib[1])/varDistrib[2]
+
+				# Weights 
+				weights = (scipy.stats.norm.pdf(randval, varDistrib[1], varDistrib[2]) / scipy.stats.norm.pdf(NCValues_f, 0, 1)) \
+						/ (scipy.stats.norm.pdf(randval, curDist[1], curDist[2]) / scipy.stats.norm.pdf(NCValues_h, 0, 1))
 
 			# Real distrib is logn:
 			#elif varDistrib[0] is 'logn':
@@ -732,25 +811,31 @@ class MonteCarlo(object):
 		# Lognormal distribution
 		elif curDist[0] is 'logn':
 			# equiv std dev
-			qsic = math.sqrt(math.log(1 + (curDist[2]/curDist[1])**2))
+			qsic = math.sqrt(math.log(1 + (curDist[3])**2))
 			# equiv mean
 			lambdac = math.log(curDist[1]) - 0.5*qsic**2
+
 			# Random values
-			randval = np.random.lognormal(lambdac, qsic, Nsi)
+			randval = np.exp(lambdac + qsic*NCValues_h)
+			#np.random.lognormal(lambdac, qsic, Nsi)
 
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is logn:
 			elif varDistrib[0] is 'logn':
 				# eq for varDistrib
-				qsiv = math.sqrt(math.log(1 + (varDistrib[2]/varDistrib[1])**2))
+				qsiv = math.sqrt(math.log(1 + (varDistrib[3])**2))
 				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
-				weights = (scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)/qsiv) \
-						/ (scipy.stats.norm.pdf(np.log(randval), lambdac, qsic)/qsic)
+				# Real normal reduced correlated values (Z_f)
+				NCValues_f = (lambdac-lambdav+qsic*NCValues_h)/qsiv
+
+				weights = (scipy.stats.norm.pdf(np.log(randval), lambdav, qsiv)/qsiv/scipy.stats.norm.pdf(NCValues_f)) \
+						/ (scipy.stats.norm.pdf(np.log(randval), lambdac, qsic)/qsic/scipy.stats.norm.pdf(NCValues_h))
 
 				# old and wrong! who is s???
 				# scipy.stats.lognorm.pdf(x, s, loc, scale)
@@ -776,11 +861,13 @@ class MonteCarlo(object):
 			locc = curDist[1] - 0.57721*sclc
 
 			# Random values
-			randval = np.random.gumbel(locc, sclc, Nsi)
+			randval = scipy.stats.gumbel_r.ppf(scipy.stats.norm.cdf(NCValues_h), loc=locc, scale=sclc)
+			#randval = np.random.gumbel(locc, sclc, Nsi)
 
 			# Weights
 			# Not sampling
 			if sampDist is False:
+				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gumbel
@@ -789,21 +876,18 @@ class MonteCarlo(object):
 				sclv = math.sqrt(6)*varDistrib[2]/math.pi
 				locv = varDistrib[1] - 0.57721*sclv
 
-				weights = scipy.stats.gumbel_r.pdf(randval, locv, sclv) \
-						/ scipy.stats.gumbel_r.pdf(randval, locc, sclc)
+				# Real normal reduced correlated values (Z_f)
+				NCValues_f = scipy.stats.norm.ppf(scipy.stats.gumbel_r.cdf(randval, loc=locv, scale=sclv))
+
+				weights = (scipy.stats.gumbel_r.pdf(randval, loc=locv, scale=sclv)/scipy.stats.norm.pdf(NCValues_f)) \
+						/ (scipy.stats.gumbel_r.pdf(randval, loc=locc, scale=sclc)/scipy.stats.norm.pdf(NCValues_h))
 
 			else:
 				exception = Exception('For now it is not possible to use different distributions in the same var.')
 				raise exception
 
-		elif curDist[0] is 'const':
-			# Constant value is not random!
-			randval = curDist[1]
-			weights[:] = 1
-
-
 		# Return
-		return [randval, weights]
+		return [randval, weights, NCValues_f]
 
 
 	def Run(self, Ns, Nmaxcycles, CVPf=0.00, tolAdPt=False):
@@ -1017,10 +1101,10 @@ class MonteCarlo(object):
 			self.MCControl_LS['CVPf'][eachLS] = []
 
 			# Run all variables declared on each limit state to get Sampling Point
-			for eachVar in self.samplingdistrib[eachLS]:
+			for eachVar in self.samplingDistrib[eachLS]:
 				# SPForLS it's a copy of sampling distribution to keep values in case of adaptive sampling.
-				self.SPForLS[eachLS]['pt'][eachVar] = list.copy(self.samplingdistrib[eachLS][eachVar])
-					## self.samplingdistrib[limst][name] = [distrib, mean, std]
+				self.SPForLS[eachLS]['pt'][eachVar] = list.copy(self.samplingDistrib[eachLS][eachVar])
+					## self.samplingDistrib[limst][name] = [distrib, mean, std]
 
 		# If sumNsi < Ns add simulations to last LS
 		if sumNsi < Ns:
@@ -1036,6 +1120,105 @@ class MonteCarlo(object):
 				+ 'last limit lost %d simulations.' % extra)
 
 		#-----------------------------------------------------------------------
+
+
+		#-----------------------------------------------------------------------
+		# Variables and Constants lengths
+		NInRandVars = len(self.variableDistrib)
+		#NInConstVars = len(self.variableConst)
+		#-----------------------------------------------------------------------
+
+
+		#-----------------------------------------------------------------------
+		# Equivalent Correlation matrix 
+		
+		# Create var id list
+		varId = {}
+		idx = 0
+		# For random variables
+		for eachVar in self.variableDistrib:
+			varId[eachVar] = idx
+			idx += 1
+
+		for eachVar in self.variableConst:
+			varId[eachVar] = idx
+			idx += 1
+
+		self.varId = varId
+
+		# Initial correlation Matrix
+		self.correlMat = np.eye(NInRandVars)
+
+		for each in self.corlist:
+			i = varId[each[0]]
+			j = varId[each[1]]
+			cor = self.corlist[each]
+
+			# Apply Nataf to transform the correlation
+			var1props = self.variableDistrib[each[0]]
+			var2props = self.variableDistrib[each[1]]
+
+			# Both are gauss
+			if (var1props[0] is 'gauss' and var2props[0] is 'gauss'):
+				cor = cor
+
+			# Both are LN
+			elif var1props[0] is 'logn' and var2props[0] is 'logn':
+				cv1 = var1props[3]
+				cv2 = var2props[3]
+				cor = cor*(math.log(1+cor*cv1*cv2) /
+				           (cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
+
+			# Both are Gumbel
+			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
+				cor = cor*(1.064 - 0.069*cor + 0.005*cor**2)
+
+			# One is gauss and other is logn
+			elif (var1props[0] is 'gauss' and var2props[0] is 'logn') \
+				or (var2props[0] is 'gauss' and var1props[0] is 'logn'):
+
+				# who is logn?
+				if var1props[0] is 'logn':
+					cv = var1props[3]
+				else:
+					cv = var2props[3]
+
+				# cor is
+				cor = cor*cv/math.sqrt(math.log(1+cv**2))
+
+			# One is gauss and other is gumbel
+			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
+				or (var2props[0] is 'gauss' and var1props[0] is 'gumbel'):
+				cor = 1.031*cor
+
+			# One is logn and other is gumbel
+			elif (var1props[0] is 'logn' and var2props[0] is 'gumbel') \
+				or (var2props[0] is 'logn' and var1props[0] is 'gumbel'):
+				# who is logn?
+				if var1props[0] is 'logn':
+					cv = var1props[3]
+				else:
+					cv = var2props[3]
+
+				# cor is
+				cor = cor*(1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv)
+
+			# Forbiden zone
+			else:
+				exception = Exception('When applying NATAF on variables \"%s\" and \"%s\" the variables ' +
+                                    'conditions wasn\'t possible.')
+				raise exception
+
+			# Save it!
+			self.correlMat[i, j] = cor
+			self.correlMat[j, i] = cor
+
+		# Lower Cholesky matrix
+		matL = np.linalg.cholesky(self.correlMat)
+		matCorInv = np.linalg.inv(self.correlMat)
+
+		#-----------------------------------------------------------------------
+
 
 
 		#-----------------------------------------------------------------------
@@ -1061,10 +1244,16 @@ class MonteCarlo(object):
 			#	(dictionary of dictionaries)
 			varsValues = {}
 
+			# Generate random normal matrix with all values
+			normalValuesMatrix = np.random.normal(0.0, 1.0, (NInRandVars, Nsi))
+			# Apply correlation with x_c=L.x
+			normalCorrelatedMatrix_h = matL.dot(normalValuesMatrix)
+			normalCorrelatedMatrix_f = normalCorrelatedMatrix_h.copy()
+
 			# Run for each variable each limit state, of limit state get limit
 			# 	state size (Ns), if there is SamplDistrb generate Ns from
 			#	sampling, else generate from RandomDistrib.
-			for eachVar in self.variabledistrib:
+			for eachVar in self.variableDistrib:
 				eachVar = eachVar.lower()
 				# For each variable has values and weights
 				varsValues[eachVar] = {}
@@ -1084,7 +1273,7 @@ class MonteCarlo(object):
 					posf = posi + Nsi
 
 					# Get True Random Distribution
-					varDistrib = self.variabledistrib[eachVar]
+					varDistrib = self.variableDistrib[eachVar]
 
 					# Verify the existence of SamplingDistrib/SPForLS, if exists get it
 					if eachVar in self.SPForLS[eachLS]['pt']:
@@ -1095,19 +1284,31 @@ class MonteCarlo(object):
 						sampDist = False
 
 
-					#print('* LS %d from %d to %d' % (eachLS, posi, posf))
-					#vvvv = np.zeros(Ns)
-					#vvvv[posi:posf] = eachLS+1
-					#print(vvvv)
-
 					# Call _GenRandomVW to get values and weights
-					[varsValues[eachVar]['values'][posi:posf], \
-						varsValues[eachVar]['weights'][posi:posf]] = \
-						self._GenRandomVW(varDistrib, sampDist, Nsi)
+					[varsValues[eachVar]['values'][posi:posf], varsValues[eachVar]['weights'][posi:posf], \
+						normalCorrelatedMatrix_f[varId[eachVar], posi:posf]] = \
+						self._GenRandomVW(varDistrib, sampDist, normalCorrelatedMatrix_h[varId[eachVar], posi:posf])
 
 					# Set posf as next posi
 					posi = posf
 
+			# Joint distributions weights
+			varsValues['__joint_all_w__'] = 1+np.zeros(Ns)
+			# Ratio of joint normal distributions (fX/hX) for Nataf process - if not using importance sampling it will be 1 !
+			for each in range(Ns):
+				# matCorInv
+				Z_f = normalCorrelatedMatrix_f[:, each]
+				Z_h = normalCorrelatedMatrix_h[:, each]
+				varsValues['__joint_all_w__'][each] = math.exp(-1/2*(Z_f.T).dot(matCorInv.dot(Z_f))+1/2*(Z_h.T).dot(matCorInv.dot(Z_h)))
+
+			# Now for constats variables
+			for eachVar in self.variableConst:
+				eachVar = eachVar.lower()
+				# For each variable has values and weights
+				varsValues[eachVar] = {}
+				# All values as 0 in the beggining
+				varsValues[eachVar]['values'] = Ns*[self.variableConst[eachVar]]
+				varsValues[eachVar]['weights'] = Ns*[1]
 			#-------------------------------------------------------------------
 
 
@@ -1184,21 +1385,27 @@ class MonteCarlo(object):
 					varVal['userf'] = self.limstates[eachLS][2]
 
 					# Weigth of simulation (starts as 1)
-					simWei = 1.00
+					#simWei = 1.00
+					simWei = varsValues['__joint_all_w__'][eachSim]
 
-					# Run all variables from variabledistrib, if it has SamplingDistirb
+					# Run all variables from variableDistrib, if it has SamplingDistirb
 					#	it will be erased in next step...
-					for eachVar in self.variabledistrib:
+					for eachVar in self.variableDistrib:
 						eachVar = eachVar.lower()
 						varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
 
 					# Run all variables from ANSYSOut and SamplingDistirbs
 						# Run eachVar of eachLS in eachSim getting value and weight
 						#for eachVar in self.limstates[eachLS][2]:
-					for eachVar in self.samplingdistrib[eachLS]:
+					for eachVar in self.samplingDistrib[eachLS]:
 						eachVar = eachVar.lower()
 						varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
 						simWei = simWei * varsValues[eachVar]['weights'][eachSim]
+
+
+					for eachVar in self.variableConst:
+						eachVar = eachVar.lower()
+						varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
 
 					#----------------------------------------------------------
 					# if running ansys:
@@ -1373,6 +1580,7 @@ class MonteCarlo(object):
 		timef = time.time()
 		# Save last cycles
 		self.cycles = cycle
+		self.MCControl['ElapsedTime'] = ((timef-timei)/60)
 
 		self._PrintR('\n\n=======================================================================\n')
 		# Verify if stopped with no convergence
@@ -1386,7 +1594,7 @@ class MonteCarlo(object):
 		self._PrintR(' Probability of failure (Pf): %2.4E' % (self.MCControl['Pf'][-1]))
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.MCControl['Beta'][-1]))
 		self._PrintR(' CV of Prob. of failure (CVPf): %2.3f' % (self.MCControl['CVPf'][-1]))
-		self._PrintR(' Elapsed time: %f minutes.' % ((timef-timei)/60))
+		self._PrintR(' Elapsed time: %f minutes.' % (self.MCControl['ElapsedTime']))
 		self._PrintR('\n=======================================================================\n\n')
 		#-------------------------------------------------------------------
 
@@ -1473,7 +1681,7 @@ class MonteCarlo(object):
 		self._PrintR('Returning values of "%s".' % thing)
 		return result
 
-	def ExportDataCSV(self, filename, separator=','):
+	def ExportDataCSV(self, filename, description=None):
 		"""
 		Exports Simulation data to a CSV file.
 
@@ -1483,9 +1691,8 @@ class MonteCarlo(object):
 			Name of file that will receive the values, doesn't need the
 			extension ".csv", it will be placed automatically.
 
-		separator : str, optional
-			Separator of data.
-			Defaults to ','.
+		description : str, optional
+			A string that will be write in the beggining of the file.
 		"""
 
 		# Open file
@@ -1496,8 +1703,12 @@ class MonteCarlo(object):
 			exception = Exception('Unable to open the %s file for write data.' % filename)
 			raise exception
 		else:
-			# Starts with sep=separator, for Microsoft Excel
-			f.write('sep=%s\n' % separator)
+			# Starts with sep=, for Microsoft Excel
+			f.write('sep=,\n')
+
+			# Description
+			if description is not None:
+				f.write('%s\n\n' % description)
 
 			f.write('Input data:\n')
 
@@ -1530,13 +1741,47 @@ class MonteCarlo(object):
 
 			# Random variables
 			f.write('Random variables:\n')
-			f.write(',Name, Distribution, Mean, Standard Deviation, Par1, Par2\n')
-			for eachVar in self.variabledistrib:
-				values = self.variabledistrib[eachVar]
+			f.write(',Name, Distribution, Mean, Standard Deviation, CV, Par1, Par2\n')
+			for eachVar in self.variableDistrib:
+				values = self.variableDistrib[eachVar]
 				cmd = ',%s,%s' % (eachVar, values[0])
 				for eachVal in values[1:]:
 					cmd = '%s,%f' % (cmd, eachVal)
 				f.write('%s\n' % cmd)
+			f.write('\n')
+
+			# Constant variables
+			f.write('Constant variables:\n')
+			f.write(',Name,Value\n')
+			for eachVar in self.variableConst:
+				cmd = ',%s,%8.5E' % (eachVar, self.variableConst[eachVar])
+				f.write('%s\n' % cmd)
+			f.write('\n')
+
+			# Correlation Matrix
+			f.write('Correlation matrix:\n')
+			# First line with Varnames:
+			cmd = ','
+			idx = 0
+			for eachVar in self.varId:
+				# Just random variables!
+				if idx >= len(self.variableDistrib):
+					break
+				cmd = '%s,%s' % (cmd, eachVar)
+				idx += 1
+			cmd = '%s\n' % cmd
+			f.write(cmd)
+			# Matrix lines with first column as Varname
+			idx = 0
+			for eachLine in self.correlMat:
+				# WTF DID I DO? But it works very well... xD
+				# GO HORSE! GO!!
+				cmd = ',%s' % list(self.varId.keys())[idx]
+				for eachVal in eachLine:
+					cmd = '%s,%f' % (cmd, eachVal)
+				cmd = '%s\n' % cmd
+				f.write(cmd)
+				idx += 1
 			f.write('\n')
 
 			# Limit states and theirs Sampling Distributions
@@ -1546,9 +1791,9 @@ class MonteCarlo(object):
 				f.write(',,Weight:,%f\n' % self.limstates[eachLS][1])
 				f.write(',,Ns/Cycle:,%f\n' % self.limstates[eachLS][3])
 				f.write(',,Starting Sampling Distributions:\n')
-				f.write(',,,Name, Distribution, Mean, Standard Deviation, Par1, Par2\n')
-				for eachVar in self.samplingdistrib[eachLS]:
-					values = self.samplingdistrib[eachLS][eachVar]
+				f.write(',,,Name, Distribution, Mean, Standard Deviation, CV, Par1, Par2\n')
+				for eachVar in self.samplingDistrib[eachLS]:
+					values = self.samplingDistrib[eachLS][eachVar]
 					cmd = ',,,%s,%s' % (eachVar, values[0])
 					for eachVal in values[1:]:
 						cmd = '%s,%f' % (cmd, eachVal)
@@ -1565,6 +1810,7 @@ class MonteCarlo(object):
 			f.write(',Probability of failure (Pf):,%2.4E\n' % self.MCControl['Pf'][-1])
 			f.write(',Reliability Index (Beta):,%2.3f\n' % self.MCControl['Beta'][-1])
 			f.write(',CV of Prob. of failure (CVPf):,%2.3f\n' % self.MCControl['CVPf'][-1])
+			f.write(',Elapsed time (minutes):,%4.3f\n' % self.MCControl['ElapsedTime'])
 			f.write('\n')
 
 			# Final Sampling Point
