@@ -235,15 +235,15 @@ class MonteCarlo(object):
 		# Set distribution name as lower case
 		distrib = distrib.lower()
 
+		# CV or STD?
+		if cv is not None:
+			std = cv*mean
+		else:
+			cv = std/mean
+
 		# Verify the distribution and then determine the parameters
 		# Gaussian variable
 		if distrib in ['gauss', 'gaus', 'gaussian', 'normal', 'norm']:
-			# CV or STD?
-			if std is 0 and cv is not None:
-				std = cv*mean
-			else:
-				cv = std/mean
-
 			# Type 0 = Random Variable distribution
 			if type is 0:
 				self.variableDistrib[name] = ['gauss', mean, std, cv]
@@ -273,12 +273,6 @@ class MonteCarlo(object):
 			#qsi = math.sqrt(math.log(1 + (cv)**2))
 			#lmbd = math.log(mean) - 0.5*qsix**2
 
-			# CV or STD?
-			if std is not 0 and cv is None:
-				cv = std/mean
-			else:
-				std = cv*mean
-
 			# Type 0 = Random Variable distribution
 			if type is 0:
 				self.variableDistrib[name] = ['logn', mean, std, cv]
@@ -304,11 +298,6 @@ class MonteCarlo(object):
 
 		# Gumbel distribution
 		elif distrib in ['gumbel', 'gumb', 'type1']:
-			# CV or STD?
-			if std is 0 and cv is not None:
-				std = cv*mean
-			else:
-				cv = std/mean
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
