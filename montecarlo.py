@@ -1713,7 +1713,7 @@ class MonteCarlo(object):
 			exception = Exception('Unable to open the %s file for write data.' % filename)
 			raise exception
 		else:
-			# Starts with sep=separator, for Microsoft Excel
+			# Starts with sep=, for Microsoft Excel
 			f.write('sep=,\n')
 
 			# Description
