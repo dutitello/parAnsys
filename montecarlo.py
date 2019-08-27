@@ -1413,6 +1413,11 @@ class MonteCarlo(object):
 						varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
 						simWei = simWei * varsValues[eachVar]['weights'][eachSim]
 
+
+					for eachVar in self.variableConst:
+						eachVar = eachVar.lower()
+						varVal[eachVar] = varsValues[eachVar]['values'][eachSim]
+
 					#----------------------------------------------------------
 					# if running ansys:
 					# Attention here: the ANSYS output variables has the weight
