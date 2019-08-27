@@ -241,12 +241,14 @@ class MonteCarlo(object):
 			# CV or STD?
 			if std is 0 and cv is not None:
 				std = cv*mean
+			else:
+				cv = std/mean
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variableDistrib[name] = ['gauss', mean, std]
-				return self._PrintR('Variable %s defined as Gaussian with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['gauss', mean, std, cv]
+				return self._PrintR('Variable %s defined as Gaussian with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
@@ -256,13 +258,13 @@ class MonteCarlo(object):
 				except:
 					# Not created yet
 					self.samplingDistrib[limst] = {}
-					self.samplingDistrib[limst][name] = ['gauss', mean, std]
+					self.samplingDistrib[limst][name] = ['gauss', mean, std, cv]
 				else:
 					# Already created
-					self.samplingDistrib[limst][name] = ['gauss', mean, std]
+					self.samplingDistrib[limst][name] = ['gauss', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as Gaussian with mean=%f and std. dev.=%f for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as Gaussian with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 		# Lognormal distribution
 		elif distrib in ['lognormal', 'logn', 'ln', 'log', 'lognorm']:
@@ -274,12 +276,14 @@ class MonteCarlo(object):
 			# CV or STD?
 			if std is not 0 and cv is None:
 				cv = std/mean
+			else:
+				std = cv*mean
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variableDistrib[name] = ['logn', mean, cv]
-				return self._PrintR('Variable %s defined as LogNormal with mean=%f and CV=%f.'
-									% (name, mean, cv))
+				self.variableDistrib[name] = ['logn', mean, std, cv]
+				return self._PrintR('Variable %s defined as LogNormal with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
@@ -289,13 +293,13 @@ class MonteCarlo(object):
 				except:
 					# Not created yet
 					self.samplingDistrib[limst] = {}
-					self.samplingDistrib[limst][name] = ['logn', mean, cv]
+					self.samplingDistrib[limst][name] = ['logn', mean, std, cv]
 				else:
 					# Already created
-					self.samplingDistrib[limst][name] = ['logn', mean, cv]
+					self.samplingDistrib[limst][name] = ['logn', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f and CV=%f. for limit state %d.'
-									% (name, mean, cv, limst))
+				return self._PrintR('Variable %s sampling defined as LogNormal with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 
 		# Gumbel distribution
@@ -303,12 +307,14 @@ class MonteCarlo(object):
 			# CV or STD?
 			if std is 0 and cv is not None:
 				std = cv*mean
+			else:
+				cv = std/mean
 
 			# Type 0 = Random Variable distribution
 			if type is 0:
-				self.variableDistrib[name] = ['gumbel', mean, std]
-				return self._PrintR('Variable %s defined as Gumbel with mean=%f and std. dev.=%f.'
-									% (name, mean, std))
+				self.variableDistrib[name] = ['gumbel', mean, std, cv]
+				return self._PrintR('Variable %s defined as Gumbel with mean=%f, std. dev.=%f, CV=%f.'
+									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
 			elif type is 1:
@@ -318,13 +324,13 @@ class MonteCarlo(object):
 				except:
 					# Not created yet
 					self.samplingDistrib[limst] = {}
-					self.samplingDistrib[limst][name] = ['gumbel', mean, std]
+					self.samplingDistrib[limst][name] = ['gumbel', mean, std, cv]
 				else:
 					# Already created
-					self.samplingDistrib[limst][name] = ['gumbel', mean, std]
+					self.samplingDistrib[limst][name] = ['gumbel', mean, std, cv]
 
-				return self._PrintR('Variable %s sampling defined as Gumbel with mean=%f and std. dev.=%f for limit state %d.'
-									% (name, mean, std, limst))
+				return self._PrintR('Variable %s sampling defined as Gumbel with mean=%f, std. dev.=%f, CV=%f for limit state %d.'
+									% (name, mean, std, cv, limst))
 
 		# Constant value
 		elif distrib in ['constant', 'const', 'cons', 'c']:
@@ -816,7 +822,7 @@ class MonteCarlo(object):
 		# Lognormal distribution
 		elif curDist[0] is 'logn':
 			# equiv std dev
-			qsic = math.sqrt(math.log(1 + (curDist[2])**2))
+			qsic = math.sqrt(math.log(1 + (curDist[3])**2))
 			# equiv mean
 			lambdac = math.log(curDist[1]) - 0.5*qsic**2
 
@@ -833,7 +839,7 @@ class MonteCarlo(object):
 			# Real distrib is logn:
 			elif varDistrib[0] is 'logn':
 				# eq for varDistrib
-				qsiv = math.sqrt(math.log(1 + (varDistrib[2])**2))
+				qsiv = math.sqrt(math.log(1 + (varDistrib[3])**2))
 				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
 
 				# Real normal reduced correlated values (Z_f)
@@ -1149,6 +1155,8 @@ class MonteCarlo(object):
 			varId[eachVar] = idx
 			idx += 1
 
+		self.varId = varId
+
 		# Initial correlation Matrix
 		self.correlMat = np.eye(NInRandVars)
 
@@ -1167,8 +1175,8 @@ class MonteCarlo(object):
 
 			# Both are LN
 			elif var1props[0] is 'logn' and var2props[0] is 'logn':
-				cv1 = var1props[2]/var1props[1]
-				cv2 = var2props[2]/var2props[1]
+				cv1 = var1props[3]
+				cv2 = var2props[3]
 				cor = cor*(math.log(1+cor*cv1*cv2) /
 				           (cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
 
@@ -1182,9 +1190,9 @@ class MonteCarlo(object):
 
 				# who is logn?
 				if var1props[0] is 'logn':
-					cv = var1props[2]/var1props[1]
+					cv = var1props[3]
 				else:
-					cv = var2props[2]/var2props[1]
+					cv = var2props[3]
 
 				# cor is
 				cor = cor*cv/math.sqrt(math.log(1+cv**2))
@@ -1199,9 +1207,9 @@ class MonteCarlo(object):
 				or (var2props[0] is 'logn' and var1props[0] is 'gumbel'):
 				# who is logn?
 				if var1props[0] is 'logn':
-					cv = var1props[2]/var1props[1]
+					cv = var1props[3]
 				else:
-					cv = var2props[2]/var2props[1]
+					cv = var2props[3]
 
 				# cor is
 				cor = cor*(1.029 + 0.001*cor + 0.014*cv + 0.004*cor**2 + 0.233*cv**2 - 0.197*cor*cv)
@@ -1678,7 +1686,7 @@ class MonteCarlo(object):
 		self._PrintR('Returning values of "%s".' % thing)
 		return result
 
-	def ExportDataCSV(self, filename, separator=','):
+	def ExportDataCSV(self, filename, description=None):
 		"""
 		Exports Simulation data to a CSV file.
 
@@ -1688,9 +1696,8 @@ class MonteCarlo(object):
 			Name of file that will receive the values, doesn't need the
 			extension ".csv", it will be placed automatically.
 
-		separator : str, optional
-			Separator of data.
-			Defaults to ','.
+		description : str, optional
+			A string that will be write in the beggining of the file.
 		"""
 
 		# Open file
@@ -1702,7 +1709,11 @@ class MonteCarlo(object):
 			raise exception
 		else:
 			# Starts with sep=separator, for Microsoft Excel
-			f.write('sep=%s\n' % separator)
+			f.write('sep=,\n')
+
+			# Description
+			if description is not None:
+				f.write('%s\n\n' % description)
 
 			f.write('Input data:\n')
 
@@ -1735,13 +1746,47 @@ class MonteCarlo(object):
 
 			# Random variables
 			f.write('Random variables:\n')
-			f.write(',Name, Distribution, Mean, Standard Deviation, Par1, Par2\n')
+			f.write(',Name, Distribution, Mean, Standard Deviation, CV, Par1, Par2\n')
 			for eachVar in self.variableDistrib:
 				values = self.variableDistrib[eachVar]
 				cmd = ',%s,%s' % (eachVar, values[0])
 				for eachVal in values[1:]:
 					cmd = '%s,%f' % (cmd, eachVal)
 				f.write('%s\n' % cmd)
+			f.write('\n')
+
+			# Constant variables
+			f.write('Constant variables:\n')
+			f.write(',Name,Value\n')
+			for eachVar in self.variableConst:
+				cmd = ',%s,%8.5E' % (eachVar, self.variableConst[eachVar])
+				f.write('%s\n' % cmd)
+			f.write('\n')
+
+			# Correlation Matrix
+			f.write('Correlation matrix:\n')
+			# First line with Varnames:
+			cmd = ','
+			idx = 0
+			for eachVar in self.varId:
+				# Just random variables!
+				if idx >= len(self.variableDistrib):
+					break
+				cmd = '%s,%s' % (cmd, eachVar)
+				idx += 1
+			cmd = '%s\n' % cmd
+			f.write(cmd)
+			# Matrix lines with first column as Varname
+			idx = 0
+			for eachLine in self.correlMat:
+				# WTF DID I DO? But it works very well... xD
+				# GO HORSE! GO!!
+				cmd = ',%s' % list(self.varId.keys())[idx]
+				for eachVal in eachLine:
+					cmd = '%s,%f' % (cmd, eachVal)
+				cmd = '%s\n' % cmd
+				f.write(cmd)
+				idx += 1
 			f.write('\n')
 
 			# Limit states and theirs Sampling Distributions
@@ -1751,7 +1796,7 @@ class MonteCarlo(object):
 				f.write(',,Weight:,%f\n' % self.limstates[eachLS][1])
 				f.write(',,Ns/Cycle:,%f\n' % self.limstates[eachLS][3])
 				f.write(',,Starting Sampling Distributions:\n')
-				f.write(',,,Name, Distribution, Mean, Standard Deviation, Par1, Par2\n')
+				f.write(',,,Name, Distribution, Mean, Standard Deviation, CV, Par1, Par2\n')
 				for eachVar in self.samplingDistrib[eachLS]:
 					values = self.samplingDistrib[eachLS][eachVar]
 					cmd = ',,,%s,%s' % (eachVar, values[0])
