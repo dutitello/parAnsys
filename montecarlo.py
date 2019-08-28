@@ -1470,7 +1470,7 @@ class MonteCarlo(object):
 			sumNfi  = sum(self.MCControl['Nfi'])
 			sumNfi2 = sum(self.MCControl['Nfi2'])
 			cCVPf = 1/cPfi * 1/math.sqrt((cycle*Ns)*(cycle*Ns-1)) \
-							 *(sumNfi2 - 1/(cycle*Ns)*(sumNfi)**2)**0.50
+							*(sumNfi2 - 1/(cycle*Ns)*(sumNfi)**2)**0.50
 			self.MCControl['CVPf'].append(cCVPf)
 
 			########################################

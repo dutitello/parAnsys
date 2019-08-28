@@ -375,7 +375,7 @@ class ANSYS(object):
 		#
 		# DO NOT REMOVE THE SPACES BEFORE -np !
 		#
-		cmd = 'start "ANSYS" /d "%s" /min /wait /b "%s" "   -np %d -j %s -b -i pdsrun.inp -o pdsout.out %s" ' % (self.ANSYSprops['run_location'],
+		cmd = 'start "ANSYS" /d "%s" /min /wait /b "%s" " -smp -np %d -j %s -b -i pdsrun.inp -o pdsout.out %s" ' % (self.ANSYSprops['run_location'],
 				self.ANSYSprops['exec_loc'], self.ANSYSprops['nproc'], self.ANSYSprops['jobname'], self.ANSYSprops['add_flags'])
 
 		self._PrintR('Running ANSYS.')
