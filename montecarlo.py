@@ -712,7 +712,7 @@ class MonteCarlo(object):
 			raise exception
 		else:
 			name = name.lower()
-			if name not in self.variableDistrib:
+			if name not in self.variableDistrib and name not in self.variableConst:
 				exception = Exception('This variable name is not declared. '+
 						'Only Random variables can be set as ANSYS variables.\n'+
 						'Please use CreateVar() to declare it.')
