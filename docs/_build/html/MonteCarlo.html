@@ -299,11 +299,15 @@ called as <code class="docutils literal notranslate"><span class="pre">userf()</
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
 <dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Coeficient of Variation of variable. You must define it or std for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>
@@ -311,15 +315,14 @@ that aren’t constant, if both (cv and std) declared std will be used.</dd>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.ExportDataCSV">
-<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>separator='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports Simulation data to a CSV file.</p>
 <dl class="docutils">
 <dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
 <dd>Name of file that will receive the values, doesn’t need the
 extension “.csv”, it will be placed automatically.</dd>
-<dt>separator <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>Separator of data.
-Defaults to ‘,’.</dd>
+<dt>description <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>A string that will be write in the beggining of the file.</dd>
 </dl>
 </dd></dl>
 
@@ -484,6 +487,21 @@ are determined using the weights of all ANSYS input variables.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="paransys.MonteCarlo.SetCorrel">
+<code class="descname">SetCorrel</code><span class="sig-paren">(</span><em>var1</em>, <em>var2</em>, <em>correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the correlation betwen two variables.</p>
+<p>The values will be transformed by the Nataf process before running.</p>
+<dl class="docutils">
+<dt>var1 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>First variable name.</dd>
+<dt>var2 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
+<dd>Second variable name.</dd>
+<dt>correl <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
+<dd>Correlation betwen var1 and var2.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="paransys.MonteCarlo.SetRandomVarSampl">
 <code class="descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em>name</em>, <em>limst</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the sampling distribution of a variable to performn Importance
@@ -508,11 +526,15 @@ are determined using the weights of all ANSYS input variables.</p>
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
 <dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Coeficient of Variation of variable. You must define it or std for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>

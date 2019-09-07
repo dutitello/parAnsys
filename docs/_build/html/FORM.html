@@ -224,11 +224,15 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 <dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
 <dd>Standard mean of variable values.</dd>
 <dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Coeficient of Variation of variable. You must define it or std for variables
-that aren’t constant, if both (cv and std) declared std will be used.</dd>
+<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+</dd>
 <dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
 <dd>Parameters for future implementations.</dd>
 </dl>
@@ -236,7 +240,7 @@ that aren’t constant, if both (cv and std) declared std will be used.</dd>
 
 <dl class="method">
 <dt id="paransys.FORM.ExportDataCSV">
-<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em>, <em>separator='</em>, <em>'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports process data to a CSV file.</p>
 <dl class="docutils">
 <dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
@@ -244,9 +248,6 @@ that aren’t constant, if both (cv and std) declared std will be used.</dd>
 extension “.csv”, it will be placed automatically.</dd>
 <dt>description <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
 <dd>A string that will be write in the beggining of the file.</dd>
-<dt>separator <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>Separator of data.
-Defaults to ‘,’.</dd>
 </dl>
 </dd></dl>
 
