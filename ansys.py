@@ -191,7 +191,7 @@ class ANSYS(object):
 			# Input variables
 			for each in self.varInNames:
 				# Variables are declared with uniform distribution betwen 1.5*maxval and 0.5*minval
-				cmd = 'PDVAR,%s,UNIF,%f,%f\n' % (each, 0.5*min(self.varInValues[each]), 1.5*max(self.varInValues[each]))
+				cmd = 'PDVAR,%s,UNIF,%f,%f\n' % (each, min(0.5*min(self.varInValues[each]),-1), max(1,1.5*max(self.varInValues[each])))
 				f.write(cmd)
 
 			# Output/control variables
