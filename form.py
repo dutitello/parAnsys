@@ -254,10 +254,12 @@ class FORM(object):
 		distrib = distrib.lower()
 
 		# CV or STD?
-		if cv is None:
-			cv = std/mean
-		else:
-			std = cv*mean
+		if distrib not in ['constant', 'const', 'cons', 'c']:
+			if cv is None:
+				cv = std/mean
+			else:
+				std = cv*mean
+		
 
 		# Verify the distribution and then store the parameters
 		# Gaussian variable
