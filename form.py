@@ -1152,7 +1152,7 @@ class FORM(object):
 					gradrepeat += 1
 					if gradrepeat is 10:
 						# 10 increses?? dh is like 1024 times greater! STOP IT!
-						exception = Exception('After 10 increases gradG is 1024 times greater and still has a value fixed.')
+						exception = Exception('After 10 increases of dh gradG still has a null term.')
 						raise exception
 
 			#-------------------------------------------------------------------
@@ -1172,7 +1172,7 @@ class FORM(object):
 				# Verify the convergence
 				#
 				cosYgradY = abs(gradG.dot(curVecRedPts))/math.sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
-				self._PrintR('|cos(y*, gradG)| = %f (it must be near 1).' % cosYgradY)
+				self._PrintR('|cos(y*, gradG)| = %f (it must be next to 1).' % cosYgradY)
 				if lastcycle is True:
 					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
 						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
@@ -1375,13 +1375,17 @@ class FORM(object):
 			#-------------------------------------------------------------------
 			# Verify the convergence
 			#
-			relErrorPoint = max(abs((newVecRedPts-curVecRedPts)/newVecRedPts))
+			# Here we have a problem: I don't know from where Beck get this cosYgradY verificarion!
+			# I've used that, but now I changed to the old fashion way.
+			# To use that again you need to change the next verification and remove the
+			# conditional lastcycle below too. 
+			#### Sometimes it didn't converge because if this crap
+			relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
-			if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
-			# Sometimes it didn't converge because if this crap
-			#if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
+			#### if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
+			if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-				self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
+				### self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
 				lastcycle = True
 			else:
 				lastcycle = False
@@ -1404,14 +1408,13 @@ class FORM(object):
 				self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
 				self.variableDesPt[eachVar], gradG[idx], gradG[idx]/absgrad))
 				idx += 1
-
 			self._PrintR('\n')
 
 
-			# END LOOP
-			#if lastcycle is True:
-			#	self._stnumb = 0
-			#	break
+			# FINISH IT, if not using cosYgradY verification
+			if lastcycle is True:
+				self._stnumb = 0
+				break
 
 			#-------------------------------------------------------------------
 
