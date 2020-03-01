@@ -973,189 +973,177 @@ class FORM(object):
 
 			# Get dh
 			dh = self.controls['dh']
+			if diff is 'center':
+				# size is 1+2*NInRandVars
+				matEvalPts = np.zeros([(1+2*NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
+				# All lines starts with design point/constant values, after random variables replace it
+				matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
 
-			gradrepeat = 0
-			while True is True:
-				if diff is 'center':
-					# size is 1+2*NInRandVars
-					matEvalPts = np.zeros([(1+2*NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
-					# All lines starts with design point/constant values, after random variables replace it
-					matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
-
-					# Run all lines from [1,end] with step=2
-						# curId is current varId
-					curId = 0
-					for eachLine in range(1, 1+2*NInRandVars, 2):
-						# vecdh is not zero on current var item
-						vecdh = np.zeros(NInRandVars)
-						vecdh[curId] = dh
-						# Odd line is +h
-						matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
-						# and now -h
-						matEvalPts[eachLine+1, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
-						curId += 1
-
-				elif diff is 'forward':
-					# size is 1+NInRandVars
-					matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
-					# All lines starts with design point/constant values, after random variables replace it
-					matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
-					curId = 0
-					for eachLine in range(1, 1+NInRandVars):
-						# vecdh is not zero on current var item
-						vecdh = np.zeros(NInRandVars)
-						vecdh[curId] = dh
-						matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
-						curId += 1
-
-				elif diff is 'backward':
-					# size is 1+NInRandVars
-					matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
-					# All lines starts with design point/constant values, after random variables replace it
-					matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
-					curId = 0
-					for eachLine in range(1, 1+NInRandVars):
-						# vecdh is not zero on current var item
-						vecdh = np.zeros(NInRandVars)
-						vecdh[curId] = dh
-						matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
-						curId += 1
-
-
-				#-------------------------------------------------------------------
-				# If using ANSYS send it's variables dependents to simulation.
-				#
-				if self._ANSYS:
-					# Mount a list of matEvalPts lines that should be simunlated
-					# Line 0 with X value is used for all not calculated lines + G(x)
-					ansysSendingList = [0]
-
-					if diff is 'center':
-						for eachVar in self.ansys.varInNames:
-							# Current variable is random or constant?
-							if eachVar.lower() in self.variableDistrib:
-								eachVar = eachVar.lower()
-								ansysSendingList.append(2*varId[eachVar]+1)
-								ansysSendingList.append(2*varId[eachVar]+2)
-
-					elif diff is 'forward' or diff is 'backward':
-						for eachVar in self.ansys.varInNames:
-							# Current variable is random or constant?
-							if eachVar.lower() in self.variableDistrib:
-								eachVar = eachVar.lower()
-								ansysSendingList.append(varId[eachVar]+1)
-
-					# Set length as Ns
-					Ns = len(ansysSendingList)
-					self.ansys.ClearValues()
-					self.ansys.SetLength(Ns)
-
-					# Send from the list to ANSYS varInValues
-					for eachVar in self.ansys.varInNames:
-						eachVar = eachVar.lower()
-						self.ansys.SetVarInValues(eachVar, matEvalPts[ansysSendingList, varId[eachVar]])
-
-					# Run ANSYS
-					self.ansys.Run()
-
-					# Get results from ANSYS
-					resANSYS = self.ansys.GetVarOutValues()
-
-					# Add ANSYS results to matEvalPts
-					for eachVar in self.ansys.varOutNames:
-						# First all lines has value from X
-						matEvalPts[:, varId[eachVar.lower()]] = resANSYS[eachVar][0]
-						# Now values are stored as in ansysSendingList
-						matEvalPts[ansysSendingList, varId[eachVar.lower()]] = resANSYS[eachVar]
-
-				#-------------------------------------------------------------------
-
-
-				#-------------------------------------------------------------------
-				# Evaluate Limit State (valG) and Gradient (gradG)
-				#
-				self._PrintR('Evaluating limit state.')
-				# dic of values in each evaluation
-				varVal = {}
-				varVal['userf'] = self._userf
-
-				# Eval Limit State:
-				for eachVar in varId:
-					varVal[eachVar] = matEvalPts[0, varId[eachVar]]
-
-				valG = eval(self.limstate, globals(), varVal)
-				self._PrintR('Limit state value = %f.' % valG)
-
-
-				# tolLS 'auto' is tolRel*(initial valG)
-				if cycle == 1 and tolLS == 'auto':
-					tolLS = self.controls['tolRel']*valG
-					self.controls['tolLS'] = tolLS
-					self._PrintR('Limit state tolerance set to %f.' % tolLS)
-
-
-				# Eval Gradient
-				self._PrintR('Evaluating gradient.')
-
+				# Run all lines from [1,end] with step=2
+					# curId is current varId
 				curId = 0
-				gradG = 0
-				gradG = np.zeros(NInRandVars)
+				for eachLine in range(1, 1+2*NInRandVars, 2):
+					# vecdh is not zero on current var item
+					vecdh = np.zeros(NInRandVars)
+					vecdh[curId] = dh
+					# Odd line is +h
+					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
+					# and now -h
+					matEvalPts[eachLine+1, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
+					curId += 1
 
-				#Derivatives only for random variables/input var
+			elif diff is 'forward':
+				# size is 1+NInRandVars
+				matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
+				# All lines starts with design point/constant values, after random variables replace it
+				matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
+				curId = 0
+				for eachLine in range(1, 1+NInRandVars):
+					# vecdh is not zero on current var item
+					vecdh = np.zeros(NInRandVars)
+					vecdh[curId] = dh
+					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
+					curId += 1
 
-				if diff is 'center':
-					for eachLine in range(1, (1+2*NInRandVars), 2):
-						# G(X+dh) = val1
-						for eachVar in varId:
-							varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-						val1 = eval(self.limstate, globals(), varVal)
+			elif diff is 'backward':
+				# size is 1+NInRandVars
+				matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
+				# All lines starts with design point/constant values, after random variables replace it
+				matEvalPts[:, 0:(NInRandVars+NInConstVars)] = vecPts
+				curId = 0
+				for eachLine in range(1, 1+NInRandVars):
+					# vecdh is not zero on current var item
+					vecdh = np.zeros(NInRandVars)
+					vecdh[curId] = dh
+					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
+					curId += 1
 
-						# G(X-dh) = val2
-						for eachVar in varId:
-							varVal[eachVar] = matEvalPts[eachLine+1, varId[eachVar]]
-						val2 = eval(self.limstate, globals(), varVal)
-
-						gradG[curId] = (val1-val2)/(2*dh)
-						curId += 1
-
-				elif diff is 'forward':
-					for eachLine in range(1, (1+NInRandVars)):
-						# G(X+dh) = val1
-						for eachVar in varId:
-							varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-						val1 = eval(self.limstate, globals(), varVal)
-
-						gradG[curId] = (val1-valG)/dh
-						curId += 1
-
-				elif diff is 'backward':
-					for eachLine in range(1, (1+NInRandVars)):
-						# G(X-dh) = val1
-						for eachVar in varId:
-							varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-						val1 = eval(self.limstate, globals(), varVal)
-
-						gradG[curId] = (valG-val1)/dh
-						curId += 1
-
-				#---------------------------------------------------------------
-
-
-				#---------------------------------------------------------------
-				# the min valu of grad must be greater than 0
-				minGrad = min(abs(gradG))
-				if minGrad > 0:
-					break
-				else:
-					self._PrintR(' One or more values from gradG were equal to zero, dh of this cycle was increased from %2.4E to %2.4E.' % (dh, dh*2.0))
-					dh = dh*2.0
-					gradrepeat += 1
-					if gradrepeat is 10:
-						# 10 increses?? dh is like 1024 times greater! STOP IT!
-						exception = Exception('After 10 increases of dh gradG still has a null term.')
-						raise exception
 
 			#-------------------------------------------------------------------
+			# If using ANSYS send it's variables dependents to simulation.
+			#
+			if self._ANSYS:
+				# Mount a list of matEvalPts lines that should be simunlated
+				# Line 0 with X value is used for all not calculated lines + G(x)
+				ansysSendingList = [0]
+
+				if diff is 'center':
+					for eachVar in self.ansys.varInNames:
+						# Current variable is random or constant?
+						if eachVar.lower() in self.variableDistrib:
+							eachVar = eachVar.lower()
+							ansysSendingList.append(2*varId[eachVar]+1)
+							ansysSendingList.append(2*varId[eachVar]+2)
+
+				elif diff is 'forward' or diff is 'backward':
+					for eachVar in self.ansys.varInNames:
+						# Current variable is random or constant?
+						if eachVar.lower() in self.variableDistrib:
+							eachVar = eachVar.lower()
+							ansysSendingList.append(varId[eachVar]+1)
+
+				# Set length as Ns
+				Ns = len(ansysSendingList)
+				self.ansys.ClearValues()
+				self.ansys.SetLength(Ns)
+
+				# Send from the list to ANSYS varInValues
+				for eachVar in self.ansys.varInNames:
+					eachVar = eachVar.lower()
+					self.ansys.SetVarInValues(eachVar, matEvalPts[ansysSendingList, varId[eachVar]])
+
+				# Run ANSYS
+				self.ansys.Run()
+
+				# Get results from ANSYS
+				resANSYS = self.ansys.GetVarOutValues()
+
+				# Add ANSYS results to matEvalPts
+				for eachVar in self.ansys.varOutNames:
+					# First all lines has value from X
+					matEvalPts[:, varId[eachVar.lower()]] = resANSYS[eachVar][0]
+					# Now values are stored as in ansysSendingList
+					matEvalPts[ansysSendingList, varId[eachVar.lower()]] = resANSYS[eachVar]
+
+			#-------------------------------------------------------------------
+
+
+			#-------------------------------------------------------------------
+			# Evaluate Limit State (valG) and Gradient (gradG)
+			#
+			self._PrintR('Evaluating limit state.')
+			# dic of values in each evaluation
+			varVal = {}
+			varVal['userf'] = self._userf
+
+			# Eval Limit State:
+			for eachVar in varId:
+				varVal[eachVar] = matEvalPts[0, varId[eachVar]]
+
+			valG = eval(self.limstate, globals(), varVal)
+			self._PrintR('Limit state value = %f.' % valG)
+
+
+			# tolLS 'auto' is tolRel*(initial valG)
+			if cycle == 1 and tolLS == 'auto':
+				tolLS = self.controls['tolRel']*valG
+				self.controls['tolLS'] = tolLS
+				self._PrintR('Limit state tolerance set to %f.' % tolLS)
+
+
+			# Eval Gradient
+			self._PrintR('Evaluating gradient.')
+
+			curId = 0
+			gradG = 0
+			gradG = np.zeros(NInRandVars)
+
+			#Derivatives only for random variables/input var
+
+			if diff is 'center':
+				for eachLine in range(1, (1+2*NInRandVars), 2):
+					# G(X+dh) = val1
+					for eachVar in varId:
+						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
+					val1 = eval(self.limstate, globals(), varVal)
+
+					# G(X-dh) = val2
+					for eachVar in varId:
+						varVal[eachVar] = matEvalPts[eachLine+1, varId[eachVar]]
+					val2 = eval(self.limstate, globals(), varVal)
+
+					gradG[curId] = (val1-val2)/(2*dh)
+					curId += 1
+
+			elif diff is 'forward':
+				for eachLine in range(1, (1+NInRandVars)):
+					# G(X+dh) = val1
+					for eachVar in varId:
+						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
+					val1 = eval(self.limstate, globals(), varVal)
+
+					gradG[curId] = (val1-valG)/dh
+					curId += 1
+
+			elif diff is 'backward':
+				for eachLine in range(1, (1+NInRandVars)):
+					# G(X-dh) = val1
+					for eachVar in varId:
+						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
+					val1 = eval(self.limstate, globals(), varVal)
+
+					gradG[curId] = (valG-val1)/dh
+					curId += 1
+
+			#---------------------------------------------------------------
+
+
+			#---------------------------------------------------------------
+			# the min valu of grad must be greater than 0, if isn't print a warning 
+			if min(abs(gradG)) == 0:
+				self._PrintR('\n WARNING: One or more terms from gradG are equal to zero. \n Please pay attention to that!\n')
+			#-------------------------------------------------------------------
+
 
 			#-------------------------------------------------------------------
 			# FORM Method
