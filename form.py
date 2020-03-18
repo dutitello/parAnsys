@@ -69,6 +69,7 @@ class FORM(object):
 		self._options['iHLRF_par_b'] = 0.50
 		self._options['iHLRF_step_lambdk_test'] = 4
 		self._options['rHLRF_relax'] = 0.50
+		self._options['APDLdebug'] = False
 
 		# After
 		self.variableDesPt = {}
@@ -538,6 +539,11 @@ class FORM(object):
 
 			* iHLRF_step_lambdk_test : float
 			  Size of ``lambdak`` test block, after each block convergence is checked.
+
+		For analyses using ANSYS:
+			* APDLdebug: bool
+			  If it's true it will be print the dict with results imported from ANSYS
+			  at each call. Great use for APDL debug.
 
 		** If an invalid option or value is set the process could stop (or not).**
 
@@ -1057,6 +1063,12 @@ class FORM(object):
 
 				# Get results from ANSYS
 				resANSYS = self.ansys.GetVarOutValues()
+
+				# If control APDL debug is true!
+				if self._options['APDLdebug'] == True:
+					self._PrintR('---\nPrinting \'resANSYS\' dict:')
+					self._PrintR(resANSYS)
+					self._PrintR('---\n')
 
 				# Add ANSYS results to matEvalPts
 				for eachVar in self.ansys.varOutNames:
