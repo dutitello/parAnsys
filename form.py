@@ -1369,10 +1369,12 @@ class FORM(object):
 			# conditional lastcycle below too. 
 			#### Sometimes it didn't converge because if this crap
 			relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
+		 	absErrorBeta = abs(curBeta-newBeta)
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
-			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % abs(curBeta-newBeta))
+			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % absErrorBeta)
 			#### if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
-			if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
+			#### if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
+			if abs(valG) < self.controls['tolLS'] and absErrorBeta < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 				### self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
 				lastcycle = True
