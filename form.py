@@ -1444,7 +1444,7 @@ class FORM(object):
 		self._PrintR(' Total of iterations: %3.3E' % (self._cycles))
 		self._PrintR(' Probability of failure (Pf): %2.4E' % (self.results['Pf']))
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.results['Beta'][-1]))
-		self._PrintR(' Elapsed time: %f minutes.' % (self.results['ElapsedTime']))
+		self._PrintR(' Elapsed time: %4.2f minutes.' % (self.results['ElapsedTime']))
 
 		self._PrintR(' Final values:')
 		self._PrintR('         VarName | D. Point    | grad(g(X_i)) | alfa(i) ')
