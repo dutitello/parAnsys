@@ -1370,6 +1370,7 @@ class FORM(object):
 			#### Sometimes it didn't converge because if this crap
 			relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
+			self._PrintR('Absolute error betwen last two Betas = %1.4f.' % abs(curBeta-newBeta))
 			#### if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
 			if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
