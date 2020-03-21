@@ -1251,7 +1251,7 @@ class FORM(object):
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = math.ceil(math.log(self.controls['tolRel']/maxdk)/math.log(par_b))
 						# I'm a good guy and so we can do more tests ;D
-					maxnk += 5
+					maxnk += 1
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
@@ -1296,6 +1296,12 @@ class FORM(object):
 
 							# Get results from ANSYS
 							resANSYS = self.ansys.GetVarOutValues()
+
+							# If control APDL debug is true!
+							if self._options['APDLdebug'] == True:
+								self._PrintR('---\nPrinting \'resANSYS\' dict:')
+								self._PrintR(resANSYS)
+								self._PrintR('---\n')
 
 							# Add ANSYS results to matEvalPts
 							for eachVar in self.ansys.varOutNames:
