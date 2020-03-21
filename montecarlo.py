@@ -236,10 +236,11 @@ class MonteCarlo(object):
 		distrib = distrib.lower()
 
 		# CV or STD?
-		if cv is not None:
-			std = cv*mean
-		else:
-			cv = std/mean
+		if distrib not in ['constant', 'const', 'cons', 'c']:
+			if cv is not None:
+				std = cv*mean
+			else:
+				cv = std/mean
 
 		# Verify the distribution and then determine the parameters
 		# Gaussian variable
