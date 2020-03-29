@@ -1250,8 +1250,8 @@ class FORM(object):
 					maxdk = max(abs(dk))
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = math.ceil(math.log(self.controls['tolRel']/maxdk)/math.log(par_b))
-						# I'm a good guy and so we can do more tests ;D
-					maxnk += 1
+						# I'm not a good guy and so we will do less!
+					maxnk += -3
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
@@ -1264,7 +1264,7 @@ class FORM(object):
 					done = False
 					forcenk = False
 
-					self._PrintR('iHLRF step range from %f to %f, being test step size %d.' % (par_b**nk, par_b**maxnk, stepnk))
+					self._PrintR('iHLRF step range from %f to %f (%.0f steps), being test step size %d.' % (par_b**nk, par_b**maxnk, maxnk, stepnk))
 
 					for step in range(math.ceil(maxnk/stepnk)):
 						# current lenght
