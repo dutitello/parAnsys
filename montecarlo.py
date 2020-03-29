@@ -939,6 +939,9 @@ class MonteCarlo(object):
 			* cycles : int
 			  Number of cycles performed to obtain the solution.
 
+			* distparms : dictionary of dictionaries
+			  Return mean (gMean) and standart deviation (gStd) of each limit state function.  
+
 
 		**Status values:**
 
@@ -1051,6 +1054,13 @@ class MonteCarlo(object):
 		self.MCControl_LS['Pf'] = {}
 		# CV of cumulative Pf for each cycle (Pf)
 		self.MCControl_LS['CVPf'] = {}
+		# Mean values of LS g(x)
+		self.MCControl_LS['gMean'] = {}
+		# Std.Dev values of LS g(x)
+		self.MCControl_LS['gStd'] = {}
+		# S1 and S2 for means and std devs (internal use)
+		gS1 = {}
+		gS2 = {}
 		#-----------------------------------------------------------------------
 
 
@@ -1100,6 +1110,12 @@ class MonteCarlo(object):
 			self.MCControl_LS['Nfi2'][eachLS] = []
 			self.MCControl_LS['Pf'][eachLS] = []
 			self.MCControl_LS['CVPf'][eachLS] = []
+			self.MCControl_LS['gMean'][eachLS] = []
+			self.MCControl_LS['gStd'][eachLS] = []
+
+			# Start empty!
+			gS1[eachLS] = 0
+			gS2[eachLS] = 0
 
 			# Run all variables declared on each limit state to get Sampling Point
 			for eachVar in self.samplingDistrib[eachLS]:
@@ -1357,6 +1373,8 @@ class MonteCarlo(object):
 			#print('*varsValues:')
 			#print(varsValues)
 
+
+
 			#-------------------------------------------------------------------
 			# Eval each Limit State function
 			#
@@ -1423,10 +1441,20 @@ class MonteCarlo(object):
 
 					# Evaluate each simulation with its LS equation
 						#Igw[eachSim] = eval(self.limstates[eachLS][0], globals(), varVal)
-					if eval(self.limstates[eachLS][0], globals(), varVal) <= 0:
+					curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
+					# Count failures
+					if curSLSvalue <= 0:
 						Igw[eachSim] = simWei
 					else:
 						Igw[eachSim] = 0
+
+					# add curSLSvalue to gS1 and gS2 for mean and std
+					gS1[eachLS] += curSLSvalue**2
+					gS2[eachLS] += curSLSvalue
+
+				# Determine current mean and std.dev for LS
+				self.MCControl_LS['gMean'][eachLS].append(gS2[eachLS]/(Nsi*cycle))
+				self.MCControl_LS['gStd'][eachLS].append(math.sqrt((Nsi*cycle*gS1[eachLS]-gS2[eachLS]**2)/(Nsi*cycle*(Nsi*cycle-1))))
 
 				# Convergence for each Limit State
 				# Nf and Nf**2 (weighted)
@@ -1490,9 +1518,14 @@ class MonteCarlo(object):
 			#print(cCVPf)
 			#print('---------------')
 
-			# Print results
+			# Print main results
 			self._PrintR('\nSolution on Cycle %d with %3.3E simulations:' % (cycle, cycle*Ns))
 			self._PrintR('Pf=%2.4E \nBeta=%2.3f \nCVPf=%2.3f \n' % (cPfi, -scipy.stats.norm.ppf(cPfi), cCVPf))
+			
+			# Print limit states mean and std dev
+			self._PrintR('Limit states means and standard deviations:')
+			for eachLS in self.limstates:
+				self._PrintR('  Limit state %d: mean=%.4E, std.dev.=%.4E.' % (eachLS, self.MCControl_LS['gMean'][eachLS][-1], self.MCControl_LS['gStd'][eachLS][-1]))
 
 			# Verify the convergence criteria for CVPf after 3rd cycle
 			# Avoid CVPf < 1E-5!
@@ -1596,6 +1629,10 @@ class MonteCarlo(object):
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.MCControl['Beta'][-1]))
 		self._PrintR(' CV of Prob. of failure (CVPf): %2.3f' % (self.MCControl['CVPf'][-1]))
 		self._PrintR(' Elapsed time: %f minutes.' % (self.MCControl['ElapsedTime']))
+		# Print limit states mean and std dev
+		self._PrintR(' Final Limit States means and standard deviations:')
+		for eachLS in self.limstates:
+			self._PrintR('   Limit state %d: mean=%.4E, std.dev.=%.4E.' % (eachLS, self.MCControl_LS['gMean'][eachLS][-1], self.MCControl_LS['gStd'][eachLS][-1]))
 		self._PrintR('\n=======================================================================\n\n')
 		#-------------------------------------------------------------------
 
@@ -1606,10 +1643,15 @@ class MonteCarlo(object):
 
 		# rsampdict is the dictionary with sampling points in each limit state
 		rsampdict = {}
+		# distparms is the dictionary with g(X) mean and std dev for each ls
+		distparms = {}
 		for eachLS in self.limstates:
 			rsampdict[eachLS] = {}
 			for eachVar in self.SPForLS[eachLS]['pt']:
 				rsampdict[eachLS][eachVar] = self.SPForLS[eachLS]['pt'][eachVar][1]
+			distparms[eachLS] = {}
+			distparms[eachLS]['gMean'] = self.MCControl_LS['gMean'][eachLS][-1]
+			distparms[eachLS]['gStd'] = self.MCControl_LS['gStd'][eachLS][-1]
 
 		# put all in a dict
 		self._stnumb = stnumb
@@ -1621,6 +1663,7 @@ class MonteCarlo(object):
 		finret['CVPf'] = self.MCControl['CVPf'][-1]
 		finret['SamplingPoints'] = rsampdict
 		finret['cycles'] = cycle
+		finret['distparms'] = distparms
 
 		return finret
 
