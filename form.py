@@ -682,7 +682,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter=50, tolRel=0.005, tolLS='auto', dh=0.15, diff='forward', meth='iHLRF'):
+	def Run(self, maxIter=50, tolRel=0.01, tolLS='auto', dh=0.15, diff='forward', meth='iHLRF'):
 		"""
 		Run the FORM process.
 
@@ -755,7 +755,7 @@ class FORM(object):
 			* {gradG} : dictionary of values
 			  Dictionary with the final gradient for each variable.
 
-			* {alfa} : dictionary of values
+			* {alpha} : dictionary of values
 			  Dictionary with the final director cossines for each variable.
 
 			* cycles : int
@@ -922,8 +922,8 @@ class FORM(object):
 
 		# Cycle (or iteration) start at 1, so +1
 		for cycle in range(1, 1+self.controls['maxIter']):
-
-			self._PrintR('---')
+			#self._PrintR('----------------------------------------------------------------------------\n')
+			self._PrintR('____________________________________________________________________________')
 			self._PrintR('Iteration cycle %d.' % cycle)
 
 			#-------------------------------------------------------------------
@@ -1147,6 +1147,20 @@ class FORM(object):
 					gradG[curId] = (valG-val1)/dh
 					curId += 1
 
+			#---------------------------------------------------------------
+
+
+			#---------------------------------------------------------------
+			# Print gradient and alpha
+			#
+			self._PrintR('Gradient and direction cosines (alpha):')
+			self._PrintR('         VarName | grad(g(X_i)) | alpha(i)')
+			idx = 0
+			absgrad = math.sqrt(gradG.dot(gradG))
+			for eachVar in self.variableDesPt:
+				self._PrintR(' %15s | %+12.5E | %+9.5E' % (eachVar, gradG[idx], gradG[idx]/absgrad))
+				idx += 1
+			self._PrintR(' ')
 			#---------------------------------------------------------------
 
 
@@ -1407,17 +1421,12 @@ class FORM(object):
 			self._PrintR(' ')
 			self._PrintR('  Current Beta = %2.3f.' % curBeta)
 			self._PrintR(' ')
-			self._PrintR('         VarName | Next Design |        Current Point ')
-			self._PrintR('                 | Point       | grad(g(X_i)) | alfa(i) ')
-
+			self._PrintR('         VarName | Next Design Point')
 			idx = 0
-			absgrad = math.sqrt(gradG.dot(gradG))
-
 			for eachVar in self.variableDesPt:
-				self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
-				self.variableDesPt[eachVar], gradG[idx], gradG[idx]/absgrad))
+				self._PrintR(' %15s | %8.5E' % (eachVar, self.variableDesPt[eachVar]))
 				idx += 1
-			self._PrintR('\n')
+			self._PrintR(' ')
 
 
 			# FINISH IT, if not using cosYgradY verification
@@ -1443,17 +1452,17 @@ class FORM(object):
 		#self.results['Beta'] = math.sqrt(newVecRedPts.dot(newVecRedPts))
 		self.results['Pf'] = scipy.stats.norm.cdf(-self.results['Beta'][-1])
 
-		# Put grad and alfa in self.results
+		# Put grad and alpha in self.results
 		self.results['grad'] = {}
-		self.results['alfa'] = {}
+		self.results['alpha'] = {}
 		absgrad = math.sqrt(gradG.dot(gradG))
 		idx = 0
 		for eachVar in self.variableDistrib:
 			self.results['grad'][eachVar] = gradG[idx]
-			self.results['alfa'][eachVar] = gradG[idx]/absgrad
+			self.results['alpha'][eachVar] = gradG[idx]/absgrad
 			idx += 1
 
-		self._PrintR('\n\n=======================================================================\n')
+		self._PrintR('\n\n============================================================================\n')
 		# Verify if stopped without convergence
 		if cycle == self.controls['maxIter']:
 			self._stnumb = 1
@@ -1467,12 +1476,12 @@ class FORM(object):
 		self._PrintR(' Elapsed time: %4.2f minutes.' % (self.results['ElapsedTime']))
 
 		self._PrintR(' Final values:')
-		self._PrintR('         VarName | D. Point    | grad(g(X_i)) | alfa(i) ')
+		self._PrintR('         VarName | D. Point    | grad(g(X_i)) | alpha(i) ')
 		for eachVar in self.variableDesPt:
 			self._PrintR(' %15s | %8.5E | %+12.5E | %+9.5E' % (eachVar, \
-				self.variableDesPt[eachVar], self.results['grad'][eachVar], self.results['alfa'][eachVar]))
+				self.variableDesPt[eachVar], self.results['grad'][eachVar], self.results['alpha'][eachVar]))
 			#self._PrintR(' %s = %3.5E' % (eachVar, self.variableDesPt[eachVar]))
-		self._PrintR('\n=======================================================================\n\n')
+		self._PrintR('\n============================================================================\n\n')
 
 		#-------------------------------------------------------------------
 
@@ -1488,7 +1497,7 @@ class FORM(object):
 		finret['Beta'] = self.results['Beta'][-1]
 		finret['DesignPoint'] = self.variableDesPt
 		finret['gradG'] = self.results['grad']
-		finret['alfa'] = self.results['alfa']
+		finret['alpha'] = self.results['alpha']
 		finret['cycles'] = self._cycles
 
 		return finret
@@ -1626,10 +1635,10 @@ class FORM(object):
 
 			# Final Sampling Point
 			f.write('Final values:\n')
-			f.write(',Variable,D. Point,grad(g(X_i)),alfa(i)\n')
+			f.write(',Variable,D. Point,grad(g(X_i)),alpha(i)\n')
 			for eachVar in self.variableDesPt:
 				f.write(',%s,%8.5E,%11.5E,%9.5E\n' % (eachVar, \
-					self.variableDesPt[eachVar], self.results['grad'][eachVar], self.results['alfa'][eachVar]))
+					self.variableDesPt[eachVar], self.results['grad'][eachVar], self.results['alpha'][eachVar]))
 			f.write('\n')
 
 			# Beta values
