@@ -1093,8 +1093,6 @@ class FORM(object):
 				varVal[eachVar] = matEvalPts[0, varId[eachVar]]
 
 			valG = eval(self.limstate, globals(), varVal)
-			self._PrintR('Limit state value = %f.' % valG)
-
 
 			# tolLS 'auto' is tolRel*(initial valG)
 			if cycle == 1 and tolLS == 'auto':
@@ -1102,6 +1100,8 @@ class FORM(object):
 				self.controls['tolLS'] = tolLS
 				self._PrintR('Limit state tolerance set to %f.' % tolLS)
 
+			# Print limit state value:
+			self._PrintR('Limit state value = %f (tolerance = %f).' % (valG, self.controls['tolLS']))
 
 			# Eval Gradient
 			self._PrintR('Evaluating gradient.')
