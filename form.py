@@ -1265,7 +1265,7 @@ class FORM(object):
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = math.ceil(math.log(self.controls['tolRel']/maxdk)/math.log(par_b))
 						# I'm not a good guy and so we will do less!
-					maxnk += -3
+					maxnk += -1
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
