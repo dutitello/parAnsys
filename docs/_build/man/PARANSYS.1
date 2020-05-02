@@ -1,0 +1,1326 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "PARANSYS" "1" "May 02, 2020" "" "PARANSYS"
+.SH NAME
+PARANSYS \- PARANSYS Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH THIS IS PART OF MY MASTER DEGREE THESIS, WHICH IS CURRENTLY UNDER DEVELOPMENT.
+.sp
+This module calls ANSYS by Probabilistic Design System (PDS) as an FEM tool for
+running a couple of parametric analysis and get some variables back to Python.
+.sp
+The class \fBparansys.ANSYS\fP is the heart of the process, this class receive the
+ANSYS APDL model, the parameters names and values, runs everything and return
+the control parameters values for each simulation back to Python.
+.sp
+This class makes easy to run a lot of analysis with the same model just changing
+some parameters values, in this scope we have Reliability Analysis,
+Optimizations and Mesh Convergence Studies, for example.
+.sp
+For Reliability Analysis we have two others classes implemented using \fBparansys.ANSYS\fP:
+.INDENT 0.0
+.IP \(bu 2
+\fBparansys.MonteCarlo\fP
+.sp
+This class performs Monte Carlo reliability analyses, with and without using
+importance sampling. When using importance sampling it’s possible to fix the
+sampling point or search it based on the center of failures weights.
+It’s also possible to run Monte Carlo simulations for a limit state equation,
+without using ANSYS.
+.sp
+\fBFor now this class just accept one limit state function/failure mode.\fP
+.nf
+
+.fi
+.sp
+.IP \(bu 2
+\fBparansys.FORM\fP
+.sp
+This class applies the First Order Reliability Method (FORM) inside Python
+using ParAnsys as a connection with ANSYS for evaluate FEM models.
+It is possible to run simulations without using ANSYS, just
+defining the limit state equation and all variables.
+.nf
+
+.fi
+.sp
+.UNINDENT
+.sp
+This module makes no claim to own any rights to ANSYS, it’s just an interface
+to call the program owned by ANSYS.
+.SS ANSYS
+.INDENT 0.0
+.TP
+.B class paransys.ANSYS(exec_loc=None, run_location=\(aqC:\eProgramacao\eWPy64\-3720\epython\-3.7.2.amd64\eLib\esite\-packages\eparansys\edocs\eansys_anl\e\(aq, jobname=\(aqfile\(aq, nproc=2, override=False, cleardir=False, add_flags=\(aq\(aq)
+This class creates a couple of script files with some parameters defined here
+by the user, copy an APDL script file created by the user with the model to be
+analysed, run everything on ANSYS and get the results from some defined
+parameters back to Python.
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B exec_loc
+str, obligatory
+Location of ANSYS executable file.
+.TP
+.B run_location
+str, optional
+ANSYS working directory. Must be a separated directory.
+.sp
+Defaults to ansys_anl inside current directory.
+.TP
+.B jobname
+str, optional
+ANSYS jobname. Defaults to ‘file’.
+.TP
+.B nproc
+int, optional
+Number of processors. Defaults to 2.
+.TP
+.B override
+bool, optional
+Attempts to delete the .lock file at working directory.
+.sp
+It’s useful when ANSYS was interrupted.
+.sp
+Defaults to False
+.TP
+.B cleardir
+bool, optional
+Delete all the files from ANSYS working directory when call the Run command.
+.sp
+Defaults to False
+.TP
+.B add_flags
+str, optional
+Additional flags to be called with ANSYS.
+.sp
+If it’s an academic version use add_flags=’\-aa_r’
+.sp
+Do not use ‘\-b \-i \-o’.
+.sp
+Flags can be found at \fI\%https://www.sharcnet.ca/Software/Ansys/16.2.3/en\-us/help/ans_ope/Hlp_G_OPE3_1.html\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.nf
+
+
+.fi
+.sp
+.sp
+\fBClass methods:\fP
+.INDENT 7.0
+.TP
+.B ClearAll()
+Clear all the properties (not from ANSYS object)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B ClearValues()
+Clear the values of all variables.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B CreateVarIn(name)
+Create an INPUT variable.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Variable name.
+.sp
+Do not use spaces in the name!
+.sp
+The same name cannot be used with INPUT and OUTPUT variables.
+.sp
+It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B CreateVarOut(name)
+Create an OUTPUT variable.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Variable name.
+.sp
+Do not use spaces in the name!
+.sp
+The same name cannot be used with INPUT and OUTPUT variables.
+.sp
+It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B GetVarOutValues()
+Return the values of the Results file from ANSYS for all the OUTPUT variables
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Info(act=False)
+Turn on/off the return of the commands to Python.
+.INDENT 7.0
+.TP
+.B act
+bool, obligatory
+True turn On and False turn Off the return of the commands to Python.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Length
+Return the number of analysis to be executed and the length of INPUT arrays.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Run()
+Execute the analysis on ANSYS.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetLength(length)
+Define the number of analysis to be executed and the length of INPUT arrays.
+Must be set before the variables.
+.INDENT 7.0
+.TP
+.B length: int, obligatory
+Number of analysis.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetModel(inputname, extrafiles=[], directory=\(aqC:\e\eProgramacao\e\eWPy64\-3720\e\epython\-3.7.2.amd64\e\eLib\e\esite\-packages\e\eparansys\e\edocs\(aq)
+Set the input script file to be used and extra files that should be copied together.
+All this files must be in the same directory set in parameter directory.
+.INDENT 7.0
+.TP
+.B inputname
+str, obligatory
+Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.
+.TP
+.B extrafiles
+list of strings, optional
+A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]
+.TP
+.B directory
+str, optional
+If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetVarInValues(name, values)
+Set the values of an INPUT variable
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Input variable name that will receive the values.
+.TP
+.B values
+1D np.array of floats, obligatory
+A 1D numpy.array() with the length of this class and the values to be analysed.
+If the array is not 1D just the first column (0) will be used.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Monte Carlo Simulation
+.INDENT 0.0
+.TP
+.B class paransys.MonteCarlo
+This class performns Monte Carlo simulations inside Python using ParAnsys as
+a connection with ANSYS for evaluate FEM models.
+.sp
+It is possible to run Monte Carlo simulations without using ANSYS, just
+defining the limit state equation and all variables.
+.sp
+This code was made following the ideia of ANSYS being a tool for getting the
+ultimate load of the structure. This works applying a displacement in the
+loaded node, and then getting the biggest reaction force on that node,
+following this way the limit state defined here is ‘R\-S’, where R are the
+values get from ANSYS and S the values generated in Python. It’s also
+possible to work applying the true load on ANSYS, it’s just necessary to
+formulate a valid limit state equation.
+.nf
+
+.fi
+.sp
+.sp
+ATTENTION: When using ANSYS the weight of results from ANSYS variables
+are determined using the weights of all ANSYS input variables.
+.nf
+
+.fi
+.sp
+.sp
+\fBTo do\fP
+.INDENT 7.0
+.IP 1. 3
+When structure has more than one limit state the PDF of sampling
+distribution is the sum of all limit states sampling distributions vs their
+sampling weights (h(x) = w1.h1(x) + w2.h2(x) + hi.wi(x)…)
+It’s already done the division of simulations for each cycle with the
+limit state weights.
+.IP 2. 3
+When sampling distribution is different of real distribution Pf is going
+wrong, so it’s not able to be used, for now.
+.UNINDENT
+.nf
+
+
+.fi
+.sp
+.sp
+\fBClass methods:\fP
+.INDENT 7.0
+.TP
+.B ANSYS(exec_loc=None, run_location=\(aqC:\e\eProgramacao\e\eWPy64\-3720\e\epython\-3.7.2.amd64\e\eLib\e\esite\-packages\e\eparansys\e\edocs\e\eansys_anl\e\e\(aq, jobname=\(aqfile\(aq, nproc=2, override=False, cleardir=False, add_flags=\(aq\(aq)
+If ANSYS will be used it defines ANSYS properties, for initialize the
+paransys.ANSYS class.
+.INDENT 7.0
+.TP
+.B exec_loc
+str, obligatory
+Location of ANSYS executable file.
+.TP
+.B run_location
+str, optional
+ANSYS working directory. Recomended to be a separated directory.
+Defaults to ansys_anl on current directory.
+.TP
+.B jobname
+str, optional
+ANSYS jobname. Defaults to ‘file’.
+.TP
+.B nproc
+int, optional
+Number of processors. Defaults to 2.
+.TP
+.B override
+bool, optional
+Attempts to delete the .lock file at working directory.
+It’s useful when ANSYS was interrupted.
+Defaults to False
+.TP
+.B cleardir
+bool, optional
+Delete all the files from ANSYS working directory when call the Run command.
+Defaults to False
+.TP
+.B add_flags
+str, optional
+Additional flags to be called with ANSYS.
+If it’s an academic version use add_flags=’\-aa_r’
+Do not use ‘\-b \-i \-o’
+Flags can be found at \fI\%https://www.sharcnet.ca/Software/Ansys/16.2.3/en\-us/help/ans_ope/Hlp_G_OPE3_1.html\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B CreateLimState(equat, weight=1.0, userf=None)
+Create and Set a new limit state.*
+.sp
+The number ID of LimitStates are generated automatically starting at 0
+for the first.
+.sp
+\fB* Current version supports only one limit state!\fP
+.sp
+ATTENTION: When using ANSYS the weight of results from ANSYS variables
+are determined using the weights of all ANSYS input variables.
+.INDENT 7.0
+.TP
+.B equat
+str, obligatory
+String with the equation of the limit state. It must be write as a
+function of defined variables (In and Out).
+.TP
+.B weight
+float, obligatory only with more than 1 limit state
+The weight of current limit state, it determines how the simulations
+are distributed betwen all the limit states.
+The sum of all limit states must be 1.00, so, if there is just one
+limit state it’s weight should be 1.00
+.TP
+.B userf
+function, optional
+An user defined function that could be used inside the limit state
+equation, called inside equat as \fBuserf()\fP\&. Each limit state has it’s
+own userf, but you can use the same Python function for all limit states.
+For example, you can create a complex Python function with loops, ifs
+and whatever for evaluate the R part of your limit state function
+for a concrete beam. An example is showed after.
+.UNINDENT
+.sp
+First example: if ANSYS returns the maximum load on a truss as variable
+FxMAX, and applied loads to be tested are \fB(g+q)*sin(theta)\fP, where
+\fBg\fP, \fBq\fP, theta are defined random variables created with \fBCreateVar()\fP\&.
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+mc.CreateLimState(equat=\(aqFxMAX\-(g+q)*sin(theta)\(aq, weight=1.00)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Note that you can use math expressions as \fBsin()\fP, \fBcos()\fP, \fBtan()\fP, \fBsqrt()\fP
+from Python math module inside the equation.
+.nf
+
+.fi
+.sp
+.sp
+Second example: you have a steel bar in tension that hasn’t hardening.
+It’s stress is a function of \fB(def, fy, E)\fP, where \fBdef\fP is current
+deformation, \fBfy\fP is yield stress and \fBE\fP the elastic moduli,
+you can create inside your code an function like:
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+def stress(def, fy, E):
+        if def > fy/E:
+                return fy
+        else:
+                return def*E
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+And now defining \fBuserf=stress\fP we can:
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+mc.CreateLimState(equat=\(aquserf(def,fy,E)\-q\(aq, weight=1.00, userf=stress)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+where \fBdef\fP, \fBfy\fP, \fBE\fP and \fBq\fP are random variables.
+Note that the function inside the limit state equation should be
+called as \fBuserf()\fP with the parameters from \fBstress\fP\&.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B CreateVar(name, distrib, mean, std=0, cv=None, par1=None, par2=None)
+Create a Random Variable
+.sp
+If it’s used on ANSYS it need to be told, so after this use:
+.sp
+.nf
+.ft C
+>>> mc.SetANSYSVar(name)
+.ft P
+.fi
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Name of variable.
+.TP
+.B distrib
+str, obligatory
+Probabilistic variable distribution type.
+.sp
+For all distributions Mean and Std are related to Normal distribution
+(the code determines the parameters for the desired distribution).
+.sp
+Available types are:
+* gaussian (or gauss, normal);
+* lognormal (or log, logn, ln, lognorm);
+* gumbel (or gumb, type1);
+* constant (or const) \- Constant value (doesn’t need std).
+.TP
+.B mean
+float, obligatory
+Standard mean of variable values.
+.TP
+.B std
+float, optional
+Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B cv
+float, optional
+Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B par1 and par2
+float, optional
+Parameters for future implementations.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B ExportDataCSV(filename, description=None)
+Exports Simulation data to a CSV file.
+.INDENT 7.0
+.TP
+.B filename
+str, obligatory
+Name of file that will receive the values, doesn’t need the
+extension “.csv”, it will be placed automatically.
+.TP
+.B description
+str, optional
+A string that will be write in the beggining of the file.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B GetSolutionControl(thing)
+Return values of Monte Carlo solution controllers.
+.INDENT 7.0
+.TP
+.B thing: str, obligatory
+Control that will be returned. Available things are listed below.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B In function of N:
+.INDENT 7.0
+.IP \(bu 2
+‘N_Pf’ = Probability of failure
+.IP \(bu 2
+‘N_Beta’ = Reliability index
+.IP \(bu 2
+‘N_CVPf’ = CV of Probability of failure
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B 2D numpy array of floats:
+Each line has simulation number and requested value on this simulation.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Graph(things, show=True, savefile=False)
+Generate graphics of Monte Carlo solution controllers.
+.sp
+Things can be a list of data that will be ploted in the same figure, the
+figure doesn’t need to be opened, it could be just saved, or just opened.
+.INDENT 7.0
+.TP
+.B things
+list of strings, obligatory
+List of data that will be ploted in the same figure. Available things
+are listed below.
+.TP
+.B show
+bool, optional
+Sinalize if figure should be opened.
+Defaults to True.
+.TP
+.B savefile
+str/bool, optional
+If it’s False doesn’t save anything.
+If it’s a string it will be used as directory+name that figure will
+have, it shouldn’t have extension, since it will be SVG.
+Defaults to False.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B With N as horizontal axis:
+.INDENT 7.0
+.IP \(bu 2
+‘N_Pf’ = Probability of failure
+.IP \(bu 2
+‘N_Beta’ = Reliability index
+.IP \(bu 2
+‘N_CVPf’ = CV of Probability of failure
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Info(act=False)
+Turn on/off the return of the commands to Python.
+.INDENT 7.0
+.TP
+.B act
+bool, obligatory
+True turn On and False turn Off the return of the commands to Python.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Run(Ns, Nmaxcycles, CVPf=0.0, tolAdPt=False)
+Run the Monte Carlo simulation.
+.INDENT 7.0
+.TP
+.B Ns
+integer, obligatory
+Number of simulations performed on each cycle.
+After each cycle the convergence of simualtion is verified.
+When using Importance Sampling with Adaptive Sampling, after each
+cycle the new sampling point will be determined.
+.TP
+.B Nmaxcycles
+integer, obligatory
+Maximum number of cycles to be performed, if CVPf is not reached on
+Nmaxcycles the simulation will be interrupted.
+.TP
+.B CVPf
+float, optional
+Target value of Probability Failure Coefficient of Variation, when
+reached the simulation stops.
+.TP
+.B tolAdPt
+float or False, optional
+Maximum relative tolerance for adaptive sampling point search.
+If the value is “False” it disable adaptive sampling, simulations
+will use always the user set point.
+.UNINDENT
+.sp
+\fBReturns a dictionary with:\fP
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+stnumb : integer
+Status of solution, values can be found after this list.
+.IP \(bu 2
+Pf : float
+Probability of failure.
+.IP \(bu 2
+Beta : float
+Reliability index.
+.IP \(bu 2
+CVPf : float
+Coefficient of Variation of Probability of failure
+.IP \(bu 2
+{SamplingPoints} : dictionary of dictionaries
+Dictionary with sampling points used, or founded in case of
+adaptive sampling, for each Variable on each Limit State.
+(SamplingPoints[eachLS][eachVar])
+.IP \(bu 2
+cycles : int
+Number of cycles performed to obtain the solution.
+.IP \(bu 2
+distparms : dictionary of dictionaries
+Return mean (gMean) and standart deviation (gStd) of each limit state function.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+\fBStatus values:\fP
+.INDENT 7.0
+.IP \(bu 2
+0: no problem;
+.IP \(bu 2
+1: warning, maximum of cycles reached with no convergence of CVPf;
+.IP \(bu 2
+99: undefined error!
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSModel(inputname, extrafiles=[], directory=\(aqC:\e\eProgramacao\e\eWPy64\-3720\e\epython\-3.7.2.amd64\e\eLib\e\esite\-packages\e\eparansys\e\edocs\(aq)
+Set the input script file to be used on ANSYS and extra files that should
+be copied together.
+All this files must be in the same directory set in parameter directory.
+.INDENT 7.0
+.TP
+.B inputname
+str, obligatory
+Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.
+.TP
+.B extrafiles
+list of strings, optional
+A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]
+.TP
+.B directory
+str, optional
+If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSOutVar(name)
+Defines a parameter/variable from ANSYS APDL script as an variable to
+return values for Python.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Variable/Parameter name, as defined in APDL script.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSVar(name)
+Mark a Random variable as ANSYS variable.
+.sp
+ATTENTION: When using ANSYS the weight of results from ANSYS variables
+are determined using the weights of all ANSYS input variables.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Name of variable.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetCorrel(var1, var2, correl)
+Set the correlation betwen two variables.
+.sp
+The values will be transformed by the Nataf process before running.
+.INDENT 7.0
+.TP
+.B var1
+str, obligatory
+First variable name.
+.TP
+.B var2
+str, obligatory
+Second variable name.
+.TP
+.B correl
+float, obligatory
+Correlation betwen var1 and var2.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetRandomVarSampl(name, limst, distrib, mean, std=0, cv=None, par1=None, par2=None)
+Sets the sampling distribution of a variable to performn Importance
+Sampling the simulations.
+.sp
+ATTENTION: When using ANSYS the weight of results from ANSYS variables
+are determined using the weights of all ANSYS input variables.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Name of variable.
+.TP
+.B limst
+integer, obligatory for type=1 with more than 1 limit state
+Limit state ID that will use current sampling distribution.
+.TP
+.B distrib
+str, obligatory
+Probabilistic variable distribution type.
+.sp
+For all distributions Mean and Std are related to Normal distribution
+(the code determines the parameters for the desired distribution).
+.sp
+Available types are:
+* gaussian (or gauss, normal);
+* lognormal (or log, logn, ln, lognorm);
+* gumbel (or gumb, type1);
+* constant (or const) \- Constant value (doesn’t need std).
+.TP
+.B mean
+float, obligatory
+Standard mean of variable values.
+.TP
+.B std
+float, optional
+Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B cv
+float, optional
+Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B par1 and par2
+float, optional
+Parameters for future implementations.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS First Order Reliability Method (FORM)
+.INDENT 0.0
+.TP
+.B class paransys.FORM
+This class applies the First Order Reliability Method (FORM) inside Python
+using ParAnsys as a connection with ANSYS for evaluate FEM models.
+.sp
+It is possible to run simulations without using ANSYS, just
+defining the limit state equation and all variables.
+.sp
+This code was made following the ideia of ANSYS being a tool for getting the
+ultimate load of the structure. This works applying a displacement in the
+loaded node, and then getting the biggest reaction force on that node,
+following this way the limit state defined here is ‘R\-S’, where R are the
+values get from ANSYS and S the values generated in Python. It’s also
+possible to work applying the true load on ANSYS, it’s just necessary to
+formulate a valid limit state equation.
+.nf
+
+
+.fi
+.sp
+.sp
+\fBClass methods:\fP
+.INDENT 7.0
+.TP
+.B ANSYS(exec_loc=None, run_location=\(aqC:\e\eProgramacao\e\eWPy64\-3720\e\epython\-3.7.2.amd64\e\eLib\e\esite\-packages\e\eparansys\e\edocs\e\eansys_anl\e\e\(aq, jobname=\(aqfile\(aq, nproc=2, override=False, cleardir=False, add_flags=\(aq\(aq)
+If ANSYS will be used it defines ANSYS properties, for initialize the
+paransys.ANSYS class.
+.INDENT 7.0
+.TP
+.B exec_loc
+str, obligatory
+Location of ANSYS executable file.
+.TP
+.B run_location
+str, optional
+ANSYS working directory. Recomended to be a separated directory.
+Defaults to ansys_anl on current directory.
+.TP
+.B jobname
+str, optional
+ANSYS jobname. Defaults to ‘file’.
+.TP
+.B nproc
+int, optional
+Number of processors. Defaults to 2.
+.TP
+.B override
+bool, optional
+Attempts to delete the .lock file at working directory.
+It’s useful when ANSYS was interrupted.
+Defaults to False
+.TP
+.B cleardir
+bool, optional
+Delete all the files from ANSYS working directory when call the Run command.
+Defaults to False
+.TP
+.B add_flags
+str, optional
+Additional flags to be called with ANSYS.
+If it’s an academic version use add_flags=’\-aa_r’
+Do not use ‘\-b \-i \-o’
+Flags can be found at \fI\%https://www.sharcnet.ca/Software/Ansys/16.2.3/en\-us/help/ans_ope/Hlp_G_OPE3_1.html\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B CreateVar(name, distrib, mean, std=0, cv=None, par1=None, par2=None)
+Create a Variable, random or not.
+.sp
+If it’s used on ANSYS it need to be told, so after this use:
+.sp
+.nf
+.ft C
+>>> form.SetANSYSVar(name)
+.ft P
+.fi
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Name of variable.
+.TP
+.B distrib
+str, obligatory
+Probabilistic variable distribution type.
+.sp
+For all distributions Mean and Std are related to Normal distribution
+(the code determines the parameters for the desired distribution).
+.sp
+Available types are:
+* gaussian (or gauss, normal);
+* lognormal (or log, logn, ln, lognorm);
+* gumbel (or gumb, type1);
+* constant (or const) \- Constant value (doesn’t need std).
+.TP
+.B mean
+float, obligatory
+Standard mean of variable values.
+.TP
+.B std
+float, optional
+Standard deviation of variable. You must define it or cv for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B cv
+float, optional
+Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.
+.sp
+For LogNormal variables it’s recommend to use CV!
+.TP
+.B par1 and par2
+float, optional
+Parameters for future implementations.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B ExportDataCSV(filename, description=None)
+Exports process data to a CSV file.
+.INDENT 7.0
+.TP
+.B filename
+str, obligatory
+Name of file that will receive the values, doesn’t need the
+extension “.csv”, it will be placed automatically.
+.TP
+.B description
+str, optional
+A string that will be write in the beggining of the file.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Info(act=False)
+Turn on/off the return of the commands to Python.
+.INDENT 7.0
+.TP
+.B act
+bool, obligatory
+True turn On and False turn Off the return of the commands to Python.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Options(option, value=None)
+Set extra options values.
+.INDENT 7.0
+.TP
+.B option
+str, obligatory
+Name of option, listed next.
+.TP
+.B value
+optional
+Value to be set, type varies with option.
+If not defined it will return current value.
+.UNINDENT
+.sp
+** Valid options:**
+For iHLRF method:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+iHLRF_forced_lambdk : float
+Forced value when line search doesnt found a valid \fBlambdak\fP\&.
+Being \fBlambdak\fP the step size.
+.sp
+It could be set as \fB\(aqauto\(aq\fP, when it
+is the complement of \fBcos(y*, gradG)\fP\&.
+Defaults to ‘auto’.
+.IP \(bu 2
+iHLRF_prod_ck : float
+Scalar value that will be multiplied by calculated \fBck\fP value. For a
+fix \fBck\fP value turn it to 0 and then use ‘iHLRF_add_ck’.
+.IP \(bu 2
+iHLRF_add_ck : float
+Scalar value that will be added to \fBck\fP value.
+.IP \(bu 2
+iHLRF_par_a : float
+Value presented as \fBa\fP in line search equation for iHLRF.
+.IP \(bu 2
+iHLRF_par_b : float
+Value presented as \fBb\fP in line search equation for iHLRF,
+\fBlambdak\fP value is \fBb**nk\fP\&.
+.IP \(bu 2
+iHLRF_step_lambdk_test : float
+Size of \fBlambdak\fP test block, after each block convergence is checked.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B For analyses using ANSYS:
+.INDENT 7.0
+.IP \(bu 2
+APDLdebug: bool
+If it’s true it will be print the dict with results imported from ANSYS
+at each call. Great use for APDL debug.
+.UNINDENT
+.UNINDENT
+.sp
+** If an invalid option or value is set the process could stop (or not).**
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Run(maxIter=50, tolRel=0.01, tolLS=\(aqauto\(aq, dh=0.15, diff=\(aqforward\(aq, meth=\(aqiHLRF\(aq)
+Run the FORM process.
+.INDENT 7.0
+.TP
+.B maxIter
+integer, optional
+Maximum of iterations that can be performed. After this the process
+will stop with error.
+Defaults to 50.
+.TP
+.B tolRel
+float, optional
+Maximum \fBrelative\fP error tolerance, for example on search for X point
+\fB|X_k \- X_(k\-1)|/|X_(k\-1)|<=tolRel\fP\&. Defaults to 0.005.
+.TP
+.B tolLS
+float, optional
+Maximum \fBabsolute\fP error tolerance for limit state function,
+\fB|G(X)|~=tolLS\fP\&. It should be calibrated based on the magnitude of
+limit state function.
+.sp
+It’s possible to automatically determine it using tolLS=’auto’, it will be set
+as (tolRel)*(first cycle limit state value).
+.sp
+Defaults to ‘auto’.
+.TP
+.B dh
+float, optional
+delta_h step when applying derivatives, value applied over X’, in
+reduced space, so in real space it’s applied over stadard
+deviation (\fBg(X\(aq + dh*std)...\fP). Defaults to 0.15.
+.TP
+.B diff
+str, optional
+Numeric derivative calcultation method. The possible mehtods are:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+center: for finite difference method with central difference,
+.UNINDENT
+.sp
+\fBf\(aq(x) = (f(x+h)\-f(x\-h)) / (2h)\fP, it needs \fB1 + 2*Nvars\fP
+evaluations of the limit state function.
+.INDENT 0.0
+.IP \(bu 2
+forward: for finite difference method with forward difference,
+.UNINDENT
+.sp
+\fBf\(aq(x) = (f(x+h)\-f(x)) / h\fP, it needs \fB1 + Nvars\fP
+evaluations of the limit state function.
+.INDENT 0.0
+.IP \(bu 2
+backward: for finite difference method with backward difference,
+.UNINDENT
+.sp
+\fBf\(aq(x) = (f(x)\-f(x\-h)) / h\fP, it needs \fB1 + Nvars\fP
+evaluations of the limit state function.
+.sp
+Defaults to forward.
+.UNINDENT
+.UNINDENT
+.TP
+.B meth
+str, optional
+FORM method used. Available methods are:
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+HLRF: Hasofer Lind Rackwitz and Fiessler method.
+.IP \(bu 2
+iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Defaults to iHLRF.
+.UNINDENT
+.sp
+\fBReturns a dictionary with:\fP
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+status : integer
+Status of solution, values can be found after this list.
+.IP \(bu 2
+Pf : float
+Probability of failure.
+.IP \(bu 2
+Beta : float
+Reliability index.
+.IP \(bu 2
+{DesignPoint} : dictionary of values
+Dictionary with the design points for each variable.
+.IP \(bu 2
+{gradG} : dictionary of values
+Dictionary with the final gradient for each variable.
+.IP \(bu 2
+{alpha} : dictionary of values
+Dictionary with the final director cossines for each variable.
+.IP \(bu 2
+cycles : int
+Number of iterations performed to obtain the solution.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+\fBStatus values:\fP
+.INDENT 7.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+0: no problem;
+.IP \(bu 2
+1: warning, maximum of cycles reached with no convergence of CVPf;
+.IP \(bu 2
+99: undefined error!
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSModel(inputname, extrafiles=[], directory=\(aqC:\e\eProgramacao\e\eWPy64\-3720\e\epython\-3.7.2.amd64\e\eLib\e\esite\-packages\e\eparansys\e\edocs\(aq)
+Set the input script file to be used on ANSYS and extra files that should
+be copied together.
+All this files must be in the same directory set in parameter directory.
+.INDENT 7.0
+.TP
+.B inputname
+str, obligatory
+Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.
+.TP
+.B extrafiles
+list of strings, optional
+A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+\fBextrafiles = [\(aqtemps.txt\(aq, \(aqmodel1.ans\(aq, \(aqfile.db\(aq]\fP
+.TP
+.B directory
+str, optional
+If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSOutVar(name)
+Defines a parameter/variable from ANSYS APDL script as an variable to
+return values for Python.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Variable/Parameter name, as defined in APDL script.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetANSYSVar(name)
+Set a variable as ANSYS variable.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Name of variable.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetCorrel(var1, var2, correl)
+Set the correlation betwen two variables. The values will be transformed
+by the Nataf process before running.
+.INDENT 7.0
+.TP
+.B var1
+str, obligatory
+First variable name.
+.TP
+.B var2
+str, obligatory
+Second variable name.
+.TP
+.B correl
+float, obligatory
+Correlation betwen var1 and var2.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetLimState(equat, userf=None)
+Set the limit state equation.
+.INDENT 7.0
+.TP
+.B equat
+str, obligatory
+String with the equation of the limit state. It must be write as a
+function of defined variables (In and Out).
+.TP
+.B userf
+function, optional
+An user defined function that could be used inside the limit state
+equation, called inside equat as \fBuserf()\fP\&.
+For example, you can create a complex Python function with loops, ifs
+and whatever for evaluate the R part of your limit state function
+for a concrete beam. An example is showed after.
+.UNINDENT
+.sp
+First example: if ANSYS returns the maximum load on a truss as variable
+FxMAX, and applied loads to be tested are \fB(g+q)*sin(theta)\fP, where
+\fBg\fP, \fBq\fP, theta are defined random variables created with \fBCreateVar()\fP\&.
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+form.SetLimState(equat=\(aqFxMAX\-(g+q)*sin(theta)\(aq)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Note that you can use math expressions as \fBsin()\fP, \fBcos()\fP, \fBtan()\fP, \fBsqrt()\fP
+from Python math module inside the equation.
+.nf
+
+.fi
+.sp
+.sp
+Second example: you have a steel bar in tension that hasn’t hardening.
+It’s stress is a function of \fB(eps, fy, E)\fP, where \fBeps\fP is current
+deformation, \fBfy\fP is yield stress and \fBE\fP the elastic moduli,
+you can create inside your code an function like:
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+def stress(eps, fy, E):
+        if eps > fy/E:
+                return fy
+        else:
+                return eps*E
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+And now defining \fBuserf=stress\fP we can:
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+form.SetLimState(equat=\(aquserf(eps,fy,E)\-q\(aq, userf=stress)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+where \fBeps\fP, \fBfy\fP, \fBE\fP and \fBq\fP are random variables.
+Note that the function inside the limit state equation should be
+called as \fBuserf()\fP with the parameters from \fBstress\fP\&.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B SetStartPoint(name, value)
+Set the point, for each variable, that process will start.
+If it’s not declared it will start with the mean value.
+.INDENT 7.0
+.TP
+.B name
+str, obligatory
+Variable name.
+.TP
+.B value
+float, obligatory
+Starting point for this variable.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Examples
+.SS Simple truss model
+.sp
+The first examples are related to a simple truss from the figure above.
+.SS Tutorial
+.sp
+LELELELELELE
+.INDENT 0.0
+.IP \(bu 2
+genindex
+.IP \(bu 2
+modindex
+.IP \(bu 2
+search
+.UNINDENT
+.SH AUTHOR
+Eduardo Pagnussat Titello
+.SH COPYRIGHT
+2019, Eduardo Pagnussat Titello
+.\" Generated by docutils manpage writer.
+.

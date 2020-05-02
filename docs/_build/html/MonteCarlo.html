@@ -190,7 +190,7 @@ wrong, so it’s not able to be used, for now.</li>
 <p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.MonteCarlo.ANSYS">
-<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
 <dl class="docutils">
@@ -427,6 +427,8 @@ adaptive sampling, for each Variable on each Limit State.
 (SamplingPoints[eachLS][eachVar])</li>
 <li>cycles : int
 Number of cycles performed to obtain the solution.</li>
+<li>distparms : dictionary of dictionaries
+Return mean (gMean) and standart deviation (gStd) of each limit state function.</li>
 </ul>
 </div></blockquote>
 <p><strong>Status values:</strong></p>
@@ -439,7 +441,7 @@ Number of cycles performed to obtain the solution.</li>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSModel">
-<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>

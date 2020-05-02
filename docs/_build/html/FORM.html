@@ -172,7 +172,7 @@ formulate a valid limit state equation.</p>
 <p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.FORM.ANSYS">
-<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
 <dl class="docutils">
@@ -302,12 +302,21 @@ Size of <code class="docutils literal notranslate"><span class="pre">lambdak</sp
 </li>
 </ul>
 </div></blockquote>
+<dl class="docutils">
+<dt>For analyses using ANSYS:</dt>
+<dd><ul class="first last simple">
+<li>APDLdebug: bool
+If it’s true it will be print the dict with results imported from ANSYS
+at each call. Great use for APDL debug.</li>
+</ul>
+</dd>
+</dl>
 <p>** If an invalid option or value is set the process could stop (or not).**</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter=50</em>, <em>tolRel=0.005</em>, <em>tolLS='auto'</em>, <em>dh=0.15</em>, <em>diff='forward'</em>, <em>meth='iHLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter=50</em>, <em>tolRel=0.01</em>, <em>tolLS='auto'</em>, <em>dh=0.15</em>, <em>diff='forward'</em>, <em>meth='iHLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the FORM process.</p>
 <dl class="docutils">
 <dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, optional</span></dt>
@@ -374,7 +383,7 @@ Reliability index.</li>
 Dictionary with the design points for each variable.</li>
 <li>{gradG} : dictionary of values
 Dictionary with the final gradient for each variable.</li>
-<li>{alfa} : dictionary of values
+<li>{alpha} : dictionary of values
 Dictionary with the final director cossines for each variable.</li>
 <li>cycles : int
 Number of iterations performed to obtain the solution.</li>
@@ -392,7 +401,7 @@ Number of iterations performed to obtain the solution.</li>
 
 <dl class="method">
 <dt id="paransys.FORM.SetANSYSModel">
-<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\ANSYS\\Python\\parAnsys\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>

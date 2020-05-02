@@ -14,7 +14,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('C:\\ANSYS\\Python\\paransys\\'))
+sys.path.insert(0, os.path.abspath('C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys'))
 import paransys
 
 
