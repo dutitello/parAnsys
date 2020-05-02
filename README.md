@@ -1,7 +1,7 @@
 # parAnsys
 A Python module to do some parametric analysis on ANSYS software, it includes some reliability methods.
 
-** Docs are available in https://dutitello.github.io/paransys/ **
+**Docs are available in https://dutitello.github.io/paransys/**
 
 ### ANSYS is a paid software!
 
