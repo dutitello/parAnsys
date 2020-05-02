@@ -5,6 +5,8 @@ running Monte Carlo simulations in Python.
 
 This module works based on ParAnsys.ANSYS.
 
+Docs are also available in https://dutitello.github.io/paransys/ 
+
 """
 
 import os

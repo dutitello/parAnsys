@@ -1,6 +1,8 @@
 # parAnsys
 A Python module to do some parametric analysis on ANSYS software, it includes some reliability methods.
 
+** Docs are available in https://dutitello.github.io/paransys/ **
+
 ### ANSYS is a paid software!
 
 # ToDo:
@@ -18,3 +20,4 @@ iHLRF step size is 1.000000.C:\Programacao\WPy64-3720\python-3.7.2.amd64\lib\sit
 
 Maximum relative error on design point = inf.
 Absolute error betwen current and next beta = 0.5169.```
+

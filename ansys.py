@@ -8,6 +8,8 @@ Built using ANSYS documentation from https://www.sharcnet.ca/Software/Ansys/
 This module makes no claim to own any rights to ANSYS, it's just an interface
 to call the program owned by ANSYS.
 
+Docs are also available in https://dutitello.github.io/paransys/ 
+
 """
 
 import os
