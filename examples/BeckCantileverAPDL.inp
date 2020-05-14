@@ -1,0 +1,74 @@
+! Deterministic parameters (PARANSYS will change this)
+b = 4
+h = 1
+l = 60
+q = 1.15
+
+! Hasn't many inlfuence
+E = 2000000 
+v = 0.26
+ndiv = 20
+
+/PREP7
+! Elements and Materials
+ET,1,BEAM189
+MPTEMP,,,,,,,,
+MPTEMP,1,0
+MPDATA,EX,1,,E
+MPDATA,PRXY,1,,v
+
+! Section
+SECTYPE,1,BEAM,RECT,1,0
+SECOFFSET,CENT
+SECDATA,h,b,3,3
+
+! Geometry
+K,1,0,0,0
+K,2,l,0,0
+L,1,2
+
+! Mesh
+TYPE,1
+MAT,1
+ESYS,0
+SECNUM,1
+SMRT,OFF
+LESIZE,ALL,,,ndiv,,1,,,1
+LMESH,1
+ALLSEL
+
+! Boundary 
+D,ALL,UZ,0
+NSEL,S,LOC,X,0
+D,ALL,ALL,0
+ALLSEL
+
+! Load Q
+SFBEAM,ALL,2,PRES,Q, , , , , ,0
+
+! Solver
+/SOL
+ANTYPE,0,NEW
+NLGEOM,OFF
+AUTOTS,ON
+OUTRES,ALL,ALL
+CNVTOL,F,,0.01,2,0.01
+CNVTOL,U,,0.01,2,0.01
+NCNV,2,5000
+ALLSEL
+SOLVE
+
+! Plot (for development)
+/ESHAPE,1
+/REPLOT
+
+! Plot X stress 
+/POST1
+SET,LAST
+PLNSOL,S,X
+
+! Put max x stress at parameter STRESS (PARANSYS will import it)
+/POST26
+NUMVAR,200
+STORE,MERGE
+*GET,STRESS,SECR,1,S,X,MAX
