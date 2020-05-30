@@ -16,7 +16,6 @@ import numpy as np
 import scipy.stats
 import math
 from math import *
-from inspect import isfunction
 
 class MonteCarlo(object):
 	"""
@@ -625,6 +624,12 @@ class MonteCarlo(object):
 		Note that the function inside the limit state equation should be
 		called as ``userf()`` with the parameters from ``stress``.
 
+		Or we can do the same using the functions instead of the string:
+
+		.. code-block:: python
+
+			mc.CreateLimState(equat=stress)
+
 		"""
 		if weight <= 0 or weight > 1.00:
 			exception = Exception('The weigth of limit state must be greater than zero and less equal to 1.00.')
@@ -662,10 +667,14 @@ class MonteCarlo(object):
 		#
 		#
 		#---------------
-
-		# Change equation to lowcase
-		equat = equat.lower()
-
+		
+		if(type(equat) is str):
+			# String equation
+			# Change equation to lowcase
+			equat = equat.lower()
+		else:
+			self._userf = None
+	
 		# Fourth value limstates[act][3] will be the Ns for LS
 		self.limstates[act] = [equat, weight, userf, 0]
 
@@ -1404,7 +1413,6 @@ class MonteCarlo(object):
 				for eachSim in range(posi, posf):
 					# Dictionary of values in this simulation and LS (used on eval)
 					varVal = {}
-					varVal['userf'] = self.limstates[eachLS][2]
 
 					# Weigth of simulation (starts as 1)
 					#simWei = 1.00
@@ -1448,7 +1456,8 @@ class MonteCarlo(object):
 					#curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
 
 					# Test if limstate is a string or a function
-					if(type(self.limstate) is str):
+					if(type(self.limstates[eachLS][0]) is str):
+						varVal['userf'] = self.limstates[eachLS][2]
 						curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
 					else:
 						curSLSvalue = self.limstates[eachLS][0](**varVal)

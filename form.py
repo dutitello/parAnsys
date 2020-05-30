@@ -378,13 +378,18 @@ class FORM(object):
 
 		Parameters
 		----------
-		equat : str, obligatory
-			String with the equation of the limit state. It must be write as a
+		equat : obligatory
+			1) It could be a string with the equation of the limit state. It must be write as a
 			function of defined variables (In and Out).
+			2) It could be a Python function created by the user, just passing the function name in 
+			the place of the string.
 
 		userf : function, optional
 			An user defined function that could be used inside the limit state
-			equation, called inside equat as ``userf()``.
+			equation (string), called inside equat as ``userf()``. 
+
+			It's similar to use a function instead of a string in the equat parameter.
+
 			For example, you can create a complex Python function with loops, ifs
 			and whatever for evaluate the R part of your limit state function
 			for a concrete beam. An example is showed after.
@@ -425,11 +430,17 @@ class FORM(object):
 		Note that the function inside the limit state equation should be
 		called as ``userf()`` with the parameters from ``stress``.
 
+		Or we can do the same using the functions instead of the string:
+
+		.. code-block:: python
+
+			form.SetLimState(equat=stress)
+
 		"""
 		# Store it
 		self.limstate = equat
 		
-		if(type(equat) is str):
+		if(type(self.limstate) is str):
 			# String equation
 			# Change equation to lowcase
 			self.limstate = self.limstate.lower()
@@ -438,7 +449,7 @@ class FORM(object):
 			return self._PrintR('Limit state defined as "{}".'.format(equat))
 		else:
 			# LS is a Python Function 
-			return self._PrintR('Limit state defined as "{}" function.'.format(self.limstate))
+			return self._PrintR('Limit state defined as "{}" function.'.format(self.limstate.__name__))
 
 	def SetANSYSVar(self, name):
 		"""
@@ -688,7 +699,7 @@ class FORM(object):
 
 
 
-	def Run(self, maxIter=50, tolRel=0.01, tolLS='auto', dh=0.15, diff='forward', meth='iHLRF'):
+	def Run(self, maxIter=50, tolRel=0.01, tolLS='auto', dh=0.05, diff='forward', meth='iHLRF'):
 		"""
 		Run the FORM process.
 
@@ -714,9 +725,9 @@ class FORM(object):
 			Defaults to 'auto'.
 
 		dh : float, optional
-			delta_h step when applying derivatives, value applied over X', in
-			reduced space, so in real space it's applied over stadard
-			deviation (``g(X' + dh*std)...``). Defaults to 0.15.
+			delta_h step when applying derivatives, value applied over means, as
+			h=mean(x)*dh, so, ``f'(x) = (f(x+mean(x)*dh)-f(x)) / (mean(x)*dh)``.
+			Defaults to 0.05.
 
 		diff : str, optional
 			Numeric derivative calcultation method. The possible mehtods are:
@@ -987,9 +998,9 @@ class FORM(object):
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
 					# Odd line is +h
-					matEvalPts[eachLine, 0:NInRandVars] = vecPts + vecMean*vecdh
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts[0:NInRandVars] + vecMean*vecdh
 					# and now -h
-					matEvalPts[eachLine+1, 0:NInRandVars] = vecPts - vecMean*vecdh
+					matEvalPts[eachLine+1, 0:NInRandVars] = vecPts[0:NInRandVars] - vecMean*vecdh
 					curId += 1
 
 			elif diff is 'forward':
@@ -1002,7 +1013,7 @@ class FORM(object):
 					# vecdh is not zero on current var item
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
-					matEvalPts[eachLine, 0:NInRandVars] = vecPts + vecMean*vecdh
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts[0:NInRandVars] + vecMean*vecdh
 					curId += 1
 
 			elif diff is 'backward':
@@ -1015,7 +1026,7 @@ class FORM(object):
 					# vecdh is not zero on current var item
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
-					matEvalPts[eachLine, 0:NInRandVars] = vecPts - vecMean*vecdh
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts[0:NInRandVars] - vecMean*vecdh
 					curId += 1
 
 
