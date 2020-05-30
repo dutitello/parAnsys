@@ -21,8 +21,8 @@ Constant variables:
 
 Correlation matrix:
 ,,y,z,m
-,y,1.000000,0.000000,0.000000
-,z,0.000000,1.000000,0.000000
+,y,1.000000,0.400000,0.000000
+,z,0.400000,1.000000,0.000000
 ,m,0.000000,0.000000,1.000000
 
 Limit State:,"y*z-m"
@@ -37,19 +37,19 @@ Results:
 FORM results:
 ,Exit status:,0,
 ,Total of iterations:,3
-,Probability of failure (Pf):,1.1459E-03
-,Reliability Index (Beta):,3.050
+,Probability of failure (Pf):,2.0982E-03
+,Reliability Index (Beta):,2.863
 ,Elapsed time (minutes):,0.001
 
 Final values:
 ,Variable,D. Point,grad(g(X_i)),alpha(i)
-,y,2.86106E+01,2.41392E+02,7.50743E-01
-,z,4.82783E+01,7.15265E+01,2.22452E-01
-,m,1.38141E+03,-2.00000E+02,-6.22012E-01
+,y,2.88771E+01,2.61233E+02,7.78429E-01
+,z,4.64712E+01,6.61657E+01,1.97162E-01
+,m,1.34200E+03,-2.00000E+02,-5.95966E-01
 
 Beta indexes of cycles:
 ,Cycle,Beta
 ,1,0.000
-,2,2.981
-,3,3.050
-,4,3.050
+,2,2.747
+,3,2.863
+,4,2.863

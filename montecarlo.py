@@ -15,7 +15,8 @@ from paransys.ansys import ANSYS
 import numpy as np
 import scipy.stats
 import math
-
+from math import *
+from inspect import isfunction
 
 class MonteCarlo(object):
 	"""
@@ -1443,7 +1444,15 @@ class MonteCarlo(object):
 
 					# Evaluate each simulation with its LS equation
 						#Igw[eachSim] = eval(self.limstates[eachLS][0], globals(), varVal)
-					curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
+					# Old solution:
+					#curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
+
+					# Test if limstate is a string or a function
+					if(type(self.limstate) is str):
+						curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
+					else:
+						curSLSvalue = self.limstates[eachLS][0](**varVal)
+
 					# Count failures
 					if curSLSvalue <= 0:
 						Igw[eachSim] = simWei

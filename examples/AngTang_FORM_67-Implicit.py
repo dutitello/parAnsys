@@ -15,26 +15,28 @@ form.CreateVar('y', 'gauss', 40, cv=0.125)
 form.CreateVar('z', 'gauss', 50, cv=0.050)
 form.CreateVar('m', 'gauss', 1000, cv=0.200)
 
-# A clean Implicit limit state function
+# An Python function that will be the Implicit function
 def myFunc(y, z, m):
-    return y * z - m
+    # Just to show that we can do a lot of things here...
 
-# But it's a function, so the parameters doesn't need to have the same name of random variables and we can have some fun, like this. 
-#   Of course, here I'm trying keep the result, but you can see the idea... 
-#   It's possible to connect complex functions here or create a function that do the connection (calling a lot of functions inside it)
-def CrazyFunction(x1, x2, x3):
-    if(x1 < -1000): x1 = 1000
-    if(x2 >= 1e28): x2 = 0
-    res = x1 * x2 - x3
-    if(res <= -100000): res = -100000
+    # Some conditional
+    if m > 1e27: 
+        m = 1e27
+    
+    # Determine the result
+    result = y * z - m
 
-    return res
+    # Print the result externally to PARANSYS
+    print('~~~The LS result is: {}'.format(result))
 
+    # Send return
+    return result
 
-# Create limit state
-#   You can hange the function name at userf=myFunc/CrazyFunction, but it's always called as userf() inside the LS
-#       Please, see that myFunc() uses x,y,m and CrazyFunction() uses x1,x2,x3, but inside userf() is used the random variables names
-form.SetLimState('userf(x3=m,x2=z,x1=y)', userf=CrazyFunction)
+# There are two ways to use implicit functions:
+# Setting a Python function in the place of the LS string, as next line:
+form.SetLimState(myFunc)
+# Or setting the Python function as userf and using it inside LS string:
+#form.SetLimState("userf(y=y, z=z, m=m)", userf=myFunc)
 
 # Run
 values = form.Run(dh=0.01, meth='iHLRF')

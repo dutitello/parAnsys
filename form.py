@@ -16,6 +16,7 @@ import numpy as np
 import scipy.stats
 from math import * # It's necessry to evaluate limit states
 import math
+from inspect import isfunction
 
 class FORM(object):
 	"""
@@ -55,6 +56,7 @@ class FORM(object):
 		self._ANSYS = False
 		self.PrintR = True
 		self.limstate = None
+		self._userf = None
 		self.variableDistrib = {}
 		self.variableConst = {}
 		self.variableStartPt = {}
@@ -424,17 +426,19 @@ class FORM(object):
 		called as ``userf()`` with the parameters from ``stress``.
 
 		"""
-
-		# Change equation to lowcase
-		equat = equat.lower()
-
 		# Store it
 		self.limstate = equat
-		self._userf = userf
+		
+		if(type(equat) is str):
+			# String equation
+			# Change equation to lowcase
+			self.limstate = self.limstate.lower()
+			self._userf = userf
 
-		return self._PrintR('Limit state defined as "%s".' %(equat))
-
-
+			return self._PrintR('Limit state defined as "{}".'.format(equat))
+		else:
+			# LS is a Python Function 
+			return self._PrintR('Limit state defined as "{}" function.'.format(self.limstate))
 
 	def SetANSYSVar(self, name):
 		"""
@@ -522,7 +526,7 @@ class FORM(object):
 			  Being ``lambdak`` the step size.
 
 			  It could be set as ``'auto'``, when it
-			  is the complement of ``cos(y*, gradG)``.
+			  is the complement of ``|y*.gradG|/(|y*|.|gradG|)``.
 			  Defaults to 'auto'.
 
 			* iHLRF_prod_ck : float
@@ -806,7 +810,7 @@ class FORM(object):
 
 
 		#-----------------------------------------------------------------------
-		# Create the correlation Matrix and VarId list
+		# Create the correlation Matrix, VarId list and Jyz/Jzy matrices
 		#
 		NInRandVars = len(self.variableDistrib)
 		NInConstVars = len(self.variableConst)
@@ -905,6 +909,12 @@ class FORM(object):
 			self.correlMat[i, j] = cor
 			self.correlMat[j, i] = cor
 
+		# Obtain the transformation matrices Jyz/Jzy
+		# Jzy is Lower matrix obtained by Cholesky at correlMat
+		Jzy = np.linalg.cholesky(self.correlMat)
+		# and Jyz is the inverse matrix
+		Jyz = np.linalg.inv(Jzy)
+
 		#-----------------------------------------------------------------------
 
 
@@ -929,7 +939,7 @@ class FORM(object):
 			self._PrintR('Iteration cycle %d.' % cycle)
 
 			#-------------------------------------------------------------------
-			# Mount mean vector and stddev matrix
+			# Mount mean vector, stddev matrix and transformations (Jxy/Jyx) matrices
 			#
 			matStd = np.zeros([NInRandVars, NInRandVars])
 			vecMean = np.zeros(NInRandVars)
@@ -951,28 +961,10 @@ class FORM(object):
 				# Put point in vecPts
 				vecPts[id] = self.variableConst[eachVar]
 
-
+			# In case of correlations we need to apply that over Jxy/Jyx
+			Jxy = matStd.dot(Jzy)
+			Jyx = Jyz.dot(np.linalg.inv(matStd))
 			#-------------------------------------------------------------------
-
-
-			#-------------------------------------------------------------------
-			# Get reduced uncorrelated points vector
-			# 	Mount Covariance Matrix, apply Cholesky and Invert it
-			#
-			matCov = matStd.dot(self.correlMat.dot(matStd))
-			matL = np.linalg.cholesky(matCov)
-			matLinv = np.linalg.inv(matL)
-
-			# reduced uncorrelated points
-			curVecRedPts = matLinv.dot(vecPts[:NInRandVars]-vecMean)
-
-			# Current beta
-			if cycle is 1:
-				self.results['Beta'].append(math.sqrt(curVecRedPts.dot(curVecRedPts)))
-
-			curBeta = self.results['Beta'][cycle]
-			#-------------------------------------------------------------------
-
 
 
 			#-------------------------------------------------------------------
@@ -995,9 +987,9 @@ class FORM(object):
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
 					# Odd line is +h
-					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts + vecMean*vecdh
 					# and now -h
-					matEvalPts[eachLine+1, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
+					matEvalPts[eachLine+1, 0:NInRandVars] = vecPts - vecMean*vecdh
 					curId += 1
 
 			elif diff is 'forward':
@@ -1010,7 +1002,7 @@ class FORM(object):
 					# vecdh is not zero on current var item
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
-					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + vecdh)
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts + vecMean*vecdh
 					curId += 1
 
 			elif diff is 'backward':
@@ -1023,7 +1015,7 @@ class FORM(object):
 					# vecdh is not zero on current var item
 					vecdh = np.zeros(NInRandVars)
 					vecdh[curId] = dh
-					matEvalPts[eachLine, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts - vecdh)
+					matEvalPts[eachLine, 0:NInRandVars] = vecPts - vecMean*vecdh
 					curId += 1
 
 
@@ -1083,18 +1075,22 @@ class FORM(object):
 
 
 			#-------------------------------------------------------------------
-			# Evaluate Limit State (valG) and Gradient (gradG)
+			# Evaluate Limit State (valG) and Gradient (in x) (gradGx)
 			#
 			self._PrintR('Evaluating limit state.')
 			# dic of values in each evaluation
 			varVal = {}
-			varVal['userf'] = self._userf
 
 			# Eval Limit State:
 			for eachVar in varId:
 				varVal[eachVar] = matEvalPts[0, varId[eachVar]]
 
-			valG = eval(self.limstate, globals(), varVal)
+			# Test if limstate is a string or a function
+			if(type(self.limstate) is str):
+				varVal['userf'] = self._userf
+				valG = eval(self.limstate, globals(), varVal)
+			else:
+				valG = self.limstate(**varVal)
 
 			# tolLS 'auto' is tolRel*(initial valG)
 			if cycle == 1 and tolLS == 'auto':
@@ -1109,8 +1105,8 @@ class FORM(object):
 			self._PrintR('Evaluating gradient.')
 
 			curId = 0
-			gradG = 0
-			gradG = np.zeros(NInRandVars)
+			gradGx = 0
+			gradGx = np.zeros(NInRandVars)
 
 			#Derivatives only for random variables/input var
 
@@ -1119,14 +1115,24 @@ class FORM(object):
 					# G(X+dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-					val1 = eval(self.limstate, globals(), varVal)
 
+					# Test if limstate is a string or a function
+					if(type(self.limstate) is str):
+						val1 = eval(self.limstate, globals(), varVal)
+					else:
+						val1 = self.limstate(**varVal)
+						
 					# G(X-dh) = val2
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine+1, varId[eachVar]]
-					val2 = eval(self.limstate, globals(), varVal)
+					
+					# Test if limstate is a string or a function
+					if(type(self.limstate) is str):
+						val2 = eval(self.limstate, globals(), varVal)
+					else:
+						val2 = self.limstate(**varVal)
 
-					gradG[curId] = (val1-val2)/(2*dh)
+					gradGx[curId] = (val1-val2)/(2*dh*vecMean[curId])
 					curId += 1
 
 			elif diff is 'forward':
@@ -1134,9 +1140,14 @@ class FORM(object):
 					# G(X+dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-					val1 = eval(self.limstate, globals(), varVal)
+					
+					# Test if limstate is a string or a function
+					if(type(self.limstate) is str):
+						val1 = eval(self.limstate, globals(), varVal)
+					else:
+						val1 = self.limstate(**varVal)
 
-					gradG[curId] = (val1-valG)/dh
+					gradGx[curId] = (val1-valG)/(dh*vecMean[curId])
 					curId += 1
 
 			elif diff is 'backward':
@@ -1144,11 +1155,22 @@ class FORM(object):
 					# G(X-dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
-					val1 = eval(self.limstate, globals(), varVal)
+					
+					# Test if limstate is a string or a function
+					if(type(self.limstate) is str):
+						val1 = eval(self.limstate, globals(), varVal)
+					else:
+						val1 = self.limstate(**varVal)
 
-					gradG[curId] = (valG-val1)/dh
+					gradGx[curId] = (valG-val1)/(dh*vecMean[curId])
 					curId += 1
 
+			#---------------------------------------------------------------
+
+			#---------------------------------------------------------------
+			# Get gradG (of y) by gradGx and Jxy
+			#
+			gradG = (Jxy.T).dot(gradGx)
 			#---------------------------------------------------------------
 
 
@@ -1174,6 +1196,21 @@ class FORM(object):
 
 
 			#-------------------------------------------------------------------
+			# Get reduced uncorrelated points vector
+			#
+
+			# reduced uncorrelated points
+			curVecRedPts = Jyx.dot(vecPts[:NInRandVars]-vecMean)
+
+			# Current beta
+			if cycle is 1:
+				self.results['Beta'].append(math.sqrt(curVecRedPts.dot(curVecRedPts)))
+
+			curBeta = self.results['Beta'][cycle]
+			#-------------------------------------------------------------------
+
+
+			#-------------------------------------------------------------------
 			# FORM Method
 			#
 			if meth in ['HLRF', 'iHLRF', 'rHLRF']:
@@ -1187,10 +1224,14 @@ class FORM(object):
 				#-------------------------------------------------------------------
 				# Verify the convergence
 				#
-				cosYgradY = abs(gradG.dot(curVecRedPts))/math.sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
-				self._PrintR('|cos(y*, gradG)| = %f (it must be next to 1).' % cosYgradY)
+				if(abs(gradG.dot(curVecRedPts)) > 0.0):
+					schwarzYgradG = abs(gradG.dot(curVecRedPts))/math.sqrt(gradG.dot(gradG)*curVecRedPts.dot(curVecRedPts))
+				else:
+					schwarzYgradG = 0.0
+
+				self._PrintR('|y*.gradG|/(|y*|.|gradG| = %f (it must be next to 1).' % schwarzYgradG)
 				if lastcycle is True:
-					if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
+					if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
 						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 						#self._PrintR('Performing a last cycle with final values.')
 						#lastcycle = True
@@ -1267,7 +1308,7 @@ class FORM(object):
 						# If b**n*max(dk) is less than tolRel, y ~= y+b**n*dk
 					maxnk = math.ceil(math.log(self.controls['tolRel']/maxdk)/math.log(par_b))
 						# I'm not a good guy and so we will do less!
-					maxnk += -1
+					maxnk += 0
 						# But if limit state value doesn't change anymore it will stop!
 					stepnk = self._options['iHLRF_step_lambdk_test']
 
@@ -1294,7 +1335,7 @@ class FORM(object):
 
 						for eachnk in range(curlen):
 							lambdks[eachnk] = par_b**nk
-							matEvalPts[eachnk, 0:NInRandVars] = vecMean + matL.dot(curVecRedPts + lambdks[eachnk]*dk)
+							matEvalPts[eachnk, 0:NInRandVars] = vecMean + Jxy.dot(curVecRedPts + lambdks[eachnk]*dk)
 							nk += 1
 
 						# pass ANSYSvars to ANSYS
@@ -1331,7 +1372,6 @@ class FORM(object):
 						for eachnk in range(curlen):
 							# dic of values in each evaluation
 							varVal = {}
-							varVal['userf'] = self._userf
 
 							# Save last valG_nk to compare it
 							valG_nk_old = valG_nk
@@ -1339,7 +1379,13 @@ class FORM(object):
 							# Eval Limit State
 							for eachVar in varId:
 								varVal[eachVar] = matEvalPts[eachnk, varId[eachVar]]
-							valG_nk = eval(self.limstate, globals(), varVal)
+							#valG_nk = eval(self.limstate, globals(), varVal)
+							# Test if limstate is a string or a function
+							if(type(self.limstate) is str):
+								varVal['userf'] = self._userf
+								valG_nk = eval(self.limstate, globals(), varVal)
+							else:
+								valG_nk = self.limstate(**varVal)
 
 							# Verify the condition
 							lambdk = lambdks[eachnk]
@@ -1366,7 +1412,7 @@ class FORM(object):
 					if done is False or forcenk is True:
 
 						if self._options['iHLRF_forced_lambdk'] is 'auto':
-							lambdk = 1 - cosYgradY
+							lambdk = 1 - schwarzYgradG
 						else:
 							lambdk = self._options['iHLRF_forced_lambdk']
 
@@ -1385,7 +1431,7 @@ class FORM(object):
 			newBeta = math.sqrt(newVecRedPts.dot(newVecRedPts))
 			self.results['Beta'].append(newBeta)
 
-			NewVecPts = vecMean + matL.dot(newVecRedPts)
+			NewVecPts = vecMean + Jxy.dot(newVecRedPts)
 
 			# Save it to self.variableDesPt
 			for eachVar in self.variableDesPt:
@@ -1397,7 +1443,7 @@ class FORM(object):
 			#-------------------------------------------------------------------
 			# Verify the convergence
 			#
-			# Here we have a problem: I don't know from where Beck get this cosYgradY verificarion!
+			# Here we have a problem: I don't know from where Beck get this schwarzYgradG verificarion!
 			# I've used that, but now I changed to the old fashion way.
 			# To use that again you need to change the next verification and remove the
 			# conditional lastcycle below too. 
@@ -1406,7 +1452,7 @@ class FORM(object):
 			absErrorBeta = abs(curBeta-newBeta)
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
 			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % absErrorBeta)
-			#### if abs(valG) < self.controls['tolLS'] and (1-cosYgradY) < self.controls['tolRel']:
+			#### if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
 			#### if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
 			if abs(valG) < self.controls['tolLS'] and absErrorBeta < self.controls['tolRel']:
 				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
@@ -1431,7 +1477,7 @@ class FORM(object):
 			self._PrintR(' ')
 
 
-			# FINISH IT, if not using cosYgradY verification
+			# FINISH IT, if not using schwarzYgradG verification
 			if lastcycle is True:
 				self._stnumb = 0
 				break
