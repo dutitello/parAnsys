@@ -1,0 +1,56 @@
+sep=,
+Comentarios?
+
+Input data:
+Process Controllers:
+,Limit of iterations:,50
+,Relative error tolerance:,1.000E-03
+,Absolute LS error tolerance:,1.000E+00
+,deltah (for derivatives):,1.000E-02
+,Finite difference method:,forward
+,FORM Method:,iHLRF
+
+Random variables:
+,Name,Distribution,Mean,Standard Deviation,CV,Par1,Par2
+,y,gauss,4.00000E+01,5.00000E+00,1.25000E-01
+,z,gauss,5.00000E+01,2.50000E+00,5.00000E-02
+,m,gauss,1.00000E+03,2.00000E+02,2.00000E-01
+
+Constant variables:
+,Name,Value
+,c,0.00000E+00
+
+Correlation matrix:
+,,y,z,m
+,y,1.000000,0.400000,0.000000
+,z,0.400000,1.000000,0.000000
+,m,0.000000,0.000000,1.000000
+
+Limit State:,"y*z-m+c"
+
+Initial design point:
+,y,4.00000E+01
+,z,5.00000E+01
+,m,1.00000E+03
+
+
+Results:
+FORM results:
+,Exit status:,0,
+,Total of iterations:,3
+,Probability of failure (Pf):,2.0991E-03
+,Reliability Index (Beta):,2.863
+,Elapsed time (minutes):,0.000
+
+Final values:
+,Variable,D. Point,grad(g(X_i)),alpha(i)
+,y,2.88573E+01,2.61233E+02,7.78429E-01
+,z,4.64781E+01,6.61657E+01,1.97162E-01
+,m,1.34123E+03,-2.00000E+02,-5.95966E-01
+
+Beta indexes of cycles:
+,Cycle,Beta
+,1,0.000
+,2,2.747
+,3,2.863
+,4,2.863
