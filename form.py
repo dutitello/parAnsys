@@ -1459,7 +1459,10 @@ class FORM(object):
 			# To use that again you need to change the next verification and remove the
 			# conditional lastcycle below too. 
 			#### Sometimes it didn't converge because if this crap
-			relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
+			if np.linalg.norm(newVecRedPts) > 0:
+				relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
+			else:
+				relErrorPoint = 1.0
 			absErrorBeta = abs(curBeta-newBeta)
 			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
 			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % absErrorBeta)
