@@ -1,159 +1,22 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Monte Carlo Simulation &mdash; PARANSYS 0.0.1 documentation</title>
-  
 
-  
-  
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <title>Monte Carlo Simulation</title>
+    <link rel="stylesheet" href="_static/epub.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> 
+  </head><body>
 
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="First Order Reliability Method (FORM)" href="FORM.html" />
-    <link rel="prev" title="ANSYS" href="ANSYS.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> PARANSYS
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="ANSYS.html">ANSYS</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Monte Carlo Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FORM.html">First Order Reliability Method (FORM)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PARANSYS</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
-      <li>Monte Carlo Simulation</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
             
   <div class="section" id="monte-carlo-simulation">
-<span id="montecarlo"></span><h1>Monte Carlo Simulation<a class="headerlink" href="#monte-carlo-simulation" title="Permalink to this headline">¶</a></h1>
+<span id="montecarlo"></span><h1>Monte Carlo Simulation</h1>
 <dl class="class">
 <dt id="paransys.MonteCarlo">
-<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">MonteCarlo</code><a class="headerlink" href="#paransys.MonteCarlo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">MonteCarlo</code></dt>
 <dd><p>This class performns Monte Carlo simulations inside Python using ParAnsys as
 a connection with ANSYS for evaluate FEM models.</p>
 <p>It is possible to run Monte Carlo simulations without using ANSYS, just
@@ -190,7 +53,7 @@ wrong, so it’s not able to be used, for now.</p></li>
 <p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.MonteCarlo.ANSYS">
-<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs\\ansys_anl\\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs\\ansys_anl\\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
 <dl class="simple">
@@ -220,7 +83,7 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.CreateLimState">
-<code class="sig-name descname">CreateLimState</code><span class="sig-paren">(</span><em class="sig-param">equat</em>, <em class="sig-param">weight=1.0</em>, <em class="sig-param">userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateLimState</code><span class="sig-paren">(</span><em class="sig-param">equat</em>, <em class="sig-param">weight=1.0</em>, <em class="sig-param">userf=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Create and Set a new limit state.*</p>
 <p>The number ID of LimitStates are generated automatically starting at 0
 for the first.</p>
@@ -281,7 +144,7 @@ called as <code class="docutils literal notranslate"><span class="pre">userf()</
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.CreateVar">
-<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Create a Random Variable</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -316,7 +179,7 @@ that aren’t constant, if both (cv and std) declared std will be used.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.ExportDataCSV">
-<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">description=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Exports Simulation data to a CSV file.</p>
 <dl class="simple">
 <dt>filename<span class="classifier">str, obligatory</span></dt><dd><p>Name of file that will receive the values, doesn’t need the
@@ -329,7 +192,7 @@ extension “.csv”, it will be placed automatically.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.GetSolutionControl">
-<code class="sig-name descname">GetSolutionControl</code><span class="sig-paren">(</span><em class="sig-param">thing</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.GetSolutionControl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">GetSolutionControl</code><span class="sig-paren">(</span><em class="sig-param">thing</em><span class="sig-paren">)</span></dt>
 <dd><p>Return values of Monte Carlo solution controllers.</p>
 <dl class="simple">
 <dt>thing: str, obligatory</dt><dd><p>Control that will be returned. Available things are listed below.</p>
@@ -351,7 +214,7 @@ extension “.csv”, it will be placed automatically.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Graph">
-<code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param">things</em>, <em class="sig-param">show=True</em>, <em class="sig-param">savefile=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Graph" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param">things</em>, <em class="sig-param">show=True</em>, <em class="sig-param">savefile=False</em><span class="sig-paren">)</span></dt>
 <dd><p>Generate graphics of Monte Carlo solution controllers.</p>
 <p>Things can be a list of data that will be ploted in the same figure, the
 figure doesn’t need to be opened, it could be just saved, or just opened.</p>
@@ -380,7 +243,7 @@ Defaults to False.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Info">
-<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span></dt>
 <dd><p>Turn on/off the return of the commands to Python.</p>
 <dl class="simple">
 <dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
@@ -390,7 +253,7 @@ Defaults to False.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Run">
-<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param">Ns</em>, <em class="sig-param">Nmaxcycles</em>, <em class="sig-param">CVPf=0.0</em>, <em class="sig-param">tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param">Ns</em>, <em class="sig-param">Nmaxcycles</em>, <em class="sig-param">CVPf=0.0</em>, <em class="sig-param">tolAdPt=False</em><span class="sig-paren">)</span></dt>
 <dd><p>Run the Monte Carlo simulation.</p>
 <dl class="simple">
 <dt>Ns<span class="classifier">integer, obligatory</span></dt><dd><p>Number of simulations performed on each cycle.
@@ -440,7 +303,7 @@ Return mean (gMean) and standart deviation (gStd) of each limit state function.<
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSModel">
-<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs'</em><span class="sig-paren">)</span></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>
@@ -466,7 +329,7 @@ Defaults to current running Python directory.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSOutVar">
-<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
 <dd><p>Defines a parameter/variable from ANSYS APDL script as an variable to
 return values for Python.</p>
 <dl class="simple">
@@ -477,7 +340,7 @@ return values for Python.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSVar">
-<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
 <dd><p>Mark a Random variable as ANSYS variable.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
@@ -489,7 +352,7 @@ are determined using the weights of all ANSYS input variables.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetCorrel">
-<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param">var1</em>, <em class="sig-param">var2</em>, <em class="sig-param">correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param">var1</em>, <em class="sig-param">var2</em>, <em class="sig-param">correl</em><span class="sig-paren">)</span></dt>
 <dd><p>Set the correlation betwen two variables.</p>
 <p>The values will be transformed by the Nataf process before running.</p>
 <dl class="simple">
@@ -504,7 +367,7 @@ are determined using the weights of all ANSYS input variables.</p>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetRandomVarSampl">
-<code class="sig-name descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">limst</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">limst</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span></dt>
 <dd><p>Sets the sampling distribution of a variable to performn Importance
 Sampling the simulations.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
@@ -543,52 +406,9 @@ that aren’t constant, if both (cv and std) declared std will be used.</p>
 </div>
 
 
-           </div>
-           
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="FORM.html" class="btn btn-neutral float-right" title="First Order Reliability Method (FORM)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="ANSYS.html" class="btn btn-neutral float-left" title="ANSYS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Eduardo Pagnussat Titello
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+      <div class="clearer"></div>
+    </div>
+  </body>
 </html>

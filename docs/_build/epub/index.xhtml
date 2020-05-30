@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to PARANSYS’s documentation!</title>
+    <link rel="stylesheet" href="_static/epub.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> 
+  </head><body>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-paransys-s-documentation">
+<h1>Welcome to PARANSYS’s documentation!</h1>
+<div class="section" id="this-is-part-of-my-master-degree-thesis-which-is-currently-under-development">
+<h2>This is part of my master degree thesis, which is currently under development.</h2>
+<p>This module calls ANSYS by Probabilistic Design System (PDS) as an FEM tool for
+running a couple of parametric analysis and get some variables back to Python.</p>
+<p>The class <strong>paransys.ANSYS</strong> is the heart of the process, this class receive the
+ANSYS APDL model, the parameters names and values, runs everything and return
+the control parameters values for each simulation back to Python.</p>
+<p>This class makes easy to run a lot of analysis with the same model just changing
+some parameters values, in this scope we have Reliability Analysis,
+Optimizations and Mesh Convergence Studies, for example.</p>
+<p>For Reliability Analysis we have two others classes implemented using <strong>paransys.ANSYS</strong>:</p>
+<ul>
+<li><p><strong>paransys.MonteCarlo</strong></p>
+<p>This class performs Monte Carlo reliability analyses, with and without using
+importance sampling. When using importance sampling it’s possible to fix the
+sampling point or search it based on the center of failures weights.
+It’s also possible to run Monte Carlo simulations for a limit state equation,
+without using ANSYS.</p>
+<p><strong>For now this class just accept one limit state function/failure mode.</strong></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+<li><p><strong>paransys.FORM</strong></p>
+<p>This class applies the First Order Reliability Method (FORM) inside Python
+using ParAnsys as a connection with ANSYS for evaluate FEM models.
+It is possible to run simulations without using ANSYS, just
+defining the limit state equation and all variables.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+</ul>
+<p>This module makes no claim to own any rights to ANSYS, it’s just an interface
+to call the program owned by ANSYS.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ANSYS.xhtml">ANSYS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MonteCarlo.xhtml">Monte Carlo Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FORM.xhtml">First Order Reliability Method (FORM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.xhtml">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.xhtml">Tutorial</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables</h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.xhtml"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.xhtml"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.xhtml"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
