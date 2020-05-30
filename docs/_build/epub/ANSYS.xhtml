@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <title>ANSYS</title>
+    <link rel="stylesheet" href="_static/epub.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> 
+  </head><body>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ansys">
+<span id="id1"></span><h1>ANSYS</h1>
+<dl class="class">
+<dt id="paransys.ANSYS">
+<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\Programacao\_MinhasBibliotecas\paransys\docs\ansys_anl\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span></dt>
+<dd><p>This class creates a couple of script files with some parameters defined here
+by the user, copy an APDL script file created by the user with the model to be
+analysed, run everything on ANSYS and get the results from some defined
+parameters back to Python.</p>
+<blockquote>
+<div><dl>
+<dt>exec_loc<span class="classifier">str, obligatory</span></dt><dd><p>Location of ANSYS executable file.</p>
+</dd>
+<dt>run_location<span class="classifier">str, optional</span></dt><dd><p>ANSYS working directory. Must be a separated directory.</p>
+<p>Defaults to ansys_anl inside current directory.</p>
+</dd>
+<dt>jobname<span class="classifier">str, optional</span></dt><dd><p>ANSYS jobname. Defaults to ‘file’.</p>
+</dd>
+<dt>nproc<span class="classifier">int, optional</span></dt><dd><p>Number of processors. Defaults to 2.</p>
+</dd>
+<dt>override<span class="classifier">bool, optional</span></dt><dd><p>Attempts to delete the .lock file at working directory.</p>
+<p>It’s useful when ANSYS was interrupted.</p>
+<p>Defaults to False</p>
+</dd>
+<dt>cleardir<span class="classifier">bool, optional</span></dt><dd><p>Delete all the files from ANSYS working directory when call the Run command.</p>
+<p>Defaults to False</p>
+</dd>
+<dt>add_flags<span class="classifier">str, optional</span></dt><dd><p>Additional flags to be called with ANSYS.</p>
+<p>If it’s an academic version use add_flags=’-aa_r’</p>
+<p>Do not use ‘-b -i -o’.</p>
+<p>Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>Class methods:</strong></p>
+<dl class="method">
+<dt id="paransys.ANSYS.ClearAll">
+<code class="sig-name descname">ClearAll</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Clear all the properties (not from ANSYS object)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.ClearValues">
+<code class="sig-name descname">ClearValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Clear the values of all variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.CreateVarIn">
+<code class="sig-name descname">CreateVarIn</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
+<dd><p>Create an INPUT variable.</p>
+<dl>
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable name.</p>
+<p>Do not use spaces in the name!</p>
+<p>The same name cannot be used with INPUT and OUTPUT variables.</p>
+<p>It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.CreateVarOut">
+<code class="sig-name descname">CreateVarOut</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
+<dd><p>Create an OUTPUT variable.</p>
+<dl>
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable name.</p>
+<p>Do not use spaces in the name!</p>
+<p>The same name cannot be used with INPUT and OUTPUT variables.</p>
+<p>It’s not case sensitivy, in fact it will be saved in uppercase
+because of ANSYS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.GetVarOutValues">
+<code class="sig-name descname">GetVarOutValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Return the values of the Results file from ANSYS for all the OUTPUT variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.Info">
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Turn on/off the return of the commands to Python.</p>
+<dl class="simple">
+<dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.Length">
+<em class="property">property </em><code class="sig-name descname">Length</code></dt>
+<dd><p>Return the number of analysis to be executed and the length of INPUT arrays.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.Run">
+<code class="sig-name descname">Run</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Execute the analysis on ANSYS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.SetLength">
+<code class="sig-name descname">SetLength</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span></dt>
+<dd><p>Define the number of analysis to be executed and the length of INPUT arrays.
+Must be set before the variables.</p>
+<dl class="simple">
+<dt>length: int, obligatory</dt><dd><p>Number of analysis.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.SetModel">
+<code class="sig-name descname">SetModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs'</em><span class="sig-paren">)</span></dt>
+<dd><p>Set the input script file to be used and extra files that should be copied together.
+All this files must be in the same directory set in parameter directory.</p>
+<dl class="simple">
+<dt>inputname<span class="classifier">str, obligatory</span></dt><dd><p>Name with extension of the script that will be executed in the analysis.
+The script must be done in function of the INPUT variables defined here,
+(as parameters of ANSYS), and must define/calculate ANSYS parameters with
+the results using the names defined here.</p>
+</dd>
+<dt>extrafiles<span class="classifier">list of strings, optional</span></dt><dd><p>A list of strings containing extra files (with extension) that are necessary to
+run the script analys, could be an MODEL with the MESH already generated,
+for example.
+An example of extrafiles list is:
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</p>
+</dd>
+<dt>directory<span class="classifier">str, optional</span></dt><dd><p>If the script is not in the current running Python directory you should
+place the entire location, if it’s in a subdirectory of current directory
+you can use ‘/dirname/filename.ext’.
+Defaults to current running Python directory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="paransys.ANSYS.SetVarInValues">
+<code class="sig-name descname">SetVarInValues</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">values</em><span class="sig-paren">)</span></dt>
+<dd><p>Set the values of an INPUT variable</p>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Input variable name that will receive the values.</p>
+</dd>
+<dt>values<span class="classifier">1D np.array of floats, obligatory</span></dt><dd><p>A 1D numpy.array() with the length of this class and the values to be analysed.
+If the array is not 1D just the first column (0) will be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -153,7 +153,7 @@
 <span id="form"></span><h1>First Order Reliability Method (FORM)<a class="headerlink" href="#first-order-reliability-method-form" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="paransys.FORM">
-<em class="property">class </em><code class="descclassname">paransys.</code><code class="descname">FORM</code><a class="headerlink" href="#paransys.FORM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">FORM</code><a class="headerlink" href="#paransys.FORM" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class applies the First Order Reliability Method (FORM) inside Python
 using ParAnsys as a connection with ANSYS for evaluate FEM models.</p>
 <p>It is possible to run simulations without using ANSYS, just
@@ -172,142 +172,133 @@ formulate a valid limit state equation.</p>
 <p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.FORM.ANSYS">
-<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs\\ansys_anl\\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
-<dl class="docutils">
-<dt>exec_loc <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Location of ANSYS executable file.</dd>
-<dt>run_location <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>ANSYS working directory. Recomended to be a separated directory.
-Defaults to ansys_anl on current directory.</dd>
-<dt>jobname <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>ANSYS jobname. Defaults to ‘file’.</dd>
-<dt>nproc <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
-<dd>Number of processors. Defaults to 2.</dd>
-<dt>override <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Attempts to delete the .lock file at working directory.
+<dl class="simple">
+<dt>exec_loc<span class="classifier">str, obligatory</span></dt><dd><p>Location of ANSYS executable file.</p>
+</dd>
+<dt>run_location<span class="classifier">str, optional</span></dt><dd><p>ANSYS working directory. Recomended to be a separated directory.
+Defaults to ansys_anl on current directory.</p>
+</dd>
+<dt>jobname<span class="classifier">str, optional</span></dt><dd><p>ANSYS jobname. Defaults to ‘file’.</p>
+</dd>
+<dt>nproc<span class="classifier">int, optional</span></dt><dd><p>Number of processors. Defaults to 2.</p>
+</dd>
+<dt>override<span class="classifier">bool, optional</span></dt><dd><p>Attempts to delete the .lock file at working directory.
 It’s useful when ANSYS was interrupted.
-Defaults to False</dd>
-<dt>cleardir <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Delete all the files from ANSYS working directory when call the Run command.
-Defaults to False</dd>
-<dt>add_flags <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>Additional flags to be called with ANSYS.
+Defaults to False</p>
+</dd>
+<dt>cleardir<span class="classifier">bool, optional</span></dt><dd><p>Delete all the files from ANSYS working directory when call the Run command.
+Defaults to False</p>
+</dd>
+<dt>add_flags<span class="classifier">str, optional</span></dt><dd><p>Additional flags to be called with ANSYS.
 If it’s an academic version use add_flags=’-aa_r’
 Do not use ‘-b -i -o’
-Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></dd>
+Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.CreateVar">
-<code class="descname">CreateVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.CreateVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.CreateVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Variable, random or not.</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">form</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">form</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of variable.</dd>
-<dt>distrib <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd><p class="first">Probabilistic variable distribution type.</p>
+<dl>
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Name of variable.</p>
+</dd>
+<dt>distrib<span class="classifier">str, obligatory</span></dt><dd><p>Probabilistic variable distribution type.</p>
 <p>For all distributions Mean and Std are related to Normal distribution
 (the code determines the parameters for the desired distribution).</p>
-<p class="last">Available types are:
+<p>Available types are:
 * gaussian (or gauss, normal);
 * lognormal (or log, logn, ln, lognorm);
 * gumbel (or gumb, type1);
 * constant (or const) - Constant value (doesn’t need std).</p>
 </dd>
-<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<dt>mean<span class="classifier">float, obligatory</span></dt><dd><p>Standard mean of variable values.</p>
 </dd>
-<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+<dt>std<span class="classifier">float, optional</span></dt><dd><p>Standard deviation of variable. You must define it or cv for variables
 that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
 </dd>
-<dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Parameters for future implementations.</dd>
+<dt>cv<span class="classifier">float, optional</span></dt><dd><p>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
+</dd>
+<dt>par1 and par2<span class="classifier">float, optional</span></dt><dd><p>Parameters for future implementations.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.ExportDataCSV">
-<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports process data to a CSV file.</p>
-<dl class="docutils">
-<dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of file that will receive the values, doesn’t need the
-extension “.csv”, it will be placed automatically.</dd>
-<dt>description <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>A string that will be write in the beggining of the file.</dd>
+<dl class="simple">
+<dt>filename<span class="classifier">str, obligatory</span></dt><dd><p>Name of file that will receive the values, doesn’t need the
+extension “.csv”, it will be placed automatically.</p>
+</dd>
+<dt>description<span class="classifier">str, optional</span></dt><dd><p>A string that will be write in the beggining of the file.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.Info">
-<code class="descname">Info</code><span class="sig-paren">(</span><em>act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off the return of the commands to Python.</p>
-<dl class="docutils">
-<dt>act <span class="classifier-delimiter">:</span> <span class="classifier">bool, obligatory</span></dt>
-<dd>True turn On and False turn Off the return of the commands to Python.</dd>
+<dl class="simple">
+<dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.Options">
-<code class="descname">Options</code><span class="sig-paren">(</span><em>option</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Options" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Options</code><span class="sig-paren">(</span><em class="sig-param">option</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Options" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set extra options values.</p>
-<dl class="docutils">
-<dt>option <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of option, listed next.</dd>
-<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">optional</span></dt>
-<dd>Value to be set, type varies with option.
-If not defined it will return current value.</dd>
+<dl class="simple">
+<dt>option<span class="classifier">str, obligatory</span></dt><dd><p>Name of option, listed next.</p>
+</dd>
+<dt>value<span class="classifier">optional</span></dt><dd><p>Value to be set, type varies with option.
+If not defined it will return current value.</p>
+</dd>
 </dl>
 <p>** Valid options:**
 For iHLRF method:</p>
 <blockquote>
 <div><ul>
-<li><p class="first">iHLRF_forced_lambdk : float
+<li><p>iHLRF_forced_lambdk : float
 Forced value when line search doesnt found a valid <code class="docutils literal notranslate"><span class="pre">lambdak</span></code>.
 Being <code class="docutils literal notranslate"><span class="pre">lambdak</span></code> the step size.</p>
 <p>It could be set as <code class="docutils literal notranslate"><span class="pre">'auto'</span></code>, when it
-is the complement of <code class="docutils literal notranslate"><span class="pre">cos(y*,</span> <span class="pre">gradG)</span></code>.
+is the complement of <code class="docutils literal notranslate"><span class="pre">|y*.gradG|/(|y*|.|gradG|)</span></code>.
 Defaults to ‘auto’.</p>
 </li>
-<li><p class="first">iHLRF_prod_ck : float
+<li><p>iHLRF_prod_ck : float
 Scalar value that will be multiplied by calculated <code class="docutils literal notranslate"><span class="pre">ck</span></code> value. For a
-fix <code class="docutils literal notranslate"><span class="pre">ck</span></code> value turn it to 0 and then use ‘iHLRF_add_ck’.</p>
-</li>
-<li><p class="first">iHLRF_add_ck : float
-Scalar value that will be added to <code class="docutils literal notranslate"><span class="pre">ck</span></code> value.</p>
-</li>
-<li><p class="first">iHLRF_par_a : float
-Value presented as <code class="docutils literal notranslate"><span class="pre">a</span></code> in line search equation for iHLRF.</p>
-</li>
-<li><p class="first">iHLRF_par_b : float
+fix <code class="docutils literal notranslate"><span class="pre">ck</span></code> value turn it to 0 and then use ‘iHLRF_add_ck’.</p></li>
+<li><p>iHLRF_add_ck : float
+Scalar value that will be added to <code class="docutils literal notranslate"><span class="pre">ck</span></code> value.</p></li>
+<li><p>iHLRF_par_a : float
+Value presented as <code class="docutils literal notranslate"><span class="pre">a</span></code> in line search equation for iHLRF.</p></li>
+<li><p>iHLRF_par_b : float
 Value presented as <code class="docutils literal notranslate"><span class="pre">b</span></code> in line search equation for iHLRF,
-<code class="docutils literal notranslate"><span class="pre">lambdak</span></code> value is <code class="docutils literal notranslate"><span class="pre">b**nk</span></code>.</p>
-</li>
-<li><p class="first">iHLRF_step_lambdk_test : float
-Size of <code class="docutils literal notranslate"><span class="pre">lambdak</span></code> test block, after each block convergence is checked.</p>
-</li>
+<code class="docutils literal notranslate"><span class="pre">lambdak</span></code> value is <code class="docutils literal notranslate"><span class="pre">b**nk</span></code>.</p></li>
+<li><p>iHLRF_step_lambdk_test : float
+Size of <code class="docutils literal notranslate"><span class="pre">lambdak</span></code> test block, after each block convergence is checked.</p></li>
 </ul>
 </div></blockquote>
-<dl class="docutils">
-<dt>For analyses using ANSYS:</dt>
-<dd><ul class="first last simple">
-<li>APDLdebug: bool
+<dl class="simple">
+<dt>For analyses using ANSYS:</dt><dd><ul class="simple">
+<li><p>APDLdebug: bool
 If it’s true it will be print the dict with results imported from ANSYS
-at each call. Great use for APDL debug.</li>
+at each call. Great use for APDL debug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -316,165 +307,165 @@ at each call. Great use for APDL debug.</li>
 
 <dl class="method">
 <dt id="paransys.FORM.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><em>maxIter=50</em>, <em>tolRel=0.01</em>, <em>tolLS='auto'</em>, <em>dh=0.15</em>, <em>diff='forward'</em>, <em>meth='iHLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param">maxIter=50</em>, <em class="sig-param">tolRel=0.01</em>, <em class="sig-param">tolLS='auto'</em>, <em class="sig-param">dh=0.05</em>, <em class="sig-param">diff='forward'</em>, <em class="sig-param">meth='iHLRF'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the FORM process.</p>
-<dl class="docutils">
-<dt>maxIter <span class="classifier-delimiter">:</span> <span class="classifier">integer, optional</span></dt>
-<dd>Maximum of iterations that can be performed. After this the process
+<dl>
+<dt>maxIter<span class="classifier">integer, optional</span></dt><dd><p>Maximum of iterations that can be performed. After this the process
 will stop with error.
-Defaults to 50.</dd>
-<dt>tolRel <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Maximum <strong>relative</strong> error tolerance, for example on search for X point
-<code class="docutils literal notranslate"><span class="pre">|X_k</span> <span class="pre">-</span> <span class="pre">X_(k-1)|/|X_(k-1)|&lt;=tolRel</span></code>. Defaults to 0.005.</dd>
-<dt>tolLS <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Maximum <strong>absolute</strong> error tolerance for limit state function,
+Defaults to 50.</p>
+</dd>
+<dt>tolRel<span class="classifier">float, optional</span></dt><dd><p>Maximum <strong>relative</strong> error tolerance, for example on search for X point
+<code class="docutils literal notranslate"><span class="pre">|X_k</span> <span class="pre">-</span> <span class="pre">X_(k-1)|/|X_(k-1)|&lt;=tolRel</span></code>. Defaults to 0.005.</p>
+</dd>
+<dt>tolLS<span class="classifier">float, optional</span></dt><dd><p>Maximum <strong>absolute</strong> error tolerance for limit state function,
 <code class="docutils literal notranslate"><span class="pre">|G(X)|~=tolLS</span></code>. It should be calibrated based on the magnitude of
 limit state function.</p>
 <p>It’s possible to automatically determine it using tolLS=’auto’, it will be set
 as (tolRel)*(first cycle limit state value).</p>
-<p class="last">Defaults to ‘auto’.</p>
+<p>Defaults to ‘auto’.</p>
 </dd>
-<dt>dh <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>delta_h step when applying derivatives, value applied over X’, in
-reduced space, so in real space it’s applied over stadard
-deviation (<code class="docutils literal notranslate"><span class="pre">g(X'</span> <span class="pre">+</span> <span class="pre">dh*std)...</span></code>). Defaults to 0.15.</dd>
-<dt>diff <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd><p class="first">Numeric derivative calcultation method. The possible mehtods are:</p>
-<blockquote class="last">
+<dt>dh<span class="classifier">float, optional</span></dt><dd><p>delta_h step when applying derivatives, value applied over means, as
+h=mean(x)*dh, so, <code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x+mean(x)*dh)-f(x))</span> <span class="pre">/</span> <span class="pre">(mean(x)*dh)</span></code>.
+Defaults to 0.05.</p>
+</dd>
+<dt>diff<span class="classifier">str, optional</span></dt><dd><p>Numeric derivative calcultation method. The possible mehtods are:</p>
+<blockquote>
 <div><ul class="simple">
-<li>center: for finite difference method with central difference,</li>
+<li><p>center: for finite difference method with central difference,</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x+h)-f(x-h))</span> <span class="pre">/</span> <span class="pre">(2h)</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">2*Nvars</span></code>
 evaluations of the limit state function.</p>
 <ul class="simple">
-<li>forward: for finite difference method with forward difference,</li>
+<li><p>forward: for finite difference method with forward difference,</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x+h)-f(x))</span> <span class="pre">/</span> <span class="pre">h</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">Nvars</span></code>
 evaluations of the limit state function.</p>
 <ul class="simple">
-<li>backward: for finite difference method with backward difference,</li>
+<li><p>backward: for finite difference method with backward difference,</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">f'(x)</span> <span class="pre">=</span> <span class="pre">(f(x)-f(x-h))</span> <span class="pre">/</span> <span class="pre">h</span></code>, it needs <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">Nvars</span></code>
 evaluations of the limit state function.</p>
 <p>Defaults to forward.</p>
 </div></blockquote>
 </dd>
-<dt>meth <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd><p class="first">FORM method used. Available methods are:</p>
+<dt>meth<span class="classifier">str, optional</span></dt><dd><p>FORM method used. Available methods are:</p>
 <blockquote>
 <div><ul class="simple">
-<li>HLRF: Hasofer Lind Rackwitz and Fiessler method.</li>
-<li>iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.</li>
+<li><p>HLRF: Hasofer Lind Rackwitz and Fiessler method.</p></li>
+<li><p>iHLRF: improved Hasofer Lind Rackwitz and Fiessler method.</p></li>
 </ul>
 </div></blockquote>
-<p class="last">Defaults to iHLRF.</p>
+<p>Defaults to iHLRF.</p>
 </dd>
 </dl>
 <p><strong>Returns a dictionary with:</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li>status : integer
-Status of solution, values can be found after this list.</li>
-<li>Pf : float
-Probability of failure.</li>
-<li>Beta : float
-Reliability index.</li>
-<li>{DesignPoint} : dictionary of values
-Dictionary with the design points for each variable.</li>
-<li>{gradG} : dictionary of values
-Dictionary with the final gradient for each variable.</li>
-<li>{alpha} : dictionary of values
-Dictionary with the final director cossines for each variable.</li>
-<li>cycles : int
-Number of iterations performed to obtain the solution.</li>
+<li><p>status : integer
+Status of solution, values can be found after this list.</p></li>
+<li><p>Pf : float
+Probability of failure.</p></li>
+<li><p>Beta : float
+Reliability index.</p></li>
+<li><p>{DesignPoint} : dictionary of values
+Dictionary with the design points for each variable.</p></li>
+<li><p>{gradG} : dictionary of values
+Dictionary with the final gradient for each variable.</p></li>
+<li><p>{alpha} : dictionary of values
+Dictionary with the final director cossines for each variable.</p></li>
+<li><p>cycles : int
+Number of iterations performed to obtain the solution.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Status values:</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li>0: no problem;</li>
-<li>1: warning, maximum of cycles reached with no convergence of CVPf;</li>
-<li>99: undefined error!</li>
+<li><p>0: no problem;</p></li>
+<li><p>1: warning, maximum of cycles reached with no convergence of CVPf;</p></li>
+<li><p>99: undefined error!</p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetANSYSModel">
-<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>
-<dl class="docutils">
-<dt>inputname <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name with extension of the script that will be executed in the analysis.
+<dl class="simple">
+<dt>inputname<span class="classifier">str, obligatory</span></dt><dd><p>Name with extension of the script that will be executed in the analysis.
 The script must be done in function of the INPUT variables defined here,
 (as parameters of ANSYS), and must define/calculate ANSYS parameters with
-the results using the names defined here.</dd>
-<dt>extrafiles <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
-<dd>A list of strings containing extra files (with extension) that are necessary to
+the results using the names defined here.</p>
+</dd>
+<dt>extrafiles<span class="classifier">list of strings, optional</span></dt><dd><p>A list of strings containing extra files (with extension) that are necessary to
 run the script analys, could be an MODEL with the MESH already generated,
 for example.
 An example of extrafiles list is:
-<code class="docutils literal notranslate"><span class="pre">extrafiles</span> <span class="pre">=</span> <span class="pre">['temps.txt',</span> <span class="pre">'model1.ans',</span> <span class="pre">'file.db']</span></code></dd>
-<dt>directory <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>If the script is not in the current running Python directory you should
+<code class="docutils literal notranslate"><span class="pre">extrafiles</span> <span class="pre">=</span> <span class="pre">['temps.txt',</span> <span class="pre">'model1.ans',</span> <span class="pre">'file.db']</span></code></p>
+</dd>
+<dt>directory<span class="classifier">str, optional</span></dt><dd><p>If the script is not in the current running Python directory you should
 place the entire location, if it’s in a subdirectory of current directory
 you can use ‘/dirname/filename.ext’.
-Defaults to current running Python directory.</dd>
+Defaults to current running Python directory.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetANSYSOutVar">
-<code class="descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a parameter/variable from ANSYS APDL script as an variable to
 return values for Python.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Variable/Parameter name, as defined in APDL script.</dd>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable/Parameter name, as defined in APDL script.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetANSYSVar">
-<code class="descname">SetANSYSVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a variable as ANSYS variable.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of variable.</dd>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Name of variable.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetCorrel">
-<code class="descname">SetCorrel</code><span class="sig-paren">(</span><em>var1</em>, <em>var2</em>, <em>correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param">var1</em>, <em class="sig-param">var2</em>, <em class="sig-param">correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetCorrel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the correlation betwen two variables. The values will be transformed
 by the Nataf process before running.</p>
-<dl class="docutils">
-<dt>var1 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>First variable name.</dd>
-<dt>var2 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Second variable name.</dd>
-<dt>correl <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Correlation betwen var1 and var2.</dd>
+<dl class="simple">
+<dt>var1<span class="classifier">str, obligatory</span></dt><dd><p>First variable name.</p>
+</dd>
+<dt>var2<span class="classifier">str, obligatory</span></dt><dd><p>Second variable name.</p>
+</dd>
+<dt>correl<span class="classifier">float, obligatory</span></dt><dd><p>Correlation betwen var1 and var2.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetLimState">
-<code class="descname">SetLimState</code><span class="sig-paren">(</span><em>equat</em>, <em>userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetLimState" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetLimState</code><span class="sig-paren">(</span><em class="sig-param">equat</em>, <em class="sig-param">userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetLimState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the limit state equation.</p>
-<dl class="docutils">
-<dt>equat <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>String with the equation of the limit state. It must be write as a
-function of defined variables (In and Out).</dd>
-<dt>userf <span class="classifier-delimiter">:</span> <span class="classifier">function, optional</span></dt>
-<dd>An user defined function that could be used inside the limit state
-equation, called inside equat as <code class="docutils literal notranslate"><span class="pre">userf()</span></code>.
-For example, you can create a complex Python function with loops, ifs
+<dl>
+<dt>equat<span class="classifier">obligatory</span></dt><dd><p>1) It could be a string with the equation of the limit state. It must be write as a
+function of defined variables (In and Out).
+2) It could be a Python function created by the user, just passing the function name in 
+the place of the string.</p>
+</dd>
+<dt>userf<span class="classifier">function, optional</span></dt><dd><p>An user defined function that could be used inside the limit state
+equation (string), called inside equat as <code class="docutils literal notranslate"><span class="pre">userf()</span></code>.</p>
+<p>It’s similar to use a function instead of a string in the equat parameter.</p>
+<p>For example, you can create a complex Python function with loops, ifs
 and whatever for evaluate the R part of your limit state function
-for a concrete beam. An example is showed after.</dd>
+for a concrete beam. An example is showed after.</p>
+</dd>
 </dl>
 <p>First example: if ANSYS returns the maximum load on a truss as variable
 FxMAX, and applied loads to be tested are <code class="docutils literal notranslate"><span class="pre">(g+q)*sin(theta)</span></code>, where
@@ -505,18 +496,22 @@ you can create inside your code an function like:</p>
 <p>where <code class="docutils literal notranslate"><span class="pre">eps</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
 Note that the function inside the limit state equation should be
 called as <code class="docutils literal notranslate"><span class="pre">userf()</span></code> with the parameters from <code class="docutils literal notranslate"><span class="pre">stress</span></code>.</p>
+<p>Or we can do the same using the functions instead of the string:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form</span><span class="o">.</span><span class="n">SetLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.FORM.SetStartPoint">
-<code class="descname">SetStartPoint</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetStartPoint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetStartPoint</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.FORM.SetStartPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the point, for each variable, that process will start.
 If it’s not declared it will start with the mean value.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Variable name.</dd>
-<dt>value <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Starting point for this variable.</dd>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable name.</p>
+</dd>
+<dt>value<span class="classifier">float, obligatory</span></dt><dd><p>Starting point for this variable.</p>
+</dd>
 </dl>
 </dd></dl>
 

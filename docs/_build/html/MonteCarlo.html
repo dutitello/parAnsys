@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -153,7 +153,7 @@
 <span id="montecarlo"></span><h1>Monte Carlo Simulation<a class="headerlink" href="#monte-carlo-simulation" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="paransys.MonteCarlo">
-<em class="property">class </em><code class="descclassname">paransys.</code><code class="descname">MonteCarlo</code><a class="headerlink" href="#paransys.MonteCarlo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">MonteCarlo</code><a class="headerlink" href="#paransys.MonteCarlo" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class performns Monte Carlo simulations inside Python using ParAnsys as
 a connection with ANSYS for evaluate FEM models.</p>
 <p>It is possible to run Monte Carlo simulations without using ANSYS, just
@@ -175,13 +175,13 @@ are determined using the weights of all ANSYS input variables.</p>
 </div>
 <p><strong>To do</strong></p>
 <ol class="arabic simple">
-<li>When structure has more than one limit state the PDF of sampling
+<li><p>When structure has more than one limit state the PDF of sampling
 distribution is the sum of all limit states sampling distributions vs their
 sampling weights (h(x) = w1.h1(x) + w2.h2(x) + hi.wi(x)…)
 It’s already done the division of simulations for each cycle with the
-limit state weights.</li>
-<li>When sampling distribution is different of real distribution Pf is going
-wrong, so it’s not able to be used, for now.</li>
+limit state weights.</p></li>
+<li><p>When sampling distribution is different of real distribution Pf is going
+wrong, so it’s not able to be used, for now.</p></li>
 </ol>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -190,59 +190,59 @@ wrong, so it’s not able to be used, for now.</li>
 <p><strong>Class methods:</strong></p>
 <dl class="method">
 <dt id="paransys.MonteCarlo.ANSYS">
-<code class="descname">ANSYS</code><span class="sig-paren">(</span><em>exec_loc=None</em>, <em>run_location='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs\\ansys_anl\\'</em>, <em>jobname='file'</em>, <em>nproc=2</em>, <em>override=False</em>, <em>cleardir=False</em>, <em>add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs\\ansys_anl\\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
-<dl class="docutils">
-<dt>exec_loc <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Location of ANSYS executable file.</dd>
-<dt>run_location <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>ANSYS working directory. Recomended to be a separated directory.
-Defaults to ansys_anl on current directory.</dd>
-<dt>jobname <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>ANSYS jobname. Defaults to ‘file’.</dd>
-<dt>nproc <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
-<dd>Number of processors. Defaults to 2.</dd>
-<dt>override <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Attempts to delete the .lock file at working directory.
+<dl class="simple">
+<dt>exec_loc<span class="classifier">str, obligatory</span></dt><dd><p>Location of ANSYS executable file.</p>
+</dd>
+<dt>run_location<span class="classifier">str, optional</span></dt><dd><p>ANSYS working directory. Recomended to be a separated directory.
+Defaults to ansys_anl on current directory.</p>
+</dd>
+<dt>jobname<span class="classifier">str, optional</span></dt><dd><p>ANSYS jobname. Defaults to ‘file’.</p>
+</dd>
+<dt>nproc<span class="classifier">int, optional</span></dt><dd><p>Number of processors. Defaults to 2.</p>
+</dd>
+<dt>override<span class="classifier">bool, optional</span></dt><dd><p>Attempts to delete the .lock file at working directory.
 It’s useful when ANSYS was interrupted.
-Defaults to False</dd>
-<dt>cleardir <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Delete all the files from ANSYS working directory when call the Run command.
-Defaults to False</dd>
-<dt>add_flags <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>Additional flags to be called with ANSYS.
+Defaults to False</p>
+</dd>
+<dt>cleardir<span class="classifier">bool, optional</span></dt><dd><p>Delete all the files from ANSYS working directory when call the Run command.
+Defaults to False</p>
+</dd>
+<dt>add_flags<span class="classifier">str, optional</span></dt><dd><p>Additional flags to be called with ANSYS.
 If it’s an academic version use add_flags=’-aa_r’
 Do not use ‘-b -i -o’
-Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></dd>
+Flags can be found at <a class="reference external" href="https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html">https://www.sharcnet.ca/Software/Ansys/16.2.3/en-us/help/ans_ope/Hlp_G_OPE3_1.html</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.CreateLimState">
-<code class="descname">CreateLimState</code><span class="sig-paren">(</span><em>equat</em>, <em>weight=1.0</em>, <em>userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateLimState</code><span class="sig-paren">(</span><em class="sig-param">equat</em>, <em class="sig-param">weight=1.0</em>, <em class="sig-param">userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and Set a new limit state.*</p>
 <p>The number ID of LimitStates are generated automatically starting at 0
 for the first.</p>
 <p><strong>* Current version supports only one limit state!</strong></p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
-<dl class="docutils">
-<dt>equat <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>String with the equation of the limit state. It must be write as a
-function of defined variables (In and Out).</dd>
-<dt>weight <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory only with more than 1 limit state</span></dt>
-<dd>The weight of current limit state, it determines how the simulations
+<dl class="simple">
+<dt>equat<span class="classifier">str, obligatory</span></dt><dd><p>String with the equation of the limit state. It must be write as a
+function of defined variables (In and Out).</p>
+</dd>
+<dt>weight<span class="classifier">float, obligatory only with more than 1 limit state</span></dt><dd><p>The weight of current limit state, it determines how the simulations
 are distributed betwen all the limit states.
 The sum of all limit states must be 1.00, so, if there is just one
-limit state it’s weight should be 1.00</dd>
-<dt>userf <span class="classifier-delimiter">:</span> <span class="classifier">function, optional</span></dt>
-<dd>An user defined function that could be used inside the limit state
+limit state it’s weight should be 1.00</p>
+</dd>
+<dt>userf<span class="classifier">function, optional</span></dt><dd><p>An user defined function that could be used inside the limit state
 equation, called inside equat as <code class="docutils literal notranslate"><span class="pre">userf()</span></code>. Each limit state has it’s
 own userf, but you can use the same Python function for all limit states.
 For example, you can create a complex Python function with loops, ifs
 and whatever for evaluate the R part of your limit state function
-for a concrete beam. An example is showed after.</dd>
+for a concrete beam. An example is showed after.</p>
+</dd>
 </dl>
 <p>First example: if ANSYS returns the maximum load on a truss as variable
 FxMAX, and applied loads to be tested are <code class="docutils literal notranslate"><span class="pre">(g+q)*sin(theta)</span></code>, where
@@ -273,107 +273,106 @@ you can create inside your code an function like:</p>
 <p>where <code class="docutils literal notranslate"><span class="pre">def</span></code>, <code class="docutils literal notranslate"><span class="pre">fy</span></code>, <code class="docutils literal notranslate"><span class="pre">E</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> are random variables.
 Note that the function inside the limit state equation should be
 called as <code class="docutils literal notranslate"><span class="pre">userf()</span></code> with the parameters from <code class="docutils literal notranslate"><span class="pre">stress</span></code>.</p>
+<p>Or we can do the same using the functions instead of the string:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mc</span><span class="o">.</span><span class="n">CreateLimState</span><span class="p">(</span><span class="n">equat</span><span class="o">=</span><span class="n">stress</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.CreateVar">
-<code class="descname">CreateVar</code><span class="sig-paren">(</span><em>name</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Random Variable</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of variable.</dd>
-<dt>distrib <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd><p class="first">Probabilistic variable distribution type.</p>
+<dl>
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Name of variable.</p>
+</dd>
+<dt>distrib<span class="classifier">str, obligatory</span></dt><dd><p>Probabilistic variable distribution type.</p>
 <p>For all distributions Mean and Std are related to Normal distribution
 (the code determines the parameters for the desired distribution).</p>
-<p class="last">Available types are:
+<p>Available types are:
 * gaussian (or gauss, normal);
 * lognormal (or log, logn, ln, lognorm);
 * gumbel (or gumb, type1);
 * constant (or const) - Constant value (doesn’t need std).</p>
 </dd>
-<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<dt>mean<span class="classifier">float, obligatory</span></dt><dd><p>Standard mean of variable values.</p>
 </dd>
-<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+<dt>std<span class="classifier">float, optional</span></dt><dd><p>Standard deviation of variable. You must define it or cv for variables
 that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
 </dd>
-<dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Parameters for future implementations.</dd>
+<dt>cv<span class="classifier">float, optional</span></dt><dd><p>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
+</dd>
+<dt>par1 and par2<span class="classifier">float, optional</span></dt><dd><p>Parameters for future implementations.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.ExportDataCSV">
-<code class="descname">ExportDataCSV</code><span class="sig-paren">(</span><em>filename</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports Simulation data to a CSV file.</p>
-<dl class="docutils">
-<dt>filename <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of file that will receive the values, doesn’t need the
-extension “.csv”, it will be placed automatically.</dd>
-<dt>description <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>A string that will be write in the beggining of the file.</dd>
+<dl class="simple">
+<dt>filename<span class="classifier">str, obligatory</span></dt><dd><p>Name of file that will receive the values, doesn’t need the
+extension “.csv”, it will be placed automatically.</p>
+</dd>
+<dt>description<span class="classifier">str, optional</span></dt><dd><p>A string that will be write in the beggining of the file.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.GetSolutionControl">
-<code class="descname">GetSolutionControl</code><span class="sig-paren">(</span><em>thing</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.GetSolutionControl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">GetSolutionControl</code><span class="sig-paren">(</span><em class="sig-param">thing</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.GetSolutionControl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return values of Monte Carlo solution controllers.</p>
-<dl class="docutils">
-<dt>thing: str, obligatory</dt>
-<dd>Control that will be returned. Available things are listed below.</dd>
+<dl class="simple">
+<dt>thing: str, obligatory</dt><dd><p>Control that will be returned. Available things are listed below.</p>
+</dd>
 </dl>
-<dl class="docutils">
-<dt>In function of N:</dt>
-<dd><ul class="first last simple">
-<li>‘N_Pf’ = Probability of failure</li>
-<li>‘N_Beta’ = Reliability index</li>
-<li>‘N_CVPf’ = CV of Probability of failure</li>
+<dl class="simple">
+<dt>In function of N:</dt><dd><ul class="simple">
+<li><p>‘N_Pf’ = Probability of failure</p></li>
+<li><p>‘N_Beta’ = Reliability index</p></li>
+<li><p>‘N_CVPf’ = CV of Probability of failure</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="docutils">
-<dt>2D numpy array of floats:</dt>
-<dd>Each line has simulation number and requested value on this simulation.</dd>
+<dl class="simple">
+<dt>2D numpy array of floats:</dt><dd><p>Each line has simulation number and requested value on this simulation.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Graph">
-<code class="descname">Graph</code><span class="sig-paren">(</span><em>things</em>, <em>show=True</em>, <em>savefile=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Graph" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param">things</em>, <em class="sig-param">show=True</em>, <em class="sig-param">savefile=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate graphics of Monte Carlo solution controllers.</p>
 <p>Things can be a list of data that will be ploted in the same figure, the
 figure doesn’t need to be opened, it could be just saved, or just opened.</p>
-<dl class="docutils">
-<dt>things <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, obligatory</span></dt>
-<dd>List of data that will be ploted in the same figure. Available things
-are listed below.</dd>
-<dt>show <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd>Sinalize if figure should be opened.
-Defaults to True.</dd>
-<dt>savefile <span class="classifier-delimiter">:</span> <span class="classifier">str/bool, optional</span></dt>
-<dd>If it’s False doesn’t save anything.
+<dl class="simple">
+<dt>things<span class="classifier">list of strings, obligatory</span></dt><dd><p>List of data that will be ploted in the same figure. Available things
+are listed below.</p>
+</dd>
+<dt>show<span class="classifier">bool, optional</span></dt><dd><p>Sinalize if figure should be opened.
+Defaults to True.</p>
+</dd>
+<dt>savefile<span class="classifier">str/bool, optional</span></dt><dd><p>If it’s False doesn’t save anything.
 If it’s a string it will be used as directory+name that figure will
 have, it shouldn’t have extension, since it will be SVG.
-Defaults to False.</dd>
+Defaults to False.</p>
+</dd>
 </dl>
-<dl class="docutils">
-<dt>With N as horizontal axis:</dt>
-<dd><ul class="first last simple">
-<li>‘N_Pf’ = Probability of failure</li>
-<li>‘N_Beta’ = Reliability index</li>
-<li>‘N_CVPf’ = CV of Probability of failure</li>
+<dl class="simple">
+<dt>With N as horizontal axis:</dt><dd><ul class="simple">
+<li><p>‘N_Pf’ = Probability of failure</p></li>
+<li><p>‘N_Beta’ = Reliability index</p></li>
+<li><p>‘N_CVPf’ = CV of Probability of failure</p></li>
 </ul>
 </dd>
 </dl>
@@ -381,164 +380,161 @@ Defaults to False.</dd>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Info">
-<code class="descname">Info</code><span class="sig-paren">(</span><em>act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off the return of the commands to Python.</p>
-<dl class="docutils">
-<dt>act <span class="classifier-delimiter">:</span> <span class="classifier">bool, obligatory</span></dt>
-<dd>True turn On and False turn Off the return of the commands to Python.</dd>
+<dl class="simple">
+<dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.Run">
-<code class="descname">Run</code><span class="sig-paren">(</span><em>Ns</em>, <em>Nmaxcycles</em>, <em>CVPf=0.0</em>, <em>tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param">Ns</em>, <em class="sig-param">Nmaxcycles</em>, <em class="sig-param">CVPf=0.0</em>, <em class="sig-param">tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the Monte Carlo simulation.</p>
-<dl class="docutils">
-<dt>Ns <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
-<dd>Number of simulations performed on each cycle.
+<dl class="simple">
+<dt>Ns<span class="classifier">integer, obligatory</span></dt><dd><p>Number of simulations performed on each cycle.
 After each cycle the convergence of simualtion is verified.
 When using Importance Sampling with Adaptive Sampling, after each
-cycle the new sampling point will be determined.</dd>
-<dt>Nmaxcycles <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory</span></dt>
-<dd>Maximum number of cycles to be performed, if CVPf is not reached on
-Nmaxcycles the simulation will be interrupted.</dd>
-<dt>CVPf <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Target value of Probability Failure Coefficient of Variation, when
-reached the simulation stops.</dd>
-<dt>tolAdPt <span class="classifier-delimiter">:</span> <span class="classifier">float or False, optional</span></dt>
-<dd>Maximum relative tolerance for adaptive sampling point search.
+cycle the new sampling point will be determined.</p>
+</dd>
+<dt>Nmaxcycles<span class="classifier">integer, obligatory</span></dt><dd><p>Maximum number of cycles to be performed, if CVPf is not reached on
+Nmaxcycles the simulation will be interrupted.</p>
+</dd>
+<dt>CVPf<span class="classifier">float, optional</span></dt><dd><p>Target value of Probability Failure Coefficient of Variation, when
+reached the simulation stops.</p>
+</dd>
+<dt>tolAdPt<span class="classifier">float or False, optional</span></dt><dd><p>Maximum relative tolerance for adaptive sampling point search.
 If the value is “False” it disable adaptive sampling, simulations
-will use always the user set point.</dd>
+will use always the user set point.</p>
+</dd>
 </dl>
 <p><strong>Returns a dictionary with:</strong></p>
 <blockquote>
 <div><ul class="simple">
-<li>stnumb : integer
-Status of solution, values can be found after this list.</li>
-<li>Pf : float
-Probability of failure.</li>
-<li>Beta : float
-Reliability index.</li>
-<li>CVPf : float
-Coefficient of Variation of Probability of failure</li>
-<li>{SamplingPoints} : dictionary of dictionaries
+<li><p>stnumb : integer
+Status of solution, values can be found after this list.</p></li>
+<li><p>Pf : float
+Probability of failure.</p></li>
+<li><p>Beta : float
+Reliability index.</p></li>
+<li><p>CVPf : float
+Coefficient of Variation of Probability of failure</p></li>
+<li><p>{SamplingPoints} : dictionary of dictionaries
 Dictionary with sampling points used, or founded in case of
 adaptive sampling, for each Variable on each Limit State.
-(SamplingPoints[eachLS][eachVar])</li>
-<li>cycles : int
-Number of cycles performed to obtain the solution.</li>
-<li>distparms : dictionary of dictionaries
-Return mean (gMean) and standart deviation (gStd) of each limit state function.</li>
+(SamplingPoints[eachLS][eachVar])</p></li>
+<li><p>cycles : int
+Number of cycles performed to obtain the solution.</p></li>
+<li><p>distparms : dictionary of dictionaries
+Return mean (gMean) and standart deviation (gStd) of each limit state function.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Status values:</strong></p>
 <ul class="simple">
-<li>0: no problem;</li>
-<li>1: warning, maximum of cycles reached with no convergence of CVPf;</li>
-<li>99: undefined error!</li>
+<li><p>0: no problem;</p></li>
+<li><p>1: warning, maximum of cycles reached with no convergence of CVPf;</p></li>
+<li><p>99: undefined error!</p></li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSModel">
-<code class="descname">SetANSYSModel</code><span class="sig-paren">(</span><em>inputname</em>, <em>extrafiles=[]</em>, <em>directory='C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>
-<dl class="docutils">
-<dt>inputname <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name with extension of the script that will be executed in the analysis.
+<dl class="simple">
+<dt>inputname<span class="classifier">str, obligatory</span></dt><dd><p>Name with extension of the script that will be executed in the analysis.
 The script must be done in function of the INPUT variables defined here,
 (as parameters of ANSYS), and must define/calculate ANSYS parameters with
-the results using the names defined here.</dd>
-<dt>extrafiles <span class="classifier-delimiter">:</span> <span class="classifier">list of strings, optional</span></dt>
-<dd>A list of strings containing extra files (with extension) that are necessary to
+the results using the names defined here.</p>
+</dd>
+<dt>extrafiles<span class="classifier">list of strings, optional</span></dt><dd><p>A list of strings containing extra files (with extension) that are necessary to
 run the script analys, could be an MODEL with the MESH already generated,
 for example.
 An example of extrafiles list is:
-extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</dd>
-<dt>directory <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
-<dd>If the script is not in the current running Python directory you should
+extrafiles = [‘temps.txt’, ‘model1.ans’, ‘file.db’]</p>
+</dd>
+<dt>directory<span class="classifier">str, optional</span></dt><dd><p>If the script is not in the current running Python directory you should
 place the entire location, if it’s in a subdirectory of current directory
 you can use ‘/dirname/filename.ext’.
-Defaults to current running Python directory.</dd>
+Defaults to current running Python directory.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSOutVar">
-<code class="descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a parameter/variable from ANSYS APDL script as an variable to
 return values for Python.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Variable/Parameter name, as defined in APDL script.</dd>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable/Parameter name, as defined in APDL script.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetANSYSVar">
-<code class="descname">SetANSYSVar</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a Random variable as ANSYS variable.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of variable.</dd>
+<dl class="simple">
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Name of variable.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetCorrel">
-<code class="descname">SetCorrel</code><span class="sig-paren">(</span><em>var1</em>, <em>var2</em>, <em>correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param">var1</em>, <em class="sig-param">var2</em>, <em class="sig-param">correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the correlation betwen two variables.</p>
 <p>The values will be transformed by the Nataf process before running.</p>
-<dl class="docutils">
-<dt>var1 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>First variable name.</dd>
-<dt>var2 <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Second variable name.</dd>
-<dt>correl <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Correlation betwen var1 and var2.</dd>
+<dl class="simple">
+<dt>var1<span class="classifier">str, obligatory</span></dt><dd><p>First variable name.</p>
+</dd>
+<dt>var2<span class="classifier">str, obligatory</span></dt><dd><p>Second variable name.</p>
+</dd>
+<dt>correl<span class="classifier">float, obligatory</span></dt><dd><p>Correlation betwen var1 and var2.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="paransys.MonteCarlo.SetRandomVarSampl">
-<code class="descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em>name</em>, <em>limst</em>, <em>distrib</em>, <em>mean</em>, <em>std=0</em>, <em>cv=None</em>, <em>par1=None</em>, <em>par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">limst</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the sampling distribution of a variable to performn Importance
 Sampling the simulations.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd>Name of variable.</dd>
-<dt>limst <span class="classifier-delimiter">:</span> <span class="classifier">integer, obligatory for type=1 with more than 1 limit state</span></dt>
-<dd>Limit state ID that will use current sampling distribution.</dd>
-<dt>distrib <span class="classifier-delimiter">:</span> <span class="classifier">str, obligatory</span></dt>
-<dd><p class="first">Probabilistic variable distribution type.</p>
+<dl>
+<dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Name of variable.</p>
+</dd>
+<dt>limst<span class="classifier">integer, obligatory for type=1 with more than 1 limit state</span></dt><dd><p>Limit state ID that will use current sampling distribution.</p>
+</dd>
+<dt>distrib<span class="classifier">str, obligatory</span></dt><dd><p>Probabilistic variable distribution type.</p>
 <p>For all distributions Mean and Std are related to Normal distribution
 (the code determines the parameters for the desired distribution).</p>
-<p class="last">Available types are:
+<p>Available types are:
 * gaussian (or gauss, normal);
 * lognormal (or log, logn, ln, lognorm);
 * gumbel (or gumb, type1);
 * constant (or const) - Constant value (doesn’t need std).</p>
 </dd>
-<dt>mean <span class="classifier-delimiter">:</span> <span class="classifier">float, obligatory</span></dt>
-<dd>Standard mean of variable values.</dd>
-<dt>std <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Standard deviation of variable. You must define it or cv for variables
-that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<dt>mean<span class="classifier">float, obligatory</span></dt><dd><p>Standard mean of variable values.</p>
 </dd>
-<dt>cv <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd><p class="first">Coeficient of Variation of variable. You must define it or std for variables
+<dt>std<span class="classifier">float, optional</span></dt><dd><p>Standard deviation of variable. You must define it or cv for variables
 that aren’t constant, if both (cv and std) declared std will be used.</p>
-<p class="last">For LogNormal variables it’s recommend to use CV!</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
 </dd>
-<dt>par1 and par2 <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
-<dd>Parameters for future implementations.</dd>
+<dt>cv<span class="classifier">float, optional</span></dt><dd><p>Coeficient of Variation of variable. You must define it or std for variables
+that aren’t constant, if both (cv and std) declared std will be used.</p>
+<p>For LogNormal variables it’s recommend to use CV!</p>
+</dd>
+<dt>par1 and par2<span class="classifier">float, optional</span></dt><dd><p>Parameters for future implementations.</p>
+</dd>
 </dl>
 </dd></dl>
 
