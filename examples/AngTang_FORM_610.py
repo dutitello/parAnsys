@@ -22,5 +22,5 @@ form.SetCorrel('y', 'z', 0.40)
 form.SetLimState('y*z-m')
 
 # Run
-values = form.Run(dh=0.01, meth='iHLRF')
+values = form.Run(dh=0.001, meth='iHLRF', tolRel=1E-6)
 form.ExportDataCSV('AngTang-FORM-610', 'Comentarios?')
