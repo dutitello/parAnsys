@@ -14,14 +14,14 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys'))
+#sys.path.insert(0, os.path.abspath('C:\\Programacao\\WPy64-3720\\python-3.7.2.amd64\\Lib\\site-packages\\paransys'))
 import paransys
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'PARANSYS'
-copyright = '2019, Eduardo Pagnussat Titello'
+copyright = '2020, Eduardo Pagnussat Titello'
 author = 'Eduardo Pagnussat Titello'
 
 # The short X.Y version
