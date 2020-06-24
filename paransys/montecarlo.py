@@ -241,6 +241,8 @@ class MonteCarlo(object):
 		if distrib not in ['constant', 'const', 'cons', 'c']:
 			if cv is not None:
 				std = cv*mean
+			elif mean == 0.0:
+				cv = 1e99
 			else:
 				cv = std/mean
 
