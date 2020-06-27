@@ -627,7 +627,8 @@ class ANSYS(object):
 			#	results[each] = np.copy(resultsALL[each])
 
 			for each in self.varOutNames:
-				results[each] = np.copy(resultsALL[each])
+				# This prevent bugs with 1 line results 
+				results[each] = np.atleast_1d(resultsALL[each])
 
 			for each in results:
 				if results[each].size > self.length:
