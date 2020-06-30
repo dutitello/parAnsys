@@ -39,7 +39,7 @@ FORM results:
 ,Total of iterations:,3
 ,Probability of failure (Pf):,1.1477E-03
 ,Reliability Index (Beta):,3.049
-,Elapsed time (minutes):,0.000
+,Elapsed time (minutes):,0.001
 
 Final values:
 ,Variable,D. Point,grad(g(X_i)),alpha(i)

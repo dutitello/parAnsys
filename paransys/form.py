@@ -1240,7 +1240,7 @@ class FORM(object):
 				else:
 					schwarzYgradG = 0.0
 
-				self._PrintR('|y*.gradG|/(|y*|.|gradG| = %f (it must be next to 1).' % schwarzYgradG)
+				self._PrintR('Schwarz inequality betwen y* and gradG = %f (it must be next to 1).' % schwarzYgradG)
 				if lastcycle is True:
 					if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
 						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
@@ -1452,32 +1452,6 @@ class FORM(object):
 
 
 			#-------------------------------------------------------------------
-			# Verify the convergence
-			#
-			# Here we have a problem: I don't know from where Beck get this schwarzYgradG verificarion!
-			# I've used that, but now I changed to the old fashion way.
-			# To use that again you need to change the next verification and remove the
-			# conditional lastcycle below too. 
-			#### Sometimes it didn't converge because if this crap
-			if np.linalg.norm(newVecRedPts) > 0:
-				relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
-			else:
-				relErrorPoint = 1.0
-			absErrorBeta = abs(curBeta-newBeta)
-			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
-			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % absErrorBeta)
-			#### if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
-			#### if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
-			if abs(valG) < self.controls['tolLS'] and absErrorBeta < self.controls['tolRel']:
-				self._PrintR('\nFinal design point found on cycle %d.' % cycle)
-				### self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
-				lastcycle = True
-			else:
-				lastcycle = False
-			#-------------------------------------------------------------------
-
-
-			#-------------------------------------------------------------------
 			# Tell user how is it going
 			#
 			self._PrintR(' ')
@@ -1489,12 +1463,45 @@ class FORM(object):
 				self._PrintR(' %15s | %8.5E' % (eachVar, self.variableDesPt[eachVar]))
 				idx += 1
 			self._PrintR(' ')
+			#-------------------------------------------------------------------
 
 
-			# FINISH IT, if not using schwarzYgradG verification
-			if lastcycle is True:
-				self._stnumb = 0
-				break
+			#-------------------------------------------------------------------
+			# Verify the convergence
+			#
+			# Here we have a problem: I don't know from where Beck get this schwarzYgradG verificarion!
+			# I've used that, but now I changed to the old fashion way.
+			# To use that again you need to change the next verification and remove the
+			# conditional lastcycle below too. 
+			#
+			#### Sometimes it didn't converge because if this crap
+			if np.linalg.norm(newVecRedPts) > 0:
+				relErrorPoint = max(abs((curVecRedPts-newVecRedPts)/newVecRedPts))
+			else:
+				relErrorPoint = 1.0
+			absErrorBeta = abs(curBeta-newBeta)
+			self._PrintR('Maximum relative error on design point = %1.4f.' % relErrorPoint)
+			self._PrintR('Absolute error betwen current and next beta = %1.4f.' % absErrorBeta)
+
+			#### if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
+			#### if abs(valG) < self.controls['tolLS'] and relErrorPoint < self.controls['tolRel']:
+
+			if abs(valG) < self.controls['tolLS']:
+				# limstate value is ok
+				if absErrorBeta < self.controls['tolRel']:
+					# Converged by absolute difference betwen betas
+					self._PrintR('\nFinal design point found on cycle %d by absolute difference betwen two betas.' % cycle)
+					self._stnumb = 0
+					lastcycle = True
+					break
+				elif (1-schwarzYgradG) < self.controls['tolRel']:
+					lastcycle = True
+					self._PrintR('\nFinal design point was probably found on cycle %d by Schwarz inequality betwen y* and gradG.' % cycle)
+					self._PrintR('A new cycle will be started to confirm the limit state value and it\'s gradient.')
+				else:
+					lastcycle = False
+			else:
+				lastcycle = False
 
 			#-------------------------------------------------------------------
 
