@@ -1647,10 +1647,15 @@ class MonteCarlo(object):
 			self._PrintR('  reach the expected CVPf.\n')
 
 		self._PrintR(' Total of simulations: %3.3E' % (Ns*cycle))
+		self._PrintR(' CV of Prob. of failure (CVPf): %2.3f' % (self.MCControl['CVPf'][-1]))
 		self._PrintR(' Probability of failure (Pf): %2.4E' % (self.MCControl['Pf'][-1]))
 		self._PrintR(' Reliability index (Beta): %2.3f' % (self.MCControl['Beta'][-1]))
-		self._PrintR(' CV of Prob. of failure (CVPf): %2.3f' % (self.MCControl['CVPf'][-1]))
+		# Confidence intervals: 10% = 1.645 | 5% = 1.960 | 1% = 2.576 
+		resBetaSup = -scipy.stats.norm.ppf(cPfi*(1-1.960*self.MCControl['CVPf'][-1]))
+		resBetaInf = -scipy.stats.norm.ppf(cPfi*(1+1.960*self.MCControl['CVPf'][-1]))
+		self._PrintR('   For a 5% confidence interval: {:.3f} <= Beta <= {:.3f}'.format(resBetaInf, resBetaSup))
 		self._PrintR(' Elapsed time: %f minutes.' % (self.MCControl['ElapsedTime']))
+
 		# Print limit states mean and std dev
 		self._PrintR(' Final Limit States means and standard deviations:')
 		for eachLS in self.limstates:
