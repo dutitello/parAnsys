@@ -37,15 +37,15 @@ Results:
 FORM results:
 ,Exit status:,0,
 ,Total of iterations:,4
-,Probability of failure (Pf):,3.0511E-03
-,Reliability Index (Beta):,2.742
-,Elapsed time (minutes):,0.001
+,Probability of failure (Pf):,3.0411E-03
+,Reliability Index (Beta):,2.743
+,Elapsed time (minutes):,0.000
 
 Final values:
 ,Variable,D. Point,grad(g(X_i)),alpha(i)
-,y,3.42968E+01,2.07834E+02,4.27799E-01
-,z,4.87766E+01,8.34050E+01,1.71678E-01
-,m,1.67288E+03,-4.31129E+02,-8.87420E-01
+,y,3.42286E+01,2.07834E+02,4.27799E-01
+,z,4.87645E+01,8.34050E+01,1.71678E-01
+,m,1.66900E+03,-4.31129E+02,-8.87420E-01
 
 Beta indexes of cycles:
 ,Cycle,Beta
@@ -53,4 +53,3 @@ Beta indexes of cycles:
 ,2,3.083
 ,3,2.807
 ,4,2.743
-,5,2.742
