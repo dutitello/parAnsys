@@ -55,7 +55,7 @@ This module is published at `Zenodo <https://github.com/dutitello/parAnsys>`_.
 You can cite it as follows, or you can get another format in it's Zenodo page. 
     
     Titello, E.P., Campos Filho, A., & Real, M.V. (2020). 
-    PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 1.0. 
+    PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 0.1. 
     Zenodo. http://doi.org/10.5281/zenodo.xxxxxxxx.
 
 

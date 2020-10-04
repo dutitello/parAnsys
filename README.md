@@ -7,8 +7,11 @@ You can find the documentation at https://dutitello.github.io/parAnsys/ and some
 
 
 ## How to install 
-The installer isn't done yet, but you can just copy the `paransys` folder inside
-this repository to your Python modules folder, or put it in your working directory. 
+You can install it by:
+
+    pip install paransys
+
+or downloading this repo and running command `python setup.py install`. 
 
 
 ## How to cite
@@ -16,7 +19,7 @@ This module is published at [Zenodo](https://zenodo.com)
 
 You can cite it as follows, or you can get another format in it's Zenodo page. 
     
-    Titello, E.P., Campos Filho, A., & Real, M.V. (2020). PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 1.0. Zenodo. http://doi.org/10.5281/zenodo.xxxxxxxx.
+    Titello, E.P., Campos Filho, A., & Real, M.V. (2020). PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 0.1. Zenodo. http://doi.org/10.5281/zenodo.xxxxxxxx.
 
 
 ## Final notes
