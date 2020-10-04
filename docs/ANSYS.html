@@ -86,7 +86,6 @@
 <li class="toctree-l1"><a class="reference internal" href="MonteCarlo.html">Monte Carlo Simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FORM.html">First Order Reliability Method (FORM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 </ul>
 
             
@@ -151,9 +150,9 @@
             
   <div class="section" id="ansys">
 <span id="id1"></span><h1>ANSYS<a class="headerlink" href="#ansys" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="paransys.ANSYS">
-<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\Programacao\_MinhasBibliotecas\paransys\docs_sphinx\ansys_anl\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exec_loc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_location</span><span class="o">=</span><span class="default_value">'C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx\\ansys_anl\\'</span></em>, <em class="sig-param"><span class="n">jobname</span><span class="o">=</span><span class="default_value">'file'</span></em>, <em class="sig-param"><span class="n">nproc</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">override</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cleardir</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_flags</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class creates a couple of script files with some parameters defined here
 by the user, copy an APDL script file created by the user with the model to be
 analysed, run everything on ANSYS and get the results from some defined
@@ -188,21 +187,21 @@ parameters back to Python.</p>
 <div class="line"><br /></div>
 </div>
 <p><strong>Class methods:</strong></p>
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.ClearAll">
 <code class="sig-name descname">ClearAll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.ClearAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear all the properties (not from ANSYS object)</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.ClearValues">
 <code class="sig-name descname">ClearValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.ClearValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the values of all variables.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.CreateVarIn">
-<code class="sig-name descname">CreateVarIn</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.CreateVarIn" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVarIn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.CreateVarIn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an INPUT variable.</p>
 <dl>
 <dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable name.</p>
@@ -214,9 +213,9 @@ because of ANSYS.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.CreateVarOut">
-<code class="sig-name descname">CreateVarOut</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.CreateVarOut" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVarOut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.CreateVarOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an OUTPUT variable.</p>
 <dl>
 <dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Variable name.</p>
@@ -228,15 +227,15 @@ because of ANSYS.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.GetVarOutValues">
 <code class="sig-name descname">GetVarOutValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.GetVarOutValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the values of the Results file from ANSYS for all the OUTPUT variables</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.Info">
-<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.Info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">act</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.Info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off the return of the commands to Python.</p>
 <dl class="simple">
 <dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
@@ -244,21 +243,21 @@ because of ANSYS.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.Length">
 <em class="property">property </em><code class="sig-name descname">Length</code><a class="headerlink" href="#paransys.ANSYS.Length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of analysis to be executed and the length of INPUT arrays.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.Run">
 <code class="sig-name descname">Run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the analysis on ANSYS.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.SetLength">
-<code class="sig-name descname">SetLength</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetLength" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetLength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define the number of analysis to be executed and the length of INPUT arrays.
 Must be set before the variables.</p>
 <dl class="simple">
@@ -267,9 +266,9 @@ Must be set before the variables.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.SetModel">
-<code class="sig-name descname">SetModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputname</span></em>, <em class="sig-param"><span class="n">extrafiles</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">directory</span><span class="o">=</span><span class="default_value">'C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used and extra files that should be copied together.
 All this files must be in the same directory set in parameter directory.</p>
 <dl class="simple">
@@ -292,9 +291,9 @@ Defaults to current running Python directory.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.ANSYS.SetVarInValues">
-<code class="sig-name descname">SetVarInValues</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetVarInValues" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetVarInValues</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">values</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.ANSYS.SetVarInValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the values of an INPUT variable</p>
 <dl class="simple">
 <dt>name<span class="classifier">str, obligatory</span></dt><dd><p>Input variable name that will receive the values.</p>

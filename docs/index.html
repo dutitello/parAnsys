@@ -85,7 +85,6 @@
 <li class="toctree-l1"><a class="reference internal" href="MonteCarlo.html">Monte Carlo Simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FORM.html">First Order Reliability Method (FORM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 </ul>
 
             
@@ -150,41 +149,59 @@
             
   <div class="section" id="welcome-to-paransys-s-documentation">
 <h1>Welcome to PARANSYS’s documentation!<a class="headerlink" href="#welcome-to-paransys-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="this-is-part-of-my-master-degree-thesis-which-is-currently-under-development">
-<h2>This is part of my master degree thesis, which is currently under development.<a class="headerlink" href="#this-is-part-of-my-master-degree-thesis-which-is-currently-under-development" title="Permalink to this headline">¶</a></h2>
+<p><strong>PARANSYS</strong>: <em>Python pArametric Reliability Analysis on ANSYS</em>, but it’s not limited just for that!</p>
+<p>PARANSYS is a module that can connect the ANSYS software to Python scripts using APDL
+scripts. It has one connection class, that can be used with many types of APDL analysis
+(more than reliability analysis), and two other classes for reliability analysis,
+that can be used with implicit and explicit Python functions, not just with ANSYS.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This module calls ANSYS by Probabilistic Design System (PDS) as an FEM tool for
 running a couple of parametric analysis and get some variables back to Python.</p>
 <p>The class <strong>paransys.ANSYS</strong> is the heart of the process, this class receive the
 ANSYS APDL model, the parameters names and values, runs everything and return
-the control parameters values for each simulation back to Python.</p>
-<p>This class makes easy to run a lot of analysis with the same model just changing
+the control parameters values for each simulation back to Python.
+This class makes easy to run a lot of analysis with the same model just changing
 some parameters values, in this scope we have Reliability Analysis,
 Optimizations and Mesh Convergence Studies, for example.</p>
-<p>For Reliability Analysis we have two others classes implemented using <strong>paransys.ANSYS</strong>:</p>
+<p>For Reliability Analysis there are two classes implemented:</p>
 <ul>
 <li><p><strong>paransys.MonteCarlo</strong></p>
 <p>This class performs Monte Carlo reliability analyses, with and without using
 importance sampling. When using importance sampling it’s possible to fix the
-sampling point or search it based on the center of failures weights.
-It’s also possible to run Monte Carlo simulations for a limit state equation,
-without using ANSYS.</p>
-<p><strong>For now this class just accept one limit state function/failure mode.</strong></p>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
+sampling point or search it based on the center of failures weights. <em>It’s
+currently limited to one limit state.</em></p>
 </li>
 <li><p><strong>paransys.FORM</strong></p>
 <p>This class applies the First Order Reliability Method (FORM) inside Python
 using ParAnsys as a connection with ANSYS for evaluate FEM models.
-It is possible to run simulations without using ANSYS, just
+It is also possible to run simulations without using ANSYS, just
 defining the limit state equation and all variables.</p>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 </li>
 </ul>
-<p>This module makes no claim to own any rights to ANSYS, it’s just an interface
-to call the program owned by ANSYS.</p>
+</div>
+<div class="section" id="how-to-install">
+<h2>How to install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
+<p>PARANSYS is available at
+<a class="reference external" href="https://github.com/dutitello/parAnsys">github.com/dutitello/parAnsys</a>.
+The installer isn’t done yet, but you can just copy the <cite>paransys</cite> dir inside
+the repository to your Python modules folder, or have it in your working directory.</p>
+</div>
+<div class="section" id="how-to-cite">
+<h2>How to cite<a class="headerlink" href="#how-to-cite" title="Permalink to this headline">¶</a></h2>
+<p>This module is published at <a class="reference external" href="https://github.com/dutitello/parAnsys">Zenodo</a>.</p>
+<p>You can cite it as follows, or you can get another format in it’s Zenodo page.</p>
+<blockquote>
+<div><p>Titello, E.P., Campos Filho, A., &amp; Real, M.V. (2020).
+PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 1.0.
+Zenodo. <a class="reference external" href="http://doi.org/10.5281/zenodo.xxxxxxxx">http://doi.org/10.5281/zenodo.xxxxxxxx</a>.</p>
+</div></blockquote>
+</div>
+<div class="section" id="final-notes">
+<h2>Final notes<a class="headerlink" href="#final-notes" title="Permalink to this headline">¶</a></h2>
+<p>This is part of my master degree thesis, available <a class="reference external" href="https://lume.ufrgs.br/handle/10183/213006">here</a>.</p>
+<p><strong>This module makes no claim to own any rights to ANSYS, it’s just an interface
+to call the program owned by ANSYS company.</strong></p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -192,18 +209,17 @@ to call the program owned by ANSYS.</p>
 <li class="toctree-l1"><a class="reference internal" href="MonteCarlo.html">Monte Carlo Simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FORM.html">First Order Reliability Method (FORM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 </ul>
 </div>
 </div>
-</div>
 <div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
+</div>
 </div>
 
 

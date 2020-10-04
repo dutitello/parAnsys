@@ -86,7 +86,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Monte Carlo Simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FORM.html">First Order Reliability Method (FORM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 </ul>
 
             
@@ -151,7 +150,7 @@
             
   <div class="section" id="monte-carlo-simulation">
 <span id="montecarlo"></span><h1>Monte Carlo Simulation<a class="headerlink" href="#monte-carlo-simulation" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="paransys.MonteCarlo">
 <em class="property">class </em><code class="sig-prename descclassname">paransys.</code><code class="sig-name descname">MonteCarlo</code><a class="headerlink" href="#paransys.MonteCarlo" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class performns Monte Carlo simulations inside Python using ParAnsys as
@@ -188,9 +187,9 @@ wrong, so it’s not able to be used, for now.</p></li>
 <div class="line"><br /></div>
 </div>
 <p><strong>Class methods:</strong></p>
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.ANSYS">
-<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param">exec_loc=None</em>, <em class="sig-param">run_location='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx\\ansys_anl\\'</em>, <em class="sig-param">jobname='file'</em>, <em class="sig-param">nproc=2</em>, <em class="sig-param">override=False</em>, <em class="sig-param">cleardir=False</em>, <em class="sig-param">add_flags=''</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ANSYS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">exec_loc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_location</span><span class="o">=</span><span class="default_value">'C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx\\ansys_anl\\'</span></em>, <em class="sig-param"><span class="n">jobname</span><span class="o">=</span><span class="default_value">'file'</span></em>, <em class="sig-param"><span class="n">nproc</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">override</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cleardir</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_flags</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ANSYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>If ANSYS will be used it defines ANSYS properties, for initialize the
 paransys.ANSYS class.</p>
 <dl class="simple">
@@ -218,9 +217,9 @@ Flags can be found at <a class="reference external" href="https://www.sharcnet.c
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.CreateLimState">
-<code class="sig-name descname">CreateLimState</code><span class="sig-paren">(</span><em class="sig-param">equat</em>, <em class="sig-param">weight=1.0</em>, <em class="sig-param">userf=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateLimState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">equat</span></em>, <em class="sig-param"><span class="n">weight</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">userf</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateLimState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create and Set a new limit state.*</p>
 <p>The number ID of LimitStates are generated automatically starting at 0
 for the first.</p>
@@ -279,9 +278,9 @@ called as <code class="docutils literal notranslate"><span class="pre">userf()</
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.CreateVar">
-<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CreateVar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">distrib</span></em>, <em class="sig-param"><span class="n">mean</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par2</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.CreateVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Random Variable</p>
 <p>If it’s used on ANSYS it need to be told, so after this use:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mc</span><span class="o">.</span><span class="n">SetANSYSVar</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -314,9 +313,9 @@ that aren’t constant, if both (cv and std) declared std will be used.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.ExportDataCSV">
-<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ExportDataCSV</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.ExportDataCSV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports Simulation data to a CSV file.</p>
 <dl class="simple">
 <dt>filename<span class="classifier">str, obligatory</span></dt><dd><p>Name of file that will receive the values, doesn’t need the
@@ -327,9 +326,9 @@ extension “.csv”, it will be placed automatically.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.GetSolutionControl">
-<code class="sig-name descname">GetSolutionControl</code><span class="sig-paren">(</span><em class="sig-param">thing</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.GetSolutionControl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">GetSolutionControl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">thing</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.GetSolutionControl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return values of Monte Carlo solution controllers.</p>
 <dl class="simple">
 <dt>thing: str, obligatory</dt><dd><p>Control that will be returned. Available things are listed below.</p>
@@ -349,9 +348,9 @@ extension “.csv”, it will be placed automatically.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.Graph">
-<code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param">things</em>, <em class="sig-param">show=True</em>, <em class="sig-param">savefile=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Graph" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">things</span></em>, <em class="sig-param"><span class="n">show</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">savefile</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate graphics of Monte Carlo solution controllers.</p>
 <p>Things can be a list of data that will be ploted in the same figure, the
 figure doesn’t need to be opened, it could be just saved, or just opened.</p>
@@ -378,9 +377,9 @@ Defaults to False.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.Info">
-<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param">act=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">act</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off the return of the commands to Python.</p>
 <dl class="simple">
 <dt>act<span class="classifier">bool, obligatory</span></dt><dd><p>True turn On and False turn Off the return of the commands to Python.</p>
@@ -388,9 +387,9 @@ Defaults to False.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.Run">
-<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param">Ns</em>, <em class="sig-param">Nmaxcycles</em>, <em class="sig-param">CVPf=0.0</em>, <em class="sig-param">tolAdPt=False</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Ns</span></em>, <em class="sig-param"><span class="n">Nmaxcycles</span></em>, <em class="sig-param"><span class="n">CVPf</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">tolAdPt</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the Monte Carlo simulation.</p>
 <dl class="simple">
 <dt>Ns<span class="classifier">integer, obligatory</span></dt><dd><p>Number of simulations performed on each cycle.
@@ -438,9 +437,9 @@ Return mean (gMean) and standart deviation (gStd) of each limit state function.<
 </ul>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.SetANSYSModel">
-<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param">inputname</em>, <em class="sig-param">extrafiles=[]</em>, <em class="sig-param">directory='C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx'</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputname</span></em>, <em class="sig-param"><span class="n">extrafiles</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">directory</span><span class="o">=</span><span class="default_value">'C:\\Programacao\\_MinhasBibliotecas\\paransys\\docs_sphinx'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the input script file to be used on ANSYS and extra files that should
 be copied together.
 All this files must be in the same directory set in parameter directory.</p>
@@ -464,9 +463,9 @@ Defaults to current running Python directory.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.SetANSYSOutVar">
-<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSOutVar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSOutVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a parameter/variable from ANSYS APDL script as an variable to
 return values for Python.</p>
 <dl class="simple">
@@ -475,9 +474,9 @@ return values for Python.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.SetANSYSVar">
-<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetANSYSVar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetANSYSVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a Random variable as ANSYS variable.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
 are determined using the weights of all ANSYS input variables.</p>
@@ -487,9 +486,9 @@ are determined using the weights of all ANSYS input variables.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.SetCorrel">
-<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param">var1</em>, <em class="sig-param">var2</em>, <em class="sig-param">correl</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetCorrel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">var1</span></em>, <em class="sig-param"><span class="n">var2</span></em>, <em class="sig-param"><span class="n">correl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetCorrel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the correlation betwen two variables.</p>
 <p>The values will be transformed by the Nataf process before running.</p>
 <dl class="simple">
@@ -502,9 +501,9 @@ are determined using the weights of all ANSYS input variables.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="paransys.MonteCarlo.SetRandomVarSampl">
-<code class="sig-name descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">limst</em>, <em class="sig-param">distrib</em>, <em class="sig-param">mean</em>, <em class="sig-param">std=0</em>, <em class="sig-param">cv=None</em>, <em class="sig-param">par1=None</em>, <em class="sig-param">par2=None</em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SetRandomVarSampl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">limst</span></em>, <em class="sig-param"><span class="n">distrib</span></em>, <em class="sig-param"><span class="n">mean</span></em>, <em class="sig-param"><span class="n">std</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">cv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par2</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#paransys.MonteCarlo.SetRandomVarSampl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the sampling distribution of a variable to performn Importance
 Sampling the simulations.</p>
 <p>ATTENTION: When using ANSYS the weight of results from ANSYS variables
