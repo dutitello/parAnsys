@@ -3,12 +3,12 @@
 This module calls ANSYS by Probabilistic Design System (PDS) as an FEM tool for
 running a couple of parametric analysis and get some variables back to Python.
 
-Built using ANSYS documentation from https://www.sharcnet.ca/Software/Ansys/
+Built using ANSYS documentation from https://www.sharcnet.ca/Software/Ansys/ (not available anymore)
 
 This module makes no claim to own any rights to ANSYS, it's just an interface
 to call the program owned by ANSYS.
 
-Docs are also available in https://dutitello.github.io/paransys/ 
+Docs are available in https://dutitello.github.io/parAnsys/ 
 
 """
 

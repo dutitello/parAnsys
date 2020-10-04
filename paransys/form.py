@@ -1,12 +1,9 @@
 ## -*- coding: UTF-8 -*-
 """
-Module to use ANSYS by Probabilistic Design System (PDS) as a FEM tool for
-running Reliability Analysis with First Order Reliability Method in Python.
+This module performns Reliability Analysis with First Order Reliability Method using Python.
+Please read the class docstring for more. 
 
-This module works based on ParAnsys.ANSYS.
-
-Docs are also available in https://dutitello.github.io/paransys/ 
-
+Docs are available at https://dutitello.github.io/parAnsys/ 
 """
 
 import os
@@ -17,6 +14,7 @@ import scipy.stats
 from math import * # It's necessry to evaluate limit states
 import math
 from inspect import isfunction
+
 
 class FORM(object):
 	"""
