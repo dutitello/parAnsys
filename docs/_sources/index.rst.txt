@@ -2,6 +2,9 @@ Welcome to PARANSYS's documentation!
 ====================================
 **PARANSYS**: *Python pArametric Reliability Analysis on ANSYS*, but it's not limited just for that!
 
+.. image:: https://zenodo.org/badge/190074859.svg
+   :target: https://zenodo.org/badge/latestdoi/190074859
+
 PARANSYS is a module that can connect the ANSYS software to Python scripts using APDL 
 scripts. It has one connection class, that can be used with many types of APDL analysis 
 (more than reliability analysis), and two other classes for reliability analysis, 
@@ -43,20 +46,20 @@ How to install
 
 PARANSYS is available at 
 `github.com/dutitello/parAnsys <https://github.com/dutitello/parAnsys>`_.
-The installer isn't done yet, but you can just copy the `paransys` dir inside
-the repository to your Python modules folder, or have it in your working directory. 
+You can install it by cloning (downloading) 
+`this repository <https://github.com/dutitello/parAnsys/archive/master.zip>`_
+and then running command `python setup.py install`. 
 
 
 How to cite
 -----------
 
-This module is published at `Zenodo <https://github.com/dutitello/parAnsys>`_. 
+This module is published at `Zenodo <https://doi.org/10.5281/zenodo.4161580>`_. 
 
 You can cite it as follows, or you can get another format in it's Zenodo page. 
     
-    Titello, E.P., Campos Filho, A., & Real, M.V. (2020). 
-    PARANSYS: Python pArametric Reliability Analysis on ANSYS. Version 0.1. 
-    Zenodo. http://doi.org/10.5281/zenodo.xxxxxxxx.
+    Titello, E.P. (2020). PARANSYS: Python pArametric Reliability Analysis on ANSYS. 
+    Version 0.1. Zenodo. https://doi.org/10.5281/zenodo.4161580
 
 
 
