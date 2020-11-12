@@ -258,7 +258,7 @@ class FORM(object):
 
 		# CV or STD?
 		if distrib not in ['constant', 'const', 'cons', 'c']:
-			if cv is None:
+			if cv == None:
 				cv = std/mean
 			else:
 				std = cv*mean
@@ -438,7 +438,7 @@ class FORM(object):
 		# Store it
 		self.limstate = equat
 		
-		if(type(self.limstate) is str):
+		if(type(self.limstate) == str):
 			# String equation
 			# Change equation to lowcase
 			self.limstate = self.limstate.lower()
@@ -461,7 +461,7 @@ class FORM(object):
 		"""
 
 		# Verify ANSYS object
-		if self._ANSYS is False:
+		if self._ANSYS == False:
 			exception = Exception('ANSYS not declared yet. Before set ANSYS '+
 				'variables you must define ANSYS properties with ANSYS(...).')
 			raise exception
@@ -564,7 +564,7 @@ class FORM(object):
 
 		"""
 
-		if value is None:
+		if value == None:
 			# Return current value
 			return self._options[option]
 
@@ -652,13 +652,13 @@ class FORM(object):
 		var = self.variableDistrib[name]
 
 		# Gaussian
-		if var[0] is 'gauss':
+		if var[0] == 'gauss':
 			# Doesn't need to transform
 			mean = var[1]
 			std = var[2]
 
 		# Lognormal
-		elif var[0] is 'logn':
+		elif var[0] == 'logn':
 			# LogNormal parameters
 			qsi = math.sqrt(math.log(1 + (var[3])**2))
 			lmbd = math.log(var[1]) - 0.5*qsi**2
@@ -668,7 +668,7 @@ class FORM(object):
 			mean = pt*(1-math.log(pt)+lmbd)
 
 		# Gumbel
-		elif var[0] is 'gumbel':
+		elif var[0] == 'gumbel':
 			# Gumbel parameters
 			scl = math.sqrt(6)*var[2]/math.pi
 			loc = var[1] - 0.57721*scl
@@ -865,25 +865,25 @@ class FORM(object):
 			var2props = self.variableDistrib[each[1]]
 
 			# Both are gauss
-			if (var1props[0] is 'gauss' and var2props[0] is 'gauss'):
+			if (var1props[0] == 'gauss' and var2props[0] == 'gauss'):
 				cor = cor
 
 			# Both are LN
-			elif var1props[0] is 'logn' and var2props[0] is 'logn':
+			elif var1props[0] == 'logn' and var2props[0] == 'logn':
 				cv1 = var1props[3]
 				cv2 = var2props[3]
 				cor = cor*(math.log(1+cor*cv1*cv2)/(cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
 
 			# Both are Gumbel
-			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
+			elif var1props[0] == 'gumbel' and var2props[0] == 'gumbel':
 				cor = cor*(1.064 - 0.069*cor + 0.005*cor**2)
 
 			# One is gauss and other is logn
-			elif (var1props[0] is 'gauss' and var2props[0] is 'logn') \
-				or (var2props[0] is 'gauss' and var1props[0] is 'logn'):
+			elif (var1props[0] == 'gauss' and var2props[0] == 'logn') \
+				or (var2props[0] == 'gauss' and var1props[0] == 'logn'):
 
 				# who is logn?
-				if var1props[0] is 'logn':
+				if var1props[0] == 'logn':
 					cv = var1props[3]
 				else:
 					cv = var2props[3]
@@ -892,15 +892,15 @@ class FORM(object):
 				cor = cor*cv/math.sqrt(math.log(1+cv**2))
 
 			# One is gauss and other is gumbel
-			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
-				or (var2props[0] is 'gauss' and var1props[0] is 'gumbel'):
+			elif (var1props[0] == 'gauss' and var2props[0] == 'gumbel') \
+				or (var2props[0] == 'gauss' and var1props[0] == 'gumbel'):
 				cor = 1.031*cor
 
 			# One is logn and other is gumbel
-			elif (var1props[0] is 'logn' and var2props[0] is 'gumbel') \
-				or (var2props[0] is 'logn' and var1props[0] is 'gumbel'):
+			elif (var1props[0] == 'logn' and var2props[0] == 'gumbel') \
+				or (var2props[0] == 'logn' and var1props[0] == 'gumbel'):
 				# who is logn?
-				if var1props[0] is 'logn':
+				if var1props[0] == 'logn':
 					cv = var1props[3]
 				else:
 					cv = var2props[3]
@@ -982,7 +982,7 @@ class FORM(object):
 
 			# Get dh
 			dh = self.controls['dh']
-			if diff is 'center':
+			if diff == 'center':
 				# size is 1+2*NInRandVars
 				matEvalPts = np.zeros([(1+2*NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
 				# All lines starts with design point/constant values, after random variables replace it
@@ -1001,7 +1001,7 @@ class FORM(object):
 					matEvalPts[eachLine+1, 0:NInRandVars] = vecPts[0:NInRandVars] - vecMean*vecdh
 					curId += 1
 
-			elif diff is 'forward':
+			elif diff == 'forward':
 				# size is 1+NInRandVars
 				matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
 				# All lines starts with design point/constant values, after random variables replace it
@@ -1014,7 +1014,7 @@ class FORM(object):
 					matEvalPts[eachLine, 0:NInRandVars] = vecPts[0:NInRandVars] + vecMean*vecdh
 					curId += 1
 
-			elif diff is 'backward':
+			elif diff == 'backward':
 				# size is 1+NInRandVars
 				matEvalPts = np.zeros([(1+NInRandVars+NInConstVars), (NInRandVars+NInConstVars+NOutVars)])
 				# All lines starts with design point/constant values, after random variables replace it
@@ -1036,15 +1036,15 @@ class FORM(object):
 				# Line 0 with X value is used for all not calculated lines + G(x)
 				ansysSendingList = [0]
 
-				if diff is 'center':
+				if diff == 'center':
 					for eachVar in self.ansys.varInNames:
-						# Current variable is random or constant?
+						# Current variable == random or constant?
 						if eachVar.lower() in self.variableDistrib:
 							eachVar = eachVar.lower()
 							ansysSendingList.append(2*varId[eachVar]+1)
 							ansysSendingList.append(2*varId[eachVar]+2)
 
-				elif diff is 'forward' or diff is 'backward':
+				elif diff == 'forward' or diff == 'backward':
 					for eachVar in self.ansys.varInNames:
 						# Current variable is random or constant?
 						if eachVar.lower() in self.variableDistrib:
@@ -1095,7 +1095,7 @@ class FORM(object):
 				varVal[eachVar] = matEvalPts[0, varId[eachVar]]
 
 			# Test if limstate is a string or a function
-			if(type(self.limstate) is str):
+			if(type(self.limstate) == str):
 				varVal['userf'] = self._userf
 				valG = eval(self.limstate, globals(), varVal)
 			else:
@@ -1119,14 +1119,14 @@ class FORM(object):
 
 			#Derivatives only for random variables/input var
 
-			if diff is 'center':
+			if diff == 'center':
 				for eachLine in range(1, (1+2*NInRandVars), 2):
 					# G(X+dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
 
 					# Test if limstate is a string or a function
-					if(type(self.limstate) is str):
+					if(type(self.limstate) == str):
 						val1 = eval(self.limstate, globals(), varVal)
 					else:
 						val1 = self.limstate(**varVal)
@@ -1136,7 +1136,7 @@ class FORM(object):
 						varVal[eachVar] = matEvalPts[eachLine+1, varId[eachVar]]
 					
 					# Test if limstate is a string or a function
-					if(type(self.limstate) is str):
+					if(type(self.limstate) == str):
 						val2 = eval(self.limstate, globals(), varVal)
 					else:
 						val2 = self.limstate(**varVal)
@@ -1144,14 +1144,14 @@ class FORM(object):
 					gradGx[curId] = (val1-val2)/(2*dh*vecMean[curId])
 					curId += 1
 
-			elif diff is 'forward':
+			elif diff == 'forward':
 				for eachLine in range(1, (1+NInRandVars)):
 					# G(X+dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
 					
 					# Test if limstate is a string or a function
-					if(type(self.limstate) is str):
+					if(type(self.limstate) == str):
 						val1 = eval(self.limstate, globals(), varVal)
 					else:
 						val1 = self.limstate(**varVal)
@@ -1159,14 +1159,14 @@ class FORM(object):
 					gradGx[curId] = (val1-valG)/(dh*vecMean[curId])
 					curId += 1
 
-			elif diff is 'backward':
+			elif diff == 'backward':
 				for eachLine in range(1, (1+NInRandVars)):
 					# G(X-dh) = val1
 					for eachVar in varId:
 						varVal[eachVar] = matEvalPts[eachLine, varId[eachVar]]
 					
 					# Test if limstate is a string or a function
-					if(type(self.limstate) is str):
+					if(type(self.limstate) == str):
 						val1 = eval(self.limstate, globals(), varVal)
 					else:
 						val1 = self.limstate(**varVal)
@@ -1212,7 +1212,7 @@ class FORM(object):
 			curVecRedPts = Jyx.dot(vecPts[:NInRandVars]-vecMean)
 
 			# Current beta
-			if cycle is 1:
+			if cycle == 1:
 				self.results['Beta'].append(math.sqrt(curVecRedPts.dot(curVecRedPts)))
 
 			curBeta = self.results['Beta'][cycle]
@@ -1239,7 +1239,7 @@ class FORM(object):
 					schwarzYgradG = 0.0
 
 				self._PrintR('Schwarz inequality betwen y* and gradG = %f (it must be next to 1).' % schwarzYgradG)
-				if lastcycle is True:
+				if lastcycle == True:
 					if abs(valG) < self.controls['tolLS'] and (1-schwarzYgradG) < self.controls['tolRel']:
 						#self._PrintR('\nFinal design point found on cycle %d.' % cycle)
 						#self._PrintR('Performing a last cycle with final values.')
@@ -1256,11 +1256,11 @@ class FORM(object):
 				#-------------------------------------------------------------------
 				# If not converged yet and meth is rHLRF or iHLRF
 				#
-				if meth is 'rHLRF':
+				if meth == 'rHLRF':
 					dk = newVecRedPts - curVecRedPts
 					newVecRedPts = curVecRedPts + self._options['rHLRF_relax']*dk
 
-				if meth is 'iHLRF':
+				if meth == 'iHLRF':
 					#-------------------------------------------------------------------
 					# iHLRF - improved Rackwitz and Fiessler recursive method
 					#
@@ -1390,7 +1390,7 @@ class FORM(object):
 								varVal[eachVar] = matEvalPts[eachnk, varId[eachVar]]
 							#valG_nk = eval(self.limstate, globals(), varVal)
 							# Test if limstate is a string or a function
-							if(type(self.limstate) is str):
+							if(type(self.limstate) == str):
 								varVal['userf'] = self._userf
 								valG_nk = eval(self.limstate, globals(), varVal)
 							else:
@@ -1415,12 +1415,12 @@ class FORM(object):
 								forcenk = True
 								break
 
-						if done is True or forcenk is True:
+						if done == True or forcenk == True:
 							break
 
-					if done is False or forcenk is True:
+					if done == False or forcenk == True:
 
-						if self._options['iHLRF_forced_lambdk'] is 'auto':
+						if self._options['iHLRF_forced_lambdk'] == 'auto':
 							lambdk = 1 - schwarzYgradG
 						else:
 							lambdk = self._options['iHLRF_forced_lambdk']
@@ -1598,7 +1598,7 @@ class FORM(object):
 			f.write('sep=,\n')
 
 			# Description
-			if description is not None:
+			if description != None:
 				f.write('%s\n\n' % description)
 
 			f.write('Input data:\n')

@@ -76,7 +76,7 @@ class ANSYS(object):
 		"""
 
 		# Verify if the exec_loc is defined and real
-		if exec_loc is None:
+		if exec_loc == None:
 			exception = Exception('Undefined ANSYS executable location. \n You must define ANSYS executable location.')
 			raise exception
 		else:
@@ -160,7 +160,7 @@ class ANSYS(object):
 
 		# Run all the varInValues[var] looking for an empty
 		for each in self.varInNames:
-			if self.varInValues[each] is None:
+			if self.varInValues[each] == None:
 				exception = Exception('Input variable \"%s\" has no defined values.' % each)
 				raise exception
 
@@ -315,14 +315,14 @@ class ANSYS(object):
 
 		# Copy the script file to workdirectory with the name 'current.inp'
 		errcopy = os.system('copy /Y %s %s' % (str(directory+'\\'+inputname), str(self.ANSYSprops['run_location']+'\\current.inp')))
-		if errcopy is not 0:
+		if errcopy != 0:
 			exception = Exception('It was not possible to copy the input script file. (\"%s\").' % str(directory+'\\'+inputname))
 			raise exception
 
 		# Copy the extra files
 		for each in extrafiles:
 			errcopy = os.system('copy /Y %s %s' % (str(directory+'\\'+each), str(self.ANSYSprops['run_location']+'\\'+each)))
-			if errcopy is not 0:
+			if errcopy != 0:
 				exception = Exception('It was not possible to copy an extra file (\"%s\").' % each)
 				raise exception
 
@@ -347,7 +347,7 @@ class ANSYS(object):
 			# Try to clear the working directory
 			self._PrintR('Cleaning the files from ANSYS working directory (\"%s\").' % self.ANSYSprops['run_location'])
 			delhand = os.system('del /q %s\\*' % self.ANSYSprops['run_location'])
-			if delhand is not 0:
+			if delhand != 0:
 				exception = Exception('Unable to clear the ANSYS working directory.')
 				raise exception
 
@@ -360,7 +360,7 @@ class ANSYS(object):
 			if self.ANSYSprops['override'] and os.path.isfile(lockfile):
 				self._PrintR('Deleting lock file.')
 				delhand = os.system('del /q %s' % lockfile)
-				if delhand is not 0:
+				if delhand != 0:
 					exception = Exception('Unable to delete lock file (\"%s\").' % lockfile)
 					raise exception
 
@@ -386,7 +386,7 @@ class ANSYS(object):
 		timei = time.time()
 
 		ansyshand = os.system(cmd)
-		if ansyshand is not 0:
+		if ansyshand != 0:
 			exception = Exception('ANSYS exited with error id=%d. Please verify the output file (\"%s\").\n\n' %(ansyshand, self.ANSYSprops['run_location']+'\\pdsout.out'))
 			raise exception
 
@@ -457,14 +457,14 @@ class ANSYS(object):
 
 		# if at least one InValue is set can't change de length
 		for each in self.varInNames:
-			if self.varInValues[each] is not None:
+			if self.varInValues[each] != None:
 				valuesset = True
 				exception = Exception('At least one value were already set to INPUT variables. \n'+
 							'To change the length you have to clear the variables values with ClearValues().')
 				raise exception
 
 		# if there is no value setted and length > 0 can change
-		if valuesset is False:
+		if valuesset == False:
 			if length <= 0:
 				exception = Exception('The analysis length must be greater than 0.')
 				raise exception
@@ -565,7 +565,7 @@ class ANSYS(object):
 				raise exception
 
 		# Verify if it's a list, in this case transf to an np.array
-		if type(values) is list:
+		if type(values) == list:
 			values = np.array(values)
 
 		# Verify if it has more than one column

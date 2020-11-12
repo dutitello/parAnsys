@@ -225,7 +225,7 @@ class MonteCarlo(object):
 		else:
 			name = name.lower()
 			# Sampling distribution not created yet
-			if type is 1 and name not in self.variableDistrib:
+			if type == 1 and name not in self.variableDistrib:
 				exception = Exception('Variable %s is not declared yet. '+
 						'Before set sampling distribution you must create it '+
 						'with CreateVar().')
@@ -236,7 +236,7 @@ class MonteCarlo(object):
 
 		# CV or STD?
 		if distrib not in ['constant', 'const', 'cons', 'c']:
-			if cv is not None:
+			if cv != None:
 				std = cv*mean
 			elif mean == 0.0:
 				cv = 1e99
@@ -247,13 +247,13 @@ class MonteCarlo(object):
 		# Gaussian variable
 		if distrib in ['gauss', 'gaus', 'gaussian', 'normal', 'norm']:
 			# Type 0 = Random Variable distribution
-			if type is 0:
+			if type == 0:
 				self.variableDistrib[name] = ['gauss', mean, std, cv]
 				return self._PrintR('Variable %s defined as Gaussian with mean=%f, std. dev.=%f, CV=%f.'
 									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
-			elif type is 1:
+			elif type == 1:
 				# Vrify of samplingDistrib[limst] exists
 				try:
 					self.samplingDistrib[limst]
@@ -276,13 +276,13 @@ class MonteCarlo(object):
 			#lmbd = math.log(mean) - 0.5*qsix**2
 
 			# Type 0 = Random Variable distribution
-			if type is 0:
+			if type == 0:
 				self.variableDistrib[name] = ['logn', mean, std, cv]
 				return self._PrintR('Variable %s defined as LogNormal with mean=%f, std. dev.=%f, CV=%f.'
 									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
-			elif type is 1:
+			elif type == 1:
 				# Vrify of samplingDistrib[limst] exists
 				try:
 					self.samplingDistrib[limst]
@@ -302,13 +302,13 @@ class MonteCarlo(object):
 		elif distrib in ['gumbel', 'gumb', 'type1']:
 
 			# Type 0 = Random Variable distribution
-			if type is 0:
+			if type == 0:
 				self.variableDistrib[name] = ['gumbel', mean, std, cv]
 				return self._PrintR('Variable %s defined as Gumbel with mean=%f, std. dev.=%f, CV=%f.'
 									% (name, mean, std, cv))
 
 			# Type 1 = Sampling distribution
-			elif type is 1:
+			elif type == 1:
 				# Vrify of samplingDistrib[limst] exists
 				try:
 					self.samplingDistrib[limst]
@@ -326,13 +326,13 @@ class MonteCarlo(object):
 		# Constant value
 		elif distrib in ['constant', 'const', 'cons', 'c']:
 			# Type 0 = Random Variable distribution
-			if type is 0:
+			if type == 0:
 				self.variableConst[name] = mean
 				return self._PrintR('Variable %s defined as Constant with value=%f'
 									% (name, mean))
 
 			# Type 1 = Sampling distribution
-			elif type is 1:
+			elif type == 1:
 				# Not possible, break
 				exception = Exception('Error on %s: You can not use a constant value for sampling!'
 										% (distrib.upper()))
@@ -536,7 +536,7 @@ class MonteCarlo(object):
 			will use always the user set point.
 
 		"""
-		if Ns >= 0 and Nmaxcycles >= 0 and CVPf >= 0 and (tolAdPt is False or tolAdPt >= 0):
+		if Ns >= 0 and Nmaxcycles >= 0 and CVPf >= 0 and (tolAdPt == False or tolAdPt >= 0):
 			# Save controls variable
 			self.controls['Ns'] = Ns
 			self.controls['Nmaxcycles'] = Nmaxcycles
@@ -548,7 +548,7 @@ class MonteCarlo(object):
 			self._PrintR('   Maximum number of cycles: %d' % Nmaxcycles)
 			self._PrintR('   Total maximum number of simulations: %2.3E' % (Ns*Nmaxcycles))
 			self._PrintR('   Target CVPf: %2.3E' % CVPf)
-			if tolAdPt is not False:
+			if tolAdPt != False:
 				self._PrintR('   Maximum relative tolerance for adaptive sampling point search: %2.3E' % tolAdPt)
 		else:
 			exception = Exception('Error while setting simulation controls. Please verify the set values.')
@@ -667,7 +667,7 @@ class MonteCarlo(object):
 		#
 		#---------------
 		
-		if(type(equat) is str):
+		if(type(equat) == str):
 			# String equation
 			# Change equation to lowcase
 			equat = equat.lower()
@@ -712,7 +712,7 @@ class MonteCarlo(object):
 		"""
 
 		# Verify ANSYS object
-		if self._ANSYS is False:
+		if self._ANSYS == False:
 			exception = Exception('ANSYS not declared yet. Before set ANSYS '+
 				'variables you must define ANSYS properties with ANSYS(...).')
 			raise exception
@@ -780,7 +780,7 @@ class MonteCarlo(object):
 		NCValues_f = np.zeros(Nsi)
 
 		# Verify the existence of sampling distrib
-		if sampDist is False:
+		if sampDist == False:
 			# Current distribution for generate values is varDistrib
 			curDist = varDistrib
 		else:
@@ -788,18 +788,18 @@ class MonteCarlo(object):
 
 		# Generate it
 		# Gauss distribution
-		if curDist[0] is 'gauss':
+		if curDist[0] == 'gauss':
 			# Sampling distribution values (X_h)
 			randval = curDist[1] + curDist[2]*NCValues_h
 
 			# Weights
 			# Not sampling
-			if sampDist is False:
+			if sampDist == False:
 				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gaussian:
-			elif varDistrib[0] is 'gauss':
+			elif varDistrib[0] == 'gauss':
 				# Real normal reduced correlated values (Z_f)
 				NCValues_f = (randval - varDistrib[1])/varDistrib[2]
 
@@ -821,7 +821,7 @@ class MonteCarlo(object):
 				raise exception
 
 		# Lognormal distribution
-		elif curDist[0] is 'logn':
+		elif curDist[0] == 'logn':
 			# equiv std dev
 			qsic = math.sqrt(math.log(1 + (curDist[3])**2))
 			# equiv mean
@@ -833,12 +833,12 @@ class MonteCarlo(object):
 
 			# Weights
 			# Not sampling
-			if sampDist is False:
+			if sampDist == False:
 				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is logn:
-			elif varDistrib[0] is 'logn':
+			elif varDistrib[0] == 'logn':
 				# eq for varDistrib
 				qsiv = math.sqrt(math.log(1 + (varDistrib[3])**2))
 				lambdav = math.log(varDistrib[1]) - 0.5*qsiv**2
@@ -865,7 +865,7 @@ class MonteCarlo(object):
 				raise exception
 
 		# Gumbel distribution
-		elif curDist[0] is 'gumbel':
+		elif curDist[0] == 'gumbel':
 			# scale parm - eqv to std
 			sclc = math.sqrt(6)*curDist[2]/math.pi
 
@@ -878,12 +878,12 @@ class MonteCarlo(object):
 
 			# Weights
 			# Not sampling
-			if sampDist is False:
+			if sampDist == False:
 				NCValues_f = NCValues_h.copy()
 				weights[:] = 1
 
 			# Real distrib is gumbel
-			elif varDistrib[0] is 'gumbel':
+			elif varDistrib[0] == 'gumbel':
 				# eq for varDistrib
 				sclv = math.sqrt(6)*varDistrib[2]/math.pi
 				locv = varDistrib[1] - 0.57721*sclv
@@ -993,7 +993,7 @@ class MonteCarlo(object):
 		#	raise exception
 
 		# Adaptive condition
-		if tolAdPt is not False:
+		if tolAdPt != False:
 			adapt = True
 		else:
 			adapt = False
@@ -1187,26 +1187,26 @@ class MonteCarlo(object):
 			var2props = self.variableDistrib[each[1]]
 
 			# Both are gauss
-			if (var1props[0] is 'gauss' and var2props[0] is 'gauss'):
+			if (var1props[0] == 'gauss' and var2props[0] == 'gauss'):
 				cor = cor
 
 			# Both are LN
-			elif var1props[0] is 'logn' and var2props[0] is 'logn':
+			elif var1props[0] == 'logn' and var2props[0] == 'logn':
 				cv1 = var1props[3]
 				cv2 = var2props[3]
 				cor = cor*(math.log(1+cor*cv1*cv2) /
 				           (cor*math.sqrt(math.log(1+cv1**2)*math.log(1+cv2**2))))
 
 			# Both are Gumbel
-			elif var1props[0] is 'gumbel' and var2props[0] is 'gumbel':
+			elif var1props[0] == 'gumbel' and var2props[0] == 'gumbel':
 				cor = cor*(1.064 - 0.069*cor + 0.005*cor**2)
 
 			# One is gauss and other is logn
-			elif (var1props[0] is 'gauss' and var2props[0] is 'logn') \
-				or (var2props[0] is 'gauss' and var1props[0] is 'logn'):
+			elif (var1props[0] == 'gauss' and var2props[0] == 'logn') \
+				or (var2props[0] == 'gauss' and var1props[0] == 'logn'):
 
 				# who is logn?
-				if var1props[0] is 'logn':
+				if var1props[0] == 'logn':
 					cv = var1props[3]
 				else:
 					cv = var2props[3]
@@ -1215,15 +1215,15 @@ class MonteCarlo(object):
 				cor = cor*cv/math.sqrt(math.log(1+cv**2))
 
 			# One is gauss and other is gumbel
-			elif (var1props[0] is 'gauss' and var2props[0] is 'gumbel') \
-				or (var2props[0] is 'gauss' and var1props[0] is 'gumbel'):
+			elif (var1props[0] == 'gauss' and var2props[0] == 'gumbel') \
+				or (var2props[0] == 'gauss' and var1props[0] == 'gumbel'):
 				cor = 1.031*cor
 
 			# One is logn and other is gumbel
-			elif (var1props[0] is 'logn' and var2props[0] is 'gumbel') \
-				or (var2props[0] is 'logn' and var1props[0] is 'gumbel'):
+			elif (var1props[0] == 'logn' and var2props[0] == 'gumbel') \
+				or (var2props[0] == 'logn' and var1props[0] == 'gumbel'):
 				# who is logn?
-				if var1props[0] is 'logn':
+				if var1props[0] == 'logn':
 					cv = var1props[3]
 				else:
 					cv = var2props[3]
@@ -1455,7 +1455,7 @@ class MonteCarlo(object):
 					#curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
 
 					# Test if limstate is a string or a function
-					if(type(self.limstates[eachLS][0]) is str):
+					if(type(self.limstates[eachLS][0]) == str):
 						varVal['userf'] = self.limstates[eachLS][2]
 						curSLSvalue = eval(self.limstates[eachLS][0], globals(), varVal)
 					else:
@@ -1564,7 +1564,7 @@ class MonteCarlo(object):
 			#	Find new design point
 			#
 
-			if adapt is True:
+			if adapt == True:
 				self._PrintR('Evaluating new design point.')
 				# Initial Igw position
 				posi = 0
@@ -1722,19 +1722,19 @@ class MonteCarlo(object):
 		cycles = self.cycles
 
 
-		if thing is 'N_Pf':
+		if thing == 'N_Pf':
 			# N vs Pf
 			result = np.zeros([cycles, 2])
 			result[:, 0] = range(Ns, Ns*(cycles+1), Ns)
 			result[:, 1] = self.MCControl['Pf']
 
-		elif thing is 'N_Beta':
+		elif thing == 'N_Beta':
 			# N vs Beta
 			result = np.zeros([cycles, 2])
 			result[:, 0] = range(Ns, Ns*(cycles+1), Ns)
 			result[:, 1] = self.MCControl['Beta']
 
-		elif thing is 'N_CVPf':
+		elif thing == 'N_CVPf':
 			# N vs CVPf
 			result = np.zeros([cycles, 2])
 			result[:, 0] = range(Ns, Ns*(cycles+1), Ns)
@@ -1775,7 +1775,7 @@ class MonteCarlo(object):
 			f.write('sep=,\n')
 
 			# Description
-			if description is not None:
+			if description != None:
 				f.write('%s\n\n' % description)
 
 			f.write('Input data:\n')
@@ -1882,7 +1882,7 @@ class MonteCarlo(object):
 			f.write('\n')
 
 			# Final Sampling Point
-			if self.controls['tolAdPt'] is not False:
+			if self.controls['tolAdPt'] != False:
 				f.write('Final sampling point:\n')
 				for eachLS in self.SPForLS:
 					f.write(',Limit State %d:\n' % (eachLS))
@@ -1988,11 +1988,11 @@ class MonteCarlo(object):
 				plots[1].set_xlabel(xlab)
 
 		# Save, or not
-		if savefile is not False:
+		if savefile != False:
 			file = savefile+'.svg'
 			self._PrintR('Saving figure as "%s".' % file)
 			plt.savefig(file, transparent=True)
 
 		# Show, or not
-		if show is True:
+		if show == True:
 			plt.show()
